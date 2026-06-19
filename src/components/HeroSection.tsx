@@ -45,14 +45,14 @@ export function HeroSection() {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-3 md:gap-6 mt-1 md:mt-2 xl:items-start items-start">
-                <p className="max-w-md text-sm md:text-lg border-l-[4px] md:border-l-[6px] border-accent pl-3 md:pl-4 text-ink font-medium leading-snug md:leading-relaxed">
+                <p className="max-w-md text-sm md:text-lg border-l-[4px] md:border-l-[6px] border-ink pl-3 md:pl-4 text-ink font-medium leading-snug md:leading-relaxed">
                   UX / Product Designer with the toolkit of a developer. I move from concept to working
                   prototype, and integrate AI where it actually serves the user.
                 </p>
                 
-                <div className="border-2 border-ink bg-accent text-accent-foreground px-3 py-2 md:px-4 md:py-3 brutal-shadow-sm font-mono text-[10px] sm:text-xs uppercase shrink-0 flex flex-col justify-center w-fit transform rotate-1 hover:rotate-0 transition-transform">
-                  <span className="font-bold tracking-widest text-ink/70 mb-0.5 md:mb-1">Notable</span>
-                  <span className="tracking-tighter font-extrabold text-xs md:text-sm whitespace-nowrap">Patent · BSH</span>
+                <div className="border-2 border-ink bg-ink text-paper px-3 py-2 md:px-4 md:py-3 brutal-shadow-sm font-mono text-[10px] sm:text-xs uppercase shrink-0 flex flex-col justify-center w-fit transform rotate-1 hover:rotate-0 transition-transform">
+                  <span className="font-bold tracking-widest text-paper/70 mb-0.5 md:mb-1">Notable</span>
+                  <span className="tracking-tighter font-extrabold text-xs md:text-sm whitespace-nowrap text-paper">Patent · BSH</span>
                 </div>
               </div>
             </div>

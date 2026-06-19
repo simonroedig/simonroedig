@@ -53,9 +53,15 @@ export function ExperienceSection() {
                 {exp.role}
               </p>
               <div
-                className="w-full h-24 md:h-32 border-2 border-ink mb-4"
+                className="w-full h-32 md:h-40 border-2 border-ink mb-4 overflow-hidden"
                 style={{ backgroundColor: exp.color }}
-              />
+              >
+                <img
+                  src={exp.image}
+                  alt={exp.company}
+                  className="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500 ease-out"
+                />
+              </div>
               <p className="text-sm md:text-[15px] leading-snug text-ink">
                 {exp.shortDescription}
               </p>

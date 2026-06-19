@@ -11,7 +11,7 @@ export function ProjectsSection() {
       {/* Header */}
       <div className="px-4 md:px-10 py-4 md:py-6 border-b-4 border-paper flex justify-between items-baseline gap-4">
         <div>
-          <div className="font-mono text-[10px] md:text-xs text-accent uppercase tracking-[0.3em] mb-1">
+          <div className="font-mono text-[10px] md:text-xs text-paper uppercase tracking-[0.3em] mb-1">
             02 / Lab
           </div>
           <h2 className="font-display text-3xl md:text-5xl lg:text-6xl italic leading-none text-paper">
@@ -30,27 +30,40 @@ export function ProjectsSection() {
             <button
               key={p.id}
               onClick={() => setOpenId(p.id)}
-              className="group text-left aspect-square bg-ink border-2 border-paper p-3 md:p-4 flex flex-col justify-between transition-all duration-150 hover:bg-paper hover:text-ink relative"
+              className="group text-left aspect-square bg-ink border-2 border-paper flex flex-col justify-between transition-all duration-150 hover:border-paper relative overflow-hidden"
               style={{
                 ["--card-shadow" as string]: p.color,
               }}
             >
-              <div className="flex items-start justify-between gap-2">
-                <span className="font-mono text-[9px] md:text-[10px] uppercase tracking-widest text-paper/60 group-hover:text-ink/60">
-                  {p.date}
-                </span>
-                <span
-                  className="w-3 h-3 border-2 border-paper group-hover:border-ink"
-                  style={{ backgroundColor: p.color }}
+              {/* Background Image Container */}
+              <div className="absolute inset-0 w-full h-full z-0 opacity-40 grayscale group-hover:grayscale-0 group-hover:scale-110 group-hover:opacity-100 transition-all duration-500 ease-out">
+                <img 
+                  src={p.image} 
+                  alt={p.title} 
+                  className="w-full h-full object-cover"
                 />
               </div>
-              <div>
-                <h4 className="font-display italic text-lg md:text-xl leading-[0.95] mb-1.5 text-pretty">
-                  {p.title}
-                </h4>
-                <p className="font-mono text-[9px] md:text-[10px] uppercase tracking-tight leading-snug text-paper/50 group-hover:text-ink/60 line-clamp-2">
-                  {p.shortDescription}
-                </p>
+              <div className="absolute inset-0 bg-ink/60 group-hover:bg-transparent transition-colors duration-300 z-0"></div>
+
+              {/* Content overlay */}
+              <div className="relative z-10 w-full h-full p-3 md:p-4 flex flex-col justify-between bg-gradient-to-t from-ink/90 via-ink/20 to-ink/60 group-hover:from-ink/90 group-hover:via-ink/40 group-hover:to-transparent">
+                <div className="flex items-start justify-between gap-2">
+                  <span className="font-mono text-[9px] md:text-[10px] uppercase tracking-widest text-paper/80 font-bold group-hover:text-paper drop-shadow-md">
+                    {p.date}
+                  </span>
+                  <span
+                    className="w-3 h-3 border-2 border-paper flex-shrink-0"
+                    style={{ backgroundColor: p.color }}
+                  />
+                </div>
+                <div>
+                  <h4 className="font-display italic text-lg md:text-xl leading-[0.95] mb-1.5 text-balance text-paper drop-shadow-lg shadow-black">
+                    {p.title}
+                  </h4>
+                  <p className="font-mono text-[9px] md:text-[10px] uppercase tracking-tight leading-snug text-paper/80 group-hover:text-paper drop-shadow-md shadow-black line-clamp-2">
+                    {p.shortDescription}
+                  </p>
+                </div>
               </div>
             </button>
           ))}

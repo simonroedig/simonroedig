@@ -45,7 +45,7 @@ export function CardOverlay({ open, onClose, title, meta, color, description }: 
           </span>
           <button
             onClick={onClose}
-            className="font-mono text-base md:text-lg font-bold text-ink hover:text-accent transition-colors"
+            className="font-mono text-base md:text-lg font-bold text-ink hover:text-accent transition-colors cursor-pointer"
             aria-label="Close"
           >
             CLOSE [✕]

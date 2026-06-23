@@ -30,7 +30,7 @@ export function ProjectsSection() {
             <button
               key={p.id}
               onClick={() => setOpenId(p.id)}
-              className="group text-left aspect-square bg-ink border-2 border-paper flex flex-col justify-between transition-all duration-150 hover:border-paper relative overflow-hidden"
+              className="group text-left aspect-square bg-ink border-2 border-paper flex flex-col justify-between transition-all duration-150 hover:border-paper relative overflow-hidden cursor-pointer"
               style={{
                 ["--card-shadow" as string]: p.color,
               }}

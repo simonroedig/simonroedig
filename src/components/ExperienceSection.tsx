@@ -29,13 +29,13 @@ export function ExperienceSection() {
           <button
             key={exp.id}
             onClick={() => setOpenId(exp.id)}
-            className="group text-left shrink-0 w-[260px] sm:w-[300px] md:w-[360px] aspect-[4/5] bg-paper border-4 border-ink p-5 md:p-6 flex flex-col justify-between transition-transform duration-200 hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
+            className="group text-left shrink-0 w-[260px] sm:w-[300px] md:w-[360px] h-[325px] sm:h-[375px] md:h-[450px] bg-paper border-4 border-ink p-5 md:p-6 flex flex-col justify-between transition-transform duration-200 hover:translate-x-1 hover:translate-y-1 hover:shadow-none cursor-pointer"
             style={{
               boxShadow: `10px 10px 0px 0px ${exp.color}`,
             }}
           >
-            <div>
-              <div className="flex items-center justify-between mb-3 md:mb-4">
+            <div className="flex flex-col flex-1 min-h-0 w-full">
+              <div className="flex items-center justify-between mb-3 md:mb-4 shrink-0">
                 <span className="font-mono text-xs md:text-sm font-bold text-ink">
                   {exp.date}
                 </span>
@@ -46,27 +46,27 @@ export function ExperienceSection() {
                   {String(experiences.length - i).padStart(2, "0")}
                 </span>
               </div>
-              <h3 className="font-display text-3xl md:text-4xl italic leading-[0.95] text-ink mb-3">
+              <h3 className="font-display text-2xl sm:text-3xl md:text-4xl italic leading-[0.95] text-ink mb-1 pb-2 shrink-0 truncate">
                 {exp.company}
               </h3>
-              <p className="font-mono text-[10px] md:text-xs uppercase tracking-tight text-muted-foreground mb-4 md:mb-6">
+              <p className="font-mono text-[10px] md:text-xs uppercase tracking-tight text-muted-foreground mb-4 md:mb-6 shrink-0">
                 {exp.role}
               </p>
               <div
-                className="w-full h-32 md:h-40 border-2 border-ink mb-4 overflow-hidden"
+                className="w-full h-32 md:h-40 border-2 border-ink mb-4 overflow-hidden shrink-0"
                 style={{ backgroundColor: exp.color }}
               >
                 <img
                   src={exp.image}
                   alt={exp.company}
-                  className="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500 ease-out"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 ease-out"
                 />
               </div>
-              <p className="text-sm md:text-[15px] leading-snug text-ink">
+              <p className="text-sm md:text-[15px] leading-snug text-ink shrink-0 line-clamp-2 md:line-clamp-3">
                 {exp.shortDescription}
               </p>
             </div>
-            <div className="mt-4 pt-3 border-t-2 border-ink flex items-center justify-between">
+            <div className="mt-4 pt-3 border-t-2 border-ink flex items-center justify-between shrink-0">
               <span className="font-mono text-[10px] uppercase tracking-widest text-ink group-hover:text-accent">
                 Open case →
               </span>

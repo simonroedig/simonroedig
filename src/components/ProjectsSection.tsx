@@ -1,10 +1,16 @@
-import { useState } from "react";
 import { projects } from "@/data/projects";
 import { CardOverlay } from "./CardOverlay";
+import { Route } from "@/routes/index";
+import { useNavigate } from "@tanstack/react-router";
 
 export function ProjectsSection() {
-  const [openId, setOpenId] = useState<string | null>(null);
+  const { project: openId } = Route.useSearch();
+  const navigate = useNavigate({ from: Route.id });
   const openProj = projects.find((p) => p.id === openId);
+
+  const setOpenId = (id: string | null) => {
+    navigate({ search: (prev) => ({ ...prev, project: id || undefined, experience: undefined }) });
+  };
 
   return (
     <section className="md:snap-start min-h-[100svh] md:h-screen w-full flex flex-col bg-paper text-ink overflow-hidden">
@@ -72,6 +78,7 @@ export function ProjectsSection() {
           color={openProj.color}
           description={openProj.fullDescription}
           image={openProj.image}
+          richContent={openProj.richContent}
         />
       )}
     </section>

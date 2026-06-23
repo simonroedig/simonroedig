@@ -1,10 +1,16 @@
-import { useState } from "react";
 import { experiences } from "@/data/experiences";
 import { CardOverlay } from "./CardOverlay";
+import { Route } from "@/routes/index";
+import { useNavigate } from "@tanstack/react-router";
 
 export function ExperienceSection() {
-  const [openId, setOpenId] = useState<string | null>(null);
+  const { experience: openId } = Route.useSearch();
+  const navigate = useNavigate({ from: Route.id });
   const openExp = experiences.find((e) => e.id === openId);
+
+  const setOpenId = (id: string | null) => {
+    navigate({ search: (prev) => ({ ...prev, experience: id || undefined, project: undefined }) });
+  };
 
   return (
     <section className="md:snap-start min-h-[100svh] md:h-screen w-full flex flex-col bg-paper border-b-4 border-ink overflow-hidden">

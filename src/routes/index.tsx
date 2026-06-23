@@ -4,6 +4,12 @@ import { ExperienceSection } from "@/components/ExperienceSection";
 import { ProjectsSection } from "@/components/ProjectsSection";
 
 export const Route = createFileRoute("/")({
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      project: search.project as string | undefined,
+      experience: search.experience as string | undefined,
+    }
+  },
   head: () => ({
     meta: [
       { title: "Simon Rödig — Human-Centric Design Accelerated by AI" },

@@ -7,9 +7,10 @@ type Props = {
   meta: string;
   color: string;
   description: string;
+  image?: string;
 };
 
-export function CardOverlay({ open, onClose, title, meta, color, description }: Props) {
+export function CardOverlay({ open, onClose, title, meta, color, description, image }: Props) {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -31,8 +32,7 @@ export function CardOverlay({ open, onClose, title, meta, color, description }: 
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-4xl max-h-[92svh] overflow-y-auto bg-paper border-4 border-ink animate-overlay-in"
-
+        className="relative w-full max-w-4xl h-[85svh] md:h-[600px] flex flex-col bg-paper border-4 border-ink animate-overlay-in overflow-hidden"
         style={{ boxShadow: `16px 16px 0px 0px ${color}` }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -52,25 +52,38 @@ export function CardOverlay({ open, onClose, title, meta, color, description }: 
           </button>
         </div>
 
-        <div className="p-6 md:p-10 grid grid-cols-1 md:grid-cols-5 gap-6 md:gap-10">
-          <div className="md:col-span-3 space-y-6">
-            <h3 className="font-display text-4xl md:text-6xl leading-[0.95] italic text-ink">
+        <div className="flex-1 min-h-0 p-6 md:p-10 grid grid-cols-1 md:grid-cols-5 gap-6 md:gap-10 overflow-y-auto md:overflow-hidden">
+          <div className={`${image ? "md:col-span-3" : "md:col-span-5"} flex flex-col min-h-0`}>
+            <h3 className="font-display text-4xl md:text-6xl leading-[0.95] italic text-ink mb-6 shrink-0">
               {title}
             </h3>
-            <p className="text-base md:text-lg leading-relaxed text-ink text-pretty">
-              {description}
-            </p>
-          </div>
-          <div className="md:col-span-2">
-            <div
-              className="w-full aspect-[4/5] border-4 border-ink grid place-items-center"
-              style={{ backgroundColor: color }}
-            >
-              <span className="font-mono text-[10px] uppercase tracking-widest text-ink/60">
-                IMG // {meta}
-              </span>
+            <div className="flex-1 md:overflow-y-auto md:pr-6 text-base md:text-lg leading-relaxed text-ink text-pretty styled-scrollbar space-y-4 md:space-y-6">
+              {description.split('\n\n').map((paragraph, idx) => {
+                if (paragraph.trim().startsWith('Disclaimer:')) {
+                  return (
+                    <p key={idx} className="text-sm md:text-base italic text-ink/80 font-serif">
+                      {paragraph}
+                    </p>
+                  );
+                }
+                return (
+                  <p key={idx} className="whitespace-pre-wrap">
+                    {paragraph}
+                  </p>
+                );
+              })}
             </div>
           </div>
+          {image && (
+            <div className="md:col-span-2">
+              <div
+                className="w-full aspect-video border-4 border-ink grid place-items-center overflow-hidden shrink-0"
+                style={{ backgroundColor: color }}
+              >
+                <img src={image} alt={title} className="w-full h-full object-cover" />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

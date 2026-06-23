@@ -78,6 +78,7 @@ export function ProjectsSection() {
           meta={`${openProj.date} · PROJECT`}
           color={openProj.color}
           description={openProj.fullDescription}
+          image={openProj.image}
         />
       )}
     </section>

@@ -71,12 +71,12 @@ export function CardOverlay({ open, onClose, title, meta, color, description, im
                    }
                    if (block.type === 'image') {
                      return (
-                       <img key={idx} src={block.src} alt={block.alt || title} className="w-full h-auto border-4 border-ink object-cover" />
+                       <img key={idx} src={block.src} alt={block.alt || title} className="w-full max-w-4xl mx-auto h-auto border-4 border-ink object-cover" />
                      );
                    }
                    if (block.type === 'video') {
                      return (
-                       <div key={idx} className="w-full aspect-video border-4 border-ink overflow-hidden shrink-0">
+                       <div key={idx} className="w-full max-w-4xl mx-auto aspect-video border-4 border-ink overflow-hidden shrink-0">
                          <iframe width="100%" height="100%" src={block.url} title={title} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
                        </div>
                      );

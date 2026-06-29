@@ -1,6 +1,14 @@
 import { useEffect } from "react";
 import type { RichContentBlock } from "@/data/projects";
 
+const imageSizeClasses = {
+  xxsmall: "max-w-[12rem]",
+  xsmall: "max-w-xs",
+  small: "max-w-lg",
+  large: "max-w-5xl",
+  xlarge: "max-w-6xl",
+} as const;
+
 type Props = {
   open: boolean;
   onClose: () => void;
@@ -57,10 +65,10 @@ export function CardOverlay({ open, onClose, title, meta, color, description, im
         <div className="flex-1 min-h-0 p-6 md:p-10 grid grid-cols-1 md:grid-cols-5 gap-6 md:gap-10 overflow-y-auto md:overflow-hidden">
           {richContent ? (
              <div className="md:col-span-5 flex flex-col min-h-0">
-               <h3 className="font-display text-4xl md:text-6xl leading-[0.95] italic text-ink mb-6 shrink-0">
+               <h3 className="font-display text-4xl md:text-6xl leading-[0.95] italic text-ink mb-6 shrink-0 text-center w-full">
                  {title}
                </h3>
-               <div className="flex-1 md:overflow-y-auto md:pr-6 text-base md:text-lg leading-relaxed text-ink text-pretty styled-scrollbar flex flex-col gap-8 pb-10">
+               <div className="flex-1 md:overflow-y-auto md:pr-6 text-base md:text-lg leading-relaxed text-ink text-pretty styled-scrollbar flex flex-col gap-8 pb-10 text-center items-center">
                  {richContent.map((block, idx) => {
                    if (block.type === 'text') {
                      return (
@@ -70,8 +78,13 @@ export function CardOverlay({ open, onClose, title, meta, color, description, im
                      );
                    }
                    if (block.type === 'image') {
+                    const sizeClass = block.size ? imageSizeClasses[block.size] : "max-w-4xl";
+                    const imageClassName = block.noBorder
+                      ? `w-full ${sizeClass} mx-auto h-auto object-cover`
+                      : `w-full ${sizeClass} mx-auto h-auto border-4 border-ink object-cover`;
+
                      return (
-                       <img key={idx} src={block.src} alt={block.alt || title} className="w-full max-w-4xl mx-auto h-auto border-4 border-ink object-cover" />
+                      <img key={idx} src={block.src} alt={block.alt || title} className={imageClassName} />
                      );
                    }
                    if (block.type === 'video') {
@@ -83,7 +96,7 @@ export function CardOverlay({ open, onClose, title, meta, color, description, im
                    }
                    if (block.type === 'link' || block.type === 'pdf') {
                      return (
-                       <a key={idx} href={block.url} target="_blank" rel="noopener noreferrer" className="self-start inline-block px-4 py-2 bg-ink text-paper font-mono text-sm md:text-base font-bold uppercase tracking-wider hover:bg-paper hover:text-ink transition-colors border-2 border-transparent hover:border-ink">
+                       <a key={idx} href={block.url} target="_blank" rel="noopener noreferrer" className="mx-auto inline-block px-4 py-2 bg-ink text-paper font-mono text-sm md:text-base font-bold uppercase tracking-wider hover:bg-paper hover:text-ink transition-colors border-2 border-transparent hover:border-ink">
                          {block.text || block.url}
                        </a>
                      );
@@ -95,10 +108,10 @@ export function CardOverlay({ open, onClose, title, meta, color, description, im
           ) : (
             <>
               <div className={`${image ? "md:col-span-3" : "md:col-span-5"} flex flex-col min-h-0`}>
-                <h3 className="font-display text-4xl md:text-6xl leading-[0.95] italic text-ink mb-6 shrink-0">
+                <h3 className="font-display text-4xl md:text-6xl leading-[0.95] italic text-ink mb-6 shrink-0 text-center w-full">
                   {title}
                 </h3>
-                <div className="flex-1 md:overflow-y-auto md:pr-6 text-base md:text-lg leading-relaxed text-ink text-pretty styled-scrollbar space-y-4 md:space-y-6">
+                <div className="flex-1 md:overflow-y-auto md:pr-6 text-base md:text-lg leading-relaxed text-ink text-pretty styled-scrollbar space-y-4 md:space-y-6 text-center items-center">
                   {description.split('\n\n').map((paragraph, idx) => {
                     if (paragraph.trim().startsWith('Disclaimer:')) {
                       return (

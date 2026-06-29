@@ -12,7 +12,7 @@ export const Route = createFileRoute("/")({
   },
   head: () => ({
     meta: [
-      { title: "Simon Rödig — Human-Centric Design Accelerated by AI" },
+      { title: "Simon Rödig - Website" },
       {
         name: "description",
         content:

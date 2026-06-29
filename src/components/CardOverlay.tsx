@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import type { RichContentBlock } from "@/data/projects";
 
+const contentWrapper = "mx-auto w-full max-w-4xl flex flex-col gap-8 text-center text-base md:text-lg leading-relaxed text-ink text-pretty";
+
 const imageSizeClasses = {
   xxsmall: "max-w-[12rem]",
   xsmall: "max-w-xs",
@@ -69,6 +71,7 @@ export function CardOverlay({ open, onClose, title, meta, color, description, im
                  {title}
                </h3>
                <div className="flex-1 md:overflow-y-auto md:pr-6 text-base md:text-lg leading-relaxed text-ink text-pretty styled-scrollbar flex flex-col gap-8 pb-10 text-center items-center">
+                <div className={contentWrapper}>
                  {richContent.map((block, idx) => {
                    if (block.type === 'text') {
                      return (
@@ -103,6 +106,7 @@ export function CardOverlay({ open, onClose, title, meta, color, description, im
                    }
                    return null;
                  })}
+                </div>
                </div>
              </div>
           ) : (
@@ -112,20 +116,22 @@ export function CardOverlay({ open, onClose, title, meta, color, description, im
                   {title}
                 </h3>
                 <div className="flex-1 md:overflow-y-auto md:pr-6 text-base md:text-lg leading-relaxed text-ink text-pretty styled-scrollbar space-y-4 md:space-y-6 text-center items-center">
-                  {description.split('\n\n').map((paragraph, idx) => {
-                    if (paragraph.trim().startsWith('Disclaimer:')) {
+                  <div className={contentWrapper}>
+                    {description.split('\n\n').map((paragraph, idx) => {
+                      if (paragraph.trim().startsWith('Disclaimer:')) {
+                        return (
+                          <p key={idx} className="text-sm md:text-base italic text-ink/80 font-serif">
+                            {paragraph}
+                          </p>
+                        );
+                      }
                       return (
-                        <p key={idx} className="text-sm md:text-base italic text-ink/80 font-serif">
+                        <p key={idx} className="whitespace-pre-wrap">
                           {paragraph}
                         </p>
                       );
-                    }
-                    return (
-                      <p key={idx} className="whitespace-pre-wrap">
-                        {paragraph}
-                      </p>
-                    );
-                  })}
+                    })}
+                  </div>
                 </div>
               </div>
               {image && (

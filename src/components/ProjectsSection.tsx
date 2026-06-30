@@ -36,33 +36,34 @@ export function ProjectsSection() {
             <button
               key={p.id}
               onClick={() => setOpenId(p.id)}
-              className="group text-left aspect-square bg-paper border-2 border-ink flex flex-col justify-between transition-all duration-200 hover:translate-x-1 hover:translate-y-1 hover:shadow-none hover:border-ink relative overflow-hidden cursor-pointer"
+              className="group text-left aspect-square bg-paper border-4 border-ink p-3 md:p-4 flex flex-col transition-all duration-200 hover:translate-x-1 hover:translate-y-1 hover:shadow-none cursor-pointer relative overflow-hidden"
               style={{
                 boxShadow: `8px 8px 0px 0px ${p.color}`,
               }}
             >
-              {/* Background Image Container */}
-              <div className="absolute inset-0 w-full h-full z-0 group-hover:scale-105 transition-transform duration-500 ease-out">
+              {/* Image Container */}
+              <div 
+                className="w-full aspect-video border-2 border-ink overflow-hidden shrink-0 mb-3 md:mb-4"
+                style={{ backgroundColor: p.color }}
+              >
                 <img 
                   src={p.image} 
                   alt={p.title} 
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                 />
               </div>
 
-              {/* Content overlay */}
-              <div className="relative z-10 w-full h-full p-3 md:p-4 flex flex-col justify-end bg-gradient-to-t from-ink/95 via-ink/60 to-transparent group-hover:from-paper/95 group-hover:via-paper/40 group-hover:to-transparent transition-colors duration-300">
-                <div className="flex flex-col">
-                  <span className="font-mono text-[9px] md:text-[10px] uppercase tracking-widest text-paper/80 font-bold group-hover:text-ink transition-colors duration-300 mb-1">
-                    {p.date}
-                  </span>
-                  <h4 className="font-display italic text-lg md:text-xl leading-[0.95] mb-1.5 text-balance text-paper group-hover:text-ink transition-colors duration-300">
-                    {p.title}
-                  </h4>
-                  <p className="font-mono text-[9px] md:text-[10px] uppercase tracking-tight leading-snug text-paper/80 group-hover:text-ink/80 line-clamp-2 transition-colors duration-300">
-                    {p.shortDescription}
-                  </p>
-                </div>
+              {/* Content area */}
+              <div className="flex flex-col flex-1 min-h-0 w-full justify-start">
+                <span className="font-mono text-[9px] md:text-[10px] uppercase tracking-widest text-ink/50 font-bold mb-1">
+                  {p.date}
+                </span>
+                <h4 className="font-display italic text-xl md:text-2xl leading-[0.95] mb-1.5 md:mb-2 text-ink truncate w-full">
+                  {p.title}
+                </h4>
+                <p className="font-mono text-[9px] md:text-[10px] uppercase tracking-tight leading-snug text-ink/80 line-clamp-2 md:line-clamp-3">
+                  {p.shortDescription}
+                </p>
               </div>
             </button>
           ))}

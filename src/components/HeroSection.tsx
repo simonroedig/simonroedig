@@ -16,8 +16,9 @@ export function HeroSection() {
 
   return (
     <section className="snap-start h-[100svh] w-full relative flex flex-col border-b-4 border-ink p-4 sm:p-6 md:p-10 gap-3 sm:gap-8 overflow-hidden">
+      
       {/* Top bar */}
-      <div className="flex justify-center md:justify-end items-start shrink-0 w-full mb-2">
+      <div className="flex justify-center md:justify-end items-start shrink-0 w-full mb-2 relative z-10">
         <div className="flex flex-wrap justify-center gap-1 md:gap-3 font-mono text-[11px] md:text-sm uppercase font-bold items-center">
           <a href="https://www.linkedin.com/in/simonroedig/" target="_blank" rel="noreferrer" className="px-2 md:px-3 py-1.5 md:py-2 border-2 border-transparent hover:border-ink hover:bg-paper transition-all hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-ink)] text-ink">LinkedIn</a>
           <a href="https://github.com/simonroedig" target="_blank" rel="noreferrer" className="px-2 md:px-3 py-1.5 md:py-2 border-2 border-transparent hover:border-ink hover:bg-paper transition-all hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-ink)] text-ink">Github</a>
@@ -99,7 +100,7 @@ export function HeroSection() {
       </div>
 
       {/* Bottom Bar: Scroll Indicator */}
-      <div className="hidden lg:flex items-center gap-3 font-mono text-xs uppercase tracking-[0.2em] font-bold text-ink/40 w-full max-w-6xl mx-auto mt-auto pb-2">
+      <div className="hidden lg:flex items-center gap-3 font-mono text-xs uppercase tracking-[0.2em] font-bold text-ink/40 w-full max-w-6xl mx-auto mt-auto pb-2 relative z-10">
         <div className="w-12 h-[2px] bg-ink/40"></div>
         SCROLL_DOWN
       </div>

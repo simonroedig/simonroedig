@@ -15,7 +15,7 @@ export function ExperienceSection() {
   const showCardNumbers = false; // Toggle this to true to show the numbers again
 
   return (
-    <section className="md:snap-start min-h-[100svh] md:h-screen w-full flex flex-col bg-paper border-b-4 border-ink overflow-hidden">
+    <section className="md:snap-start min-h-[100svh] md:h-screen w-full flex flex-col border-b-4 border-ink overflow-hidden">
       {/* Header */}
       <div className="px-4 md:px-10 py-4 md:py-6 border-b-4 border-ink flex justify-between items-baseline gap-4">
         <div>

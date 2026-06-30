@@ -57,6 +57,8 @@ export type RichContentBlock =
   | { type: "pdf"; url: string; text?: string };
 
 export type Project = {
+  category: "Personal" | "University";
+  isStarred: boolean;
   id: string;
   title: string;
   date: string;
@@ -71,6 +73,8 @@ export type Project = {
 export const projects: Project[] = [
   {
     id: "anodi",
+    category: "Personal",
+    isStarred: false,
     title: "Anodi",
     date: "02/2026",
     sortDate: "2026-02",
@@ -91,6 +95,8 @@ export const projects: Project[] = [
   },
   {
     id: "privacy-deck",
+    category: "University",
+    isStarred: false,
     title: "PrivacyDeck",
     date: "03/2026",
     sortDate: "2026-03",
@@ -108,6 +114,8 @@ export const projects: Project[] = [
   },
   {
     id: "dart-ai",
+    category: "Personal",
+    isStarred: false,
     title: "DartAI",
     date: "10/2025",
     sortDate: "2025-10",
@@ -124,6 +132,8 @@ export const projects: Project[] = [
   },
   {
     id: "doggy-match",
+    category: "Personal",
+    isStarred: false,
     title: "DoggyMatch",
     date: "08/2025",
     sortDate: "2025-08",
@@ -141,6 +151,8 @@ export const projects: Project[] = [
   },
   {
     id: "noisescape",
+    category: "University",
+    isStarred: true,
     title: "NoiseScape",
     date: "08/2025",
     sortDate: "2025-08",
@@ -156,6 +168,8 @@ export const projects: Project[] = [
   },
   {
     id: "scentconnect",
+    category: "University",
+    isStarred: false,
     title: "ScentConnect",
     date: "03/2025",
     sortDate: "2025-03",
@@ -171,6 +185,8 @@ export const projects: Project[] = [
   },
   {
     id: "pulse-ll",
+    category: "University",
+    isStarred: true,
     title: "PulseLL",
     date: "08/2024",
     sortDate: "2024-08",
@@ -188,6 +204,8 @@ export const projects: Project[] = [
   },
   {
     id: "song-treasure",
+    category: "University",
+    isStarred: true,
     title: "SongTreasure",
     date: "08/2024",
     sortDate: "2024-08",
@@ -204,6 +222,8 @@ export const projects: Project[] = [
   },
   {
     id: "s-bin",
+    category: "University",
+    isStarred: false,
     title: "S-Bin",
     date: "06/2024",
     sortDate: "2024-06",
@@ -220,6 +240,8 @@ export const projects: Project[] = [
   },
   {
     id: "chordsync",
+    category: "University",
+    isStarred: true,
     title: "ChordSync",
     date: "03/2024",
     sortDate: "2024-03",
@@ -238,6 +260,8 @@ export const projects: Project[] = [
   },
   {
     id: "rememory",
+    category: "University",
+    isStarred: false,
     title: "Rememory",
     date: "09/2023",
     sortDate: "2023-09",
@@ -253,6 +277,8 @@ export const projects: Project[] = [
   },
   {
     id: "connectivity-control",
+    category: "University",
+    isStarred: true,
     title: "ConnectivityControl",
     date: "03/2023",
     sortDate: "2023-03",
@@ -269,6 +295,8 @@ export const projects: Project[] = [
   },
   {
     id: "webdevelopment",
+    category: "Personal",
+    isStarred: false,
     title: "Webdevelopment",
     date: "03/2023",
     sortDate: "2023-03",
@@ -286,6 +314,8 @@ export const projects: Project[] = [
   },
   {
     id: "chrome-extension",
+    category: "Personal",
+    isStarred: false,
     title: "Chrome Extension",
     date: "02/2023",
     sortDate: "2023-02",
@@ -302,6 +332,8 @@ export const projects: Project[] = [
   },
   {
     id: "music",
+    category: "Personal",
+    isStarred: false,
     title: "Music",
     date: "01/2023",
     sortDate: "2023-01",
@@ -320,6 +352,8 @@ export const projects: Project[] = [
   },
   {
     id: "ecoshower",
+    category: "University",
+    isStarred: false,
     title: "EcoShower",
     date: "09/2022",
     sortDate: "2022-09",
@@ -337,6 +371,8 @@ export const projects: Project[] = [
   },
   {
     id: "quarto",
+    category: "Personal",
+    isStarred: false,
     title: "\"Quarto\" Game",
     date: "09/2022",
     sortDate: "2022-09",
@@ -353,6 +389,8 @@ export const projects: Project[] = [
   },
   {
     id: "meet",
+    category: "University",
+    isStarred: false,
     title: "\"Meet\" Prototype",
     date: "01/2022",
     sortDate: "2022-01",
@@ -368,6 +406,8 @@ export const projects: Project[] = [
   },
   {
     id: "media-design",
+    category: "Personal",
+    isStarred: false,
     title: "Media Design",
     date: "11/2021",
     sortDate: "2021-11",

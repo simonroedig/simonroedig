@@ -61,7 +61,7 @@ export function ExperienceSection() {
                   </span>
                 ) : null}
               </div>
-              <h3 className="font-display text-2xl sm:text-3xl md:text-4xl italic leading-[0.95] text-ink mb-1 pb-2 shrink-0 truncate">
+              <h3 className="font-display text-2xl sm:text-3xl md:text-4xl italic leading-[0.95] text-ink pb-3 shrink-0 truncate w-full">
                 {exp.company}
               </h3>
               <p className="font-mono text-[10px] md:text-xs uppercase tracking-tight text-muted-foreground mb-4 md:mb-6 shrink-0">

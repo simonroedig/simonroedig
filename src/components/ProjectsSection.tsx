@@ -2,11 +2,23 @@ import { projects } from "@/data/projects";
 import { CardOverlay } from "./CardOverlay";
 import { Route } from "@/routes/index";
 import { useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
+
+type FilterType = 'All' | 'Starred' | 'Personal' | 'University';
 
 export function ProjectsSection() {
   const { project: openId } = Route.useSearch();
   const navigate = useNavigate({ from: Route.id });
   const openProj = projects.find((p) => p.id === openId);
+  const [filter, setFilter] = useState<FilterType>('All');
+
+  const filteredProjects = [...projects]
+    .filter(p => {
+      if (filter === 'All') return true;
+      if (filter === 'Starred') return p.isStarred;
+      return p.category === filter;
+    })
+    .sort((a, b) => new Date(b.sortDate).getTime() - new Date(a.sortDate).getTime());
 
   const setOpenId = (id: string | null) => {
     navigate({ search: (prev) => ({ ...prev, project: id || undefined, experience: undefined }) });
@@ -15,7 +27,7 @@ export function ProjectsSection() {
   return (
     <section className="md:snap-start min-h-[100svh] md:h-screen w-full flex flex-col bg-paper text-ink overflow-hidden">
       {/* Header */}
-      <div className="px-4 md:px-10 py-4 md:py-6 border-b-4 border-ink flex justify-between items-baseline gap-4">
+      <div className="px-4 md:px-10 py-4 md:py-6 border-b-4 border-ink flex justify-between items-baseline gap-4 bg-paper">
         <div>
           <div className="font-mono text-[10px] md:text-xs text-ink uppercase tracking-[0.3em] mb-1">
             02 / Lab
@@ -25,14 +37,32 @@ export function ProjectsSection() {
           </h2>
         </div>
         <span className="font-mono text-[10px] md:text-xs uppercase tracking-widest text-ink/50 hidden sm:block">
-          INDEX // {projects.length} ENTRIES
+          INDEX // {filteredProjects.length} ENTRIES
         </span>
+      </div>
+
+      {/* Filter Bar */}
+      <div className="border-b-4 border-ink px-4 md:px-10 py-3 md:py-4 flex items-center gap-3 md:gap-5 overflow-x-auto styled-scrollbar bg-ink">
+        <span className="font-mono text-[10px] md:text-xs uppercase tracking-widest text-paper/70 font-bold shrink-0 mr-1 md:mr-2">Filter:</span>
+        {(['All', 'Starred', 'Personal', 'University'] as FilterType[]).map(f => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            className={`px-3 py-1.5 md:px-4 md:py-2 border-2 transition-all font-mono text-[10px] md:text-xs uppercase tracking-widest shrink-0 cursor-pointer ${
+              filter === f 
+                ? 'bg-transparent border-paper text-paper shadow-[4px_4px_0px_0px_var(--color-paper)] font-bold -translate-y-1' 
+                : 'bg-transparent border-paper/20 text-paper/60 hover:border-paper hover:text-paper hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-paper)] font-medium'
+            }`}
+          >
+            {f === 'Starred' ? '★ Starred' : f}
+          </button>
+        ))}
       </div>
 
       {/* Grid (scrollable internally — full grid visible without page scroll on desktop) */}
       <div className="flex-1 overflow-y-auto p-4 md:p-6">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6 pb-6">
-          {projects.map((p) => (
+          {filteredProjects.map((p) => (
             <button
               key={p.id}
               onClick={() => setOpenId(p.id)}
@@ -58,7 +88,7 @@ export function ProjectsSection() {
                 <span className="font-mono text-[9px] md:text-[10px] uppercase tracking-widest text-ink/50 font-bold mb-1">
                   {p.date}
                 </span>
-                <h4 className="font-display italic text-xl md:text-2xl leading-[0.95] mb-1.5 md:mb-2 text-ink truncate w-full">
+                <h4 className="font-display italic text-xl md:text-2xl leading-[0.95] pb-2 text-ink truncate w-full">
                   {p.title}
                 </h4>
                 <p className="font-mono text-[9px] md:text-[10px] uppercase tracking-tight leading-snug text-ink/80 line-clamp-2 md:line-clamp-3">

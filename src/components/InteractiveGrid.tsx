@@ -17,6 +17,9 @@ export function InteractiveGrid() {
     const mouse = { x: -1000, y: -1000 };
     const radius = 200; // mouse repulsion radius
     
+    let clearRadius = 60;
+    let targetClearRadius = 60;
+    
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -40,6 +43,12 @@ export function InteractiveGrid() {
     const handleMouseMove = (e: MouseEvent) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
+      
+      const target = e.target as HTMLElement;
+      if (target && target.closest) {
+        const isInterest = target.closest('a, button, h1, h2, h3, h4, p, img, span');
+        targetClearRadius = isInterest ? 180 : 60;
+      }
     };
 
     const handleMouseLeave = () => {
@@ -55,6 +64,8 @@ export function InteractiveGrid() {
 
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      clearRadius += (targetClearRadius - clearRadius) * 0.1;
       
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
@@ -79,15 +90,15 @@ export function InteractiveGrid() {
           size = 2 + force * 6; // grow when near mouse
           
           // Center fade to create a perfectly clear halo around the cursor
-          // Fades to 0 when distance is less than 60px
-          const centerFade = Math.min(1, Math.pow(dist / 60, 2));
+          // Fades to 0 depending on the dynamic clearRadius
+          const centerFade = Math.min(1, Math.pow(dist / clearRadius, 2.5));
           
           // Get darker/thicker but fade out right at the center
-          const alpha = (0.1 + force * 0.9) * centerFade;
+          const alpha = (0.2 + force * 0.6) * centerFade;
           ctx.strokeStyle = `rgba(0, 0, 0, ${alpha})`;
           ctx.lineWidth = 1 + force * 2;
         } else {
-          ctx.strokeStyle = "rgba(0, 0, 0, 0.1)";
+          ctx.strokeStyle = "rgba(0, 0, 0, 0.2)";
           ctx.lineWidth = 1;
         }
         

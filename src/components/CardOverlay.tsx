@@ -70,80 +70,86 @@ export function CardOverlay({ open, onClose, title, meta, color, description, im
         <div className="flex-1 min-h-0 p-6 md:p-10 grid grid-cols-1 md:grid-cols-5 gap-6 md:gap-10 overflow-y-auto md:overflow-hidden">
           {richContent ? (
              <div className="md:col-span-5 flex flex-col min-h-0">
-               <h3 className="font-display text-4xl md:text-6xl leading-[0.95] italic text-ink mb-6 shrink-0 text-center w-full">
-                 {title}
-               </h3>
-               <div className="flex-1 md:overflow-y-auto md:pr-6 text-base md:text-lg leading-relaxed text-ink text-pretty styled-scrollbar flex flex-col gap-8 pb-10 text-center items-center">
-                <div className={contentWrapper}>
-                 {richContent.map((block, idx) => {
-                   if (block.type === 'text') {
-                     return (
-                       <p key={idx} className="whitespace-pre-wrap">
-                         {block.content}
-                       </p>
-                     );
-                   }
-                   if (block.type === 'image') {
-                    const sizeClass = block.size ? imageSizeClasses[block.size] : "max-w-4xl";
-                    const imageClassName = block.noBorder
-                      ? `w-full ${sizeClass} mx-auto h-auto object-cover`
-                      : `w-full ${sizeClass} mx-auto h-auto border-4 border-ink object-cover`;
+               <div className="flex-1 md:overflow-y-auto md:pr-6 flex flex-col">
+                 <div className="my-auto w-full flex flex-col items-center justify-center py-4">
+                   <h3 className="font-display text-4xl md:text-6xl leading-[0.95] italic text-ink mb-6 shrink-0 text-center w-full">
+                     {title}
+                   </h3>
+                   <div className={`${contentWrapper} items-center`}>
+                    {richContent.map((block, idx) => {
+                      if (block.type === 'text') {
+                        return (
+                          <p key={idx} className="whitespace-pre-wrap">
+                            {block.content}
+                          </p>
+                        );
+                      }
+                      if (block.type === 'image') {
+                       const sizeClass = block.size ? imageSizeClasses[block.size] : "max-w-4xl";
+                       const imageClassName = block.noBorder
+                         ? `w-full ${sizeClass} mx-auto h-auto object-cover`
+                         : `w-full ${sizeClass} mx-auto h-auto border-4 border-ink object-cover`;
 
-                     return (
-                      <img key={idx} src={block.src} alt={block.alt || title} className={imageClassName} />
-                     );
-                   }
-                   if (block.type === 'video') {
-                     return (
-                       <div key={idx} className="w-full max-w-4xl mx-auto aspect-video border-4 border-ink overflow-hidden shrink-0">
-                         <iframe width="100%" height="100%" src={block.url} title={title} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-                       </div>
-                     );
-                   }
-                   if (block.type === 'link' || block.type === 'pdf') {
-                     return (
-                       <a key={idx} href={block.url} target="_blank" rel="noopener noreferrer" className="mx-auto inline-block px-4 py-2 bg-ink text-paper font-mono text-sm md:text-base font-bold uppercase tracking-wider transition-all duration-200 border-2 border-transparent hover:border-ink hover:bg-paper hover:text-ink hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-ink)] active:translate-y-0 active:shadow-none">
-                         {block.text || block.url}
-                       </a>
-                     );
-                   }
-                   return null;
-                 })}
-                </div>
+                        return (
+                         <img key={idx} src={block.src} alt={block.alt || title} className={imageClassName} />
+                        );
+                      }
+                      if (block.type === 'video') {
+                        return (
+                          <div key={idx} className="w-full max-w-4xl mx-auto aspect-video border-4 border-ink overflow-hidden shrink-0">
+                            <iframe width="100%" height="100%" src={block.url} title={title} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                          </div>
+                        );
+                      }
+                      if (block.type === 'link' || block.type === 'pdf') {
+                        return (
+                          <a key={idx} href={block.url} target="_blank" rel="noopener noreferrer" className="mx-auto inline-block px-4 py-2 bg-ink text-paper font-mono text-sm md:text-base font-bold uppercase tracking-wider transition-all duration-200 border-2 border-transparent hover:border-ink hover:bg-paper hover:text-ink hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-ink)] active:translate-y-0 active:shadow-none">
+                            {block.text || block.url}
+                          </a>
+                        );
+                      }
+                      return null;
+                    })}
+                   </div>
+                 </div>
                </div>
              </div>
           ) : (
             <>
               <div className={`${image ? "md:col-span-3" : "md:col-span-5"} flex flex-col min-h-0`}>
-                <h3 className="font-display text-4xl md:text-6xl leading-[0.95] italic text-ink mb-6 shrink-0 text-center w-full">
-                  {title}
-                </h3>
-                <div className="flex-1 md:overflow-y-auto md:pr-6 text-base md:text-lg leading-relaxed text-ink text-pretty styled-scrollbar space-y-4 md:space-y-6 text-center items-center">
-                  <div className={contentWrapper}>
-                    {description.split('\n\n').map((paragraph, idx) => {
-                      if (paragraph.trim().startsWith('Disclaimer:')) {
+                <div className="flex-1 md:overflow-y-auto md:pr-6 flex flex-col">
+                  <div className="my-auto w-full flex flex-col py-4">
+                    <h3 className="font-display text-4xl md:text-6xl leading-[0.95] italic text-ink mb-6 shrink-0 text-center w-full">
+                      {title}
+                    </h3>
+                    <div className={contentWrapper}>
+                      {description.split('\n\n').map((paragraph, idx) => {
+                        if (paragraph.trim().startsWith('Disclaimer:')) {
+                          return (
+                            <p key={idx} className="text-sm md:text-base italic text-ink/80 font-serif">
+                              {paragraph}
+                            </p>
+                          );
+                        }
                         return (
-                          <p key={idx} className="text-sm md:text-base italic text-ink/80 font-serif">
+                          <p key={idx} className="whitespace-pre-wrap">
                             {paragraph}
                           </p>
                         );
-                      }
-                      return (
-                        <p key={idx} className="whitespace-pre-wrap">
-                          {paragraph}
-                        </p>
-                      );
-                    })}
+                      })}
+                    </div>
                   </div>
                 </div>
               </div>
               {image && (
-                <div className="md:col-span-2">
-                  <div
-                    className="w-full aspect-video border-4 border-ink grid place-items-center overflow-hidden shrink-0"
-                    style={{ backgroundColor: color }}
-                  >
-                    <img src={image} alt={title} className="w-full h-full object-cover" />
+                <div className="md:col-span-2 flex flex-col">
+                  <div className="my-auto w-full">
+                    <div
+                      className="w-full aspect-video border-4 border-ink grid place-items-center overflow-hidden shrink-0"
+                      style={{ backgroundColor: color }}
+                    >
+                      <img src={image} alt={title} className="w-full h-full object-cover" />
+                    </div>
                   </div>
                 </div>
               )}

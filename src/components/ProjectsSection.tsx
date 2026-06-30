@@ -74,7 +74,7 @@ export function ProjectsSection() {
           open={!!openProj}
           onClose={() => setOpenId(null)}
           title={openProj.title}
-          meta={`${openProj.date} · PROJECT`}
+          meta={`${openProj.date} · ${openProj.title.toUpperCase()}`}
           color={openProj.color}
           description={openProj.fullDescription}
           image={openProj.image}

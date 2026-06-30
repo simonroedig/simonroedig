@@ -12,6 +12,7 @@ const calculateAge = (birthDate: Date) => {
 
 export function HeroSection() {
   const age = calculateAge(new Date('1999-06-25'));
+  const showArchetypeBlock = false; // Toggle this to true to show the block again
 
   return (
     <section className="snap-start h-[100svh] w-full relative flex flex-col border-b-4 border-ink p-4 sm:p-6 md:p-10 gap-3 sm:gap-8 overflow-hidden">
@@ -50,10 +51,17 @@ export function HeroSection() {
                   prototype, and integrate AI where it actually serves the user.
                 </p>
                 
-                <div className="border-2 border-ink bg-ink text-paper px-3 py-2 md:px-4 md:py-3 brutal-shadow-sm font-mono text-[10px] sm:text-xs uppercase shrink-0 flex flex-col justify-center w-fit transform rotate-1 hover:rotate-0 transition-transform">
-                  <span className="font-bold tracking-widest text-paper/70 mb-0.5 md:mb-1">Notable</span>
-                  <span className="tracking-tighter font-extrabold text-xs md:text-sm whitespace-nowrap text-paper">Patent · BSH</span>
-                </div>
+                {showArchetypeBlock && (
+                  <div className="group border-2 border-ink bg-ink text-paper px-3 py-2 md:px-4 md:py-3 shadow-[4px_4px_0px_0px_var(--color-accent)] font-mono text-[10px] sm:text-xs uppercase shrink-0 flex flex-col justify-center w-fit transform rotate-1 hover:-rotate-1 transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_var(--color-accent)] cursor-default">
+                    <span className="font-bold tracking-widest text-paper/70 mb-0.5 md:mb-1 flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse shadow-[0_0_8px_var(--color-accent)]"></span>
+                      Archetype
+                    </span>
+                    <span className="tracking-tighter font-extrabold text-xs md:text-sm whitespace-nowrap text-paper group-hover:text-accent transition-colors">
+                      Design Engineer
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </div>

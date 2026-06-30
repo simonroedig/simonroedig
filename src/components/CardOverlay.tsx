@@ -57,10 +57,13 @@ export function CardOverlay({ open, onClose, title, meta, color, description, im
           </span>
           <button
             onClick={onClose}
-            className="font-mono text-base md:text-lg font-bold text-ink hover:text-accent transition-colors cursor-pointer"
+            className="group relative flex items-center gap-2 bg-paper border-2 border-ink px-3 md:px-4 py-1 md:py-1.5 font-mono text-xs md:text-sm font-bold uppercase text-ink transition-all duration-200 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-ink)] active:translate-y-0 active:shadow-none cursor-pointer"
             aria-label="Close"
           >
-            CLOSE [✕]
+            <span>Close</span>
+            <span className="inline-block transition-transform duration-300 ease-out group-hover:rotate-90 group-hover:scale-125">
+              ✕
+            </span>
           </button>
         </div>
 
@@ -99,7 +102,7 @@ export function CardOverlay({ open, onClose, title, meta, color, description, im
                    }
                    if (block.type === 'link' || block.type === 'pdf') {
                      return (
-                       <a key={idx} href={block.url} target="_blank" rel="noopener noreferrer" className="mx-auto inline-block px-4 py-2 bg-ink text-paper font-mono text-sm md:text-base font-bold uppercase tracking-wider hover:bg-paper hover:text-ink transition-colors border-2 border-transparent hover:border-ink">
+                       <a key={idx} href={block.url} target="_blank" rel="noopener noreferrer" className="mx-auto inline-block px-4 py-2 bg-ink text-paper font-mono text-sm md:text-base font-bold uppercase tracking-wider transition-all duration-200 border-2 border-transparent hover:border-ink hover:bg-paper hover:text-ink hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-ink)] active:translate-y-0 active:shadow-none">
                          {block.text || block.url}
                        </a>
                      );

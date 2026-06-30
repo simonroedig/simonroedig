@@ -23,7 +23,6 @@ import ocWebRedesign from "@/assets/projects/opencards/website/redesign.jpg";
 
 import ocMeetPortf from "@/assets/projects/opencards/meet/portf.jpg";
 import ocQuarto from "@/assets/projects/opencards/quarto/quarto.jpg";
-import ocMusicGuitar from "@/assets/projects/opencards/music/meguitar.jpg";
 import ocChromeScreen from "@/assets/projects/opencards/chrome/screenshot.jpg";
 import ocShowerStory from "@/assets/projects/opencards/shower/storyboard.jpg";
 import ocConnDemo from "@/assets/projects/opencards/connect/demo.gif";
@@ -84,7 +83,7 @@ export const projects: Project[] = [
       { type: "text", content: "Music streaming services such as Spotify have made access to music nearly effortless. While this convenience enhances efficiency and availability, it also contributes to an overwhelming abundance of content. As a result, music consumption often becomes passive, and the perceived value of listening diminishes.\n\nIn contrast, analog media like vinyl records and CDs encouraged a more intentional and ritualized experience. The physical act of selecting, handling, and playing music created a deeper sense of engagement." },
       { type: "image", src: ocAnodi3, noBorder: true, size: "xsmall" },
       { type: "text", content: "Anodi is a conceptual response to this shift. It reimagines the record player by combining the accessibility of digital streaming with the tactile qualities of analog interaction. Originally developed as part of a potential master’s thesis idea, the project now exists as a design exploration and visualization.\n\nThe concept envisions a record player where the traditional vinyl is replaced by a digital interface. At its center is a touchscreen, either circular and physically rotating, or rectangular with a circular display that simulates rotation. Through this interface, users can access streaming services such as Spotify or Tidal, presented in a deliberately reduced and curated UI. Music is organized strictly in albums, echoing the structure of physical formats and encouraging more intentional listening." },
-      { type: "image", src: ocAnodi4, noBorder: true, size: "xsmall"},
+      { type: "image", src: ocAnodi4, noBorder: true, size: "xsmall" },
       { type: "text", content: "A defining feature of Anodi is its physical tonearm. To begin playback, the user must manually move and place the tonearm onto the digital surface. This interaction triggers the rotation of the interface, visualizes contact through subtle feedback, and initiates playback, mirroring the ritual of a traditional record player.\n\nThe goal of Anodi is to reintroduce meaningful friction into the listening experience. By slowing down interaction and emphasizing physical engagement, the concept aims to transform music consumption from a passive activity into a more conscious and valued ritual, while still leveraging the convenience of modern streaming technologies." },
       { type: "image", src: ocAnodi2 }
 

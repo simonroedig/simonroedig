@@ -18,10 +18,10 @@ export function HeroSection() {
       {/* Top bar */}
       <div className="flex justify-center md:justify-end items-start shrink-0 w-full mb-2">
         <div className="flex flex-wrap justify-center gap-1 md:gap-3 font-mono text-[11px] md:text-sm uppercase font-bold items-center">
-          <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer" className="px-2 md:px-3 py-1.5 md:py-2 border-2 border-transparent hover:border-ink hover:bg-paper transition-all hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-ink)] text-ink">LinkedIn</a>
-          <a href="https://github.com/" target="_blank" rel="noreferrer" className="px-2 md:px-3 py-1.5 md:py-2 border-2 border-transparent hover:border-ink hover:bg-paper transition-all hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-ink)] text-ink">Github</a>
-          <a href="https://youtube.com/" target="_blank" rel="noreferrer" className="px-2 md:px-3 py-1.5 md:py-2 border-2 border-transparent hover:border-ink hover:bg-paper transition-all hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-ink)] text-ink">YouTube</a>
-          <a href="mailto:hello@example.com" className="px-2 md:px-3 py-1.5 md:py-2 border-2 border-ink bg-ink text-paper transition-all hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-accent)]">Email</a>
+          <a href="https://www.linkedin.com/in/simonroedig/" target="_blank" rel="noreferrer" className="px-2 md:px-3 py-1.5 md:py-2 border-2 border-transparent hover:border-ink hover:bg-paper transition-all hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-ink)] text-ink">LinkedIn</a>
+          <a href="https://github.com/simonroedig" target="_blank" rel="noreferrer" className="px-2 md:px-3 py-1.5 md:py-2 border-2 border-transparent hover:border-ink hover:bg-paper transition-all hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-ink)] text-ink">Github</a>
+          <a href="https://www.youtube.com/channel/UCisvFnG8YWMEamSpQ3NiKew" target="_blank" rel="noreferrer" className="px-2 md:px-3 py-1.5 md:py-2 border-2 border-transparent hover:border-ink hover:bg-paper transition-all hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-ink)] text-ink">YouTube</a>
+          <a href="mailto:simonroedig@web.de" className="px-2 md:px-3 py-1.5 md:py-2 border-2 border-ink bg-ink text-paper transition-all hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-accent)]">Email</a>
         </div>
       </div>
 

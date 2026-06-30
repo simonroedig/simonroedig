@@ -12,6 +12,8 @@ export function ExperienceSection() {
     navigate({ search: (prev) => ({ ...prev, experience: id || undefined, project: undefined }) });
   };
 
+  const showCardNumbers = false; // Toggle this to true to show the numbers again
+
   return (
     <section className="md:snap-start min-h-[100svh] md:h-screen w-full flex flex-col bg-paper border-b-4 border-ink overflow-hidden">
       {/* Header */}
@@ -35,7 +37,7 @@ export function ExperienceSection() {
           <button
             key={exp.id}
             onClick={() => setOpenId(exp.id)}
-            className="group text-left shrink-0 w-[260px] sm:w-[300px] md:w-[360px] h-[325px] sm:h-[375px] md:h-[450px] bg-paper border-4 border-ink p-5 md:p-6 flex flex-col justify-between transition-transform duration-200 hover:translate-x-1 hover:translate-y-1 hover:shadow-none cursor-pointer"
+            className="group relative text-left shrink-0 w-[260px] sm:w-[300px] md:w-[360px] h-[325px] sm:h-[375px] md:h-[450px] bg-paper border-4 border-ink p-5 md:p-6 flex flex-col justify-between transition-transform duration-200 hover:translate-x-1 hover:translate-y-1 hover:shadow-none cursor-pointer"
             style={{
               boxShadow: `10px 10px 0px 0px ${exp.color}`,
             }}
@@ -45,12 +47,19 @@ export function ExperienceSection() {
                 <span className="font-mono text-xs md:text-sm font-bold text-ink">
                   {exp.date}
                 </span>
-                <span
-                  className="font-mono text-[10px] uppercase px-2 py-0.5 border-2 border-ink"
-                  style={{ backgroundColor: exp.color, color: "#000" }}
-                >
-                  {String(experiences.length - i).padStart(2, "0")}
-                </span>
+                {exp.id === "bsh" ? (
+                  <div className="bg-accent text-paper px-2 py-0.5 border-2 border-ink font-mono text-[10px] md:text-xs font-bold uppercase flex items-center gap-1.5 shadow-[2px_2px_0px_0px_var(--color-ink)] transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:rotate-2">
+                    <span className="text-[10px] md:text-xs">★</span>
+                    <span>Patent</span>
+                  </div>
+                ) : showCardNumbers ? (
+                  <span
+                    className="font-mono text-[10px] uppercase px-2 py-0.5 border-2 border-ink"
+                    style={{ backgroundColor: exp.color, color: "#000" }}
+                  >
+                    {String(experiences.length - i).padStart(2, "0")}
+                  </span>
+                ) : null}
               </div>
               <h3 className="font-display text-2xl sm:text-3xl md:text-4xl italic leading-[0.95] text-ink mb-1 pb-2 shrink-0 truncate">
                 {exp.company}

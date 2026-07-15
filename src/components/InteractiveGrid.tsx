@@ -94,11 +94,11 @@ export function InteractiveGrid() {
           const centerFade = Math.min(1, Math.pow(dist / clearRadius, 2.5));
           
           // Get darker/thicker but fade out right at the center
-          const alpha = (0.2 + force * 0.6) * centerFade;
+          const alpha = (0.12 + force * 0.35) * centerFade;
           ctx.strokeStyle = `rgba(0, 0, 0, ${alpha})`;
-          ctx.lineWidth = 1 + force * 2;
+          ctx.lineWidth = 1 + force * 1.5;
         } else {
-          ctx.strokeStyle = "rgba(0, 0, 0, 0.2)";
+          ctx.strokeStyle = "rgba(0, 0, 0, 0.12)";
           ctx.lineWidth = 1;
         }
         

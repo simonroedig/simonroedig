@@ -124,6 +124,21 @@ export function CardOverlay({ open, onClose, title, meta, color, description, im
                     </h3>
                     <div className={contentWrapper}>
                       {description.split('\n\n').map((paragraph, idx) => {
+                        if (paragraph.trim() === 'Patent') {
+                          return (
+                            <div key={idx} className="mx-auto inline-flex items-center gap-2 bg-accent text-paper px-4 py-2 border-4 border-ink font-mono text-sm md:text-base font-bold uppercase tracking-wider shadow-[4px_4px_0px_0px_var(--color-ink)]">
+                              <span className="text-sm md:text-base">★</span>
+                              <span>Patent</span>
+                            </div>
+                          );
+                        }
+                        if (paragraph.trim() === 'Patenting Next-Generation Cooktop UI') {
+                          return (
+                            <h4 key={idx} className="font-display text-2xl md:text-3xl italic text-ink leading-tight">
+                              {paragraph}
+                            </h4>
+                          );
+                        }
                         if (paragraph.trim().startsWith('Disclaimer:')) {
                           return (
                             <p key={idx} className="text-sm md:text-base italic text-ink/80 font-serif">

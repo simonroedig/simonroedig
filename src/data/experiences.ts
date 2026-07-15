@@ -35,7 +35,15 @@ Noticing gaps in prototyping practices and issues in colleagues understanding co
 
 In addition, I conducted iterative user studies with participants, gathering insights to refine and validate our concepts based on mentioned prototypes, and I contributed to unifying multi-brand processes by developing shared information structures and component-based design architectures, ensuring consistency and efficiency across teams and products globally.
 
-This role has been an immersive experience, allowing me to experiment with emerging technologies, take ownership of prototyping practices, and shape multi-brand design processes—all while redefining how user experience and AI-driven design intersect in next-generation home appliances.`
+This role has been an immersive experience, allowing me to experiment with emerging technologies, take ownership of prototyping practices, and shape multi-brand design processes, all while redefining how user experience and AI-driven design intersect in next-generation home appliances.
+
+Patent
+
+Patenting Next-Generation Cooktop UI
+
+A standout milestone of my time at BSH was co-inventing a novel, patent-pending user interaction and interface concept for induction cooktops (Filed: German Patent Application, pending publication).
+
+As a co-inventor (holding a 22% contribution share), I designed the core logic that makes this technology scalable. Specifically, I developed a mathematical approach to define the optimal number of light indicators required to make this new UI concept adapt to a wide variety of induction cooktop layouts. To validate and refine this logic, I built multiple interactive prototypes. It has been incredibly rewarding to see this systematic approach transition from early code exploration directly into a final, upcoming product line and form the foundation of our patent application.`
   },
   {
     id: "rohde-schwarz",

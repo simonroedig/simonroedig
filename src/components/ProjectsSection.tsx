@@ -61,13 +61,15 @@ export function ProjectsSection() {
 
       {/* Grid (scrollable internally — full grid visible without page scroll on desktop) */}
       <div className="flex-1 overflow-y-auto p-4 md:p-6">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6 pb-6">
-          {filteredProjects.map((p) => (
+        <div key={filter} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6 pb-6">
+          {filteredProjects.map((p, index) => (
             <button
               key={p.id}
               onClick={() => setOpenId(p.id)}
-              className="group text-left aspect-square bg-paper border-4 border-ink p-3 md:p-4 flex flex-col transition-all duration-200 hover:translate-x-1 hover:translate-y-1 hover:shadow-none cursor-pointer relative overflow-hidden"
+              className="group text-left aspect-square bg-paper border-4 border-ink p-3 md:p-4 flex flex-col transition-all duration-200 hover:translate-x-1 hover:translate-y-1 hover:shadow-none cursor-pointer relative overflow-hidden animate-filter-card-in"
               style={{
+                animationDelay: `${Math.min(index, 12) * 35}ms`,
+                animationFillMode: "both",
                 boxShadow: `8px 8px 0px 0px ${p.color}`,
               }}
             >

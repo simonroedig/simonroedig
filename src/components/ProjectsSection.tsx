@@ -42,8 +42,8 @@ export function ProjectsSection() {
       </div>
 
       {/* Filter Bar */}
-      <div className="border-b-4 border-ink px-4 md:px-10 py-3 md:py-4 flex items-center gap-3 md:gap-5 overflow-x-auto styled-scrollbar bg-ink">
-        <span className="font-mono text-[10px] md:text-xs uppercase tracking-widest text-paper/70 font-bold shrink-0 mr-1 md:mr-2">Filter:</span>
+      <div className="border-b-4 border-ink px-4 md:px-10 py-3 md:py-4 flex items-center gap-3 md:gap-5 overflow-x-auto styled-scrollbar bg-[#151515]">
+        <span className="font-mono text-[10px] md:text-xs uppercase tracking-widest text-paper/80 font-bold shrink-0 mr-1 md:mr-2">Filter:</span>
         {(['All', 'Starred', 'Personal', 'University'] as FilterType[]).map(f => (
           <button
             key={f}
@@ -51,7 +51,7 @@ export function ProjectsSection() {
             className={`px-3 py-1.5 md:px-4 md:py-2 border-2 transition-all font-mono text-[10px] md:text-xs uppercase tracking-widest shrink-0 cursor-pointer ${
               filter === f 
                 ? 'bg-transparent border-paper text-paper shadow-[4px_4px_0px_0px_var(--color-paper)] font-bold -translate-y-1' 
-                : 'bg-transparent border-paper/20 text-paper/60 hover:border-paper hover:text-paper hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-paper)] font-medium'
+                : 'bg-transparent border-paper/35 text-paper/85 hover:border-paper hover:text-paper hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-paper)] font-medium'
             }`}
           >
             {f === 'Starred' ? '★ Starred' : f}

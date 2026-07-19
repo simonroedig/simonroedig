@@ -64,7 +64,7 @@ export function ProjectsSection() {
 
       {/* Grid (scrollable internally — full grid visible without page scroll on desktop) */}
       <div className="flex-1 overflow-y-auto p-4 md:p-6">
-        <div key={filter} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6 pb-6">
+        <div key={filter} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 auto-rows-fr gap-4 md:gap-6 pb-6">
           {filteredProjects.map((p, index) => (
             <button
               key={p.id}
@@ -93,7 +93,7 @@ export function ProjectsSection() {
                 <span className="font-mono text-[9px] md:text-[10px] uppercase tracking-widest text-ink/50 font-bold mb-1">
                   {p.date}
                 </span>
-                <h4 className="font-display italic text-lg sm:text-xl md:text-2xl leading-normal pb-1 text-ink line-clamp-2 w-full">
+                <h4 className="font-display italic text-lg sm:text-xl md:text-2xl leading-tight pb-1 text-ink break-words line-clamp-2 w-full">
                   {p.title}
                 </h4>
                 <p className="font-mono text-[9px] md:text-[10px] uppercase tracking-tight leading-snug text-ink/80 line-clamp-2 md:line-clamp-3">

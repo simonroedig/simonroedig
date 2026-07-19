@@ -1,3 +1,4 @@
+import { useState } from "react";
 import simonPortrait from "@/assets/simon.png";
 
 const calculateAge = (birthDate: Date) => {
@@ -13,6 +14,7 @@ const calculateAge = (birthDate: Date) => {
 export function HeroSection() {
   const age = calculateAge(new Date('1999-06-25'));
   const showArchetypeBlock = false; // Toggle this to true to show the block again
+  const [isPortraitTapped, setIsPortraitTapped] = useState(false);
 
   return (
     <section className="snap-start min-h-[100svh] w-full relative flex flex-col border-b-4 border-ink p-4 sm:p-6 md:p-10 gap-3 sm:gap-8 overflow-x-hidden">
@@ -69,8 +71,9 @@ export function HeroSection() {
           {/* Image Section */}
           <div className="lg:col-span-5 flex justify-center lg:justify-end order-1 lg:order-2 animate-brutal-in min-h-0" style={{ animationDelay: '150ms' }}>
             <div 
-              className="relative w-3/4 max-w-[240px] sm:max-w-[320px] lg:w-full lg:max-w-[460px] h-auto lg:h-auto aspect-[4/5] border-2 md:border-4 border-ink bg-ink group user-select-none shrink-0"
+              className="relative w-3/4 max-w-[240px] sm:max-w-[320px] lg:w-full lg:max-w-[460px] h-auto lg:h-auto aspect-[4/5] border-2 md:border-4 border-ink bg-ink group user-select-none shrink-0 cursor-pointer lg:cursor-default"
               style={{ boxShadow: `-8px 8px 0px 0px var(--color-ink)` }}
+              onClick={() => setIsPortraitTapped(prev => !prev)}
             >
               {/* Added a decorative element to make the image area pop */}
               <div className="absolute -inset-2 md:-inset-4 border-2 border-ink -z-10 translate-x-[8px] md:translate-x-[12px] -translate-y-[8px] md:-translate-y-[12px] opacity-20"></div>
@@ -79,12 +82,12 @@ export function HeroSection() {
                 <img
                   src={simonPortrait}
                   alt="Portrait of Simon Rödig"
-                  className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                  className={`w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105 ${isPortraitTapped ? "scale-105" : ""}`}
                 />
                 
                 {/* Conservative age pop-up */}
                 <div 
-                  className="absolute bottom-4 right-4 md:bottom-6 md:right-6 border-2 border-ink bg-paper px-3 py-1.5 md:py-2 flex items-center justify-center opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out z-20 pointer-events-none"
+                  className={`absolute bottom-4 right-4 md:bottom-6 md:right-6 border-2 border-ink bg-paper px-3 py-1.5 md:py-2 flex items-center justify-center transition-all duration-300 ease-out z-20 pointer-events-none ${isPortraitTapped ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0"}`}
                   style={{ boxShadow: `4px 4px 0px 0px var(--color-ink)` }}
                 >
                   <span className="font-mono text-xs md:text-sm font-bold uppercase tracking-widest text-ink whitespace-nowrap">

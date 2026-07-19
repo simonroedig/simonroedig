@@ -41,6 +41,9 @@ export function InteractiveGrid() {
     };
 
     const handleMouseMove = (e: MouseEvent) => {
+      // Ignore simulated mouse events on touch devices
+      if (window.matchMedia("(pointer: coarse)").matches) return;
+
       mouse.x = e.clientX;
       mouse.y = e.clientY;
       

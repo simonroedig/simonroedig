@@ -15,7 +15,7 @@ export function HeroSection() {
   const showArchetypeBlock = false; // Toggle this to true to show the block again
 
   return (
-    <section className="snap-start h-[100svh] w-full relative flex flex-col border-b-4 border-ink p-4 sm:p-6 md:p-10 gap-3 sm:gap-8 overflow-hidden">
+    <section className="snap-start min-h-[100svh] lg:h-[100svh] w-full relative flex flex-col border-b-4 border-ink p-4 sm:p-6 md:p-10 gap-3 sm:gap-8 overflow-x-hidden lg:overflow-hidden">
       
       {/* Top bar */}
       <div className="flex justify-center md:justify-end items-start shrink-0 w-full mb-2 relative z-10">
@@ -47,9 +47,8 @@ export function HeroSection() {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-3 md:gap-6 mt-1 md:mt-2 xl:items-start items-start">
-                <p className="max-w-md text-sm md:text-lg border-l-[4px] md:border-l-[6px] border-ink pl-3 md:pl-4 text-ink font-medium leading-snug md:leading-relaxed">
-                  UX / Product Designer with the toolkit of a developer. I move from concept to working
-                  prototype, and integrate AI where it actually serves the user.
+                <p className="max-w-md text-sm md:text-lg border-l-[4px] md:border-l-[6px] border-accent2 pl-3 md:pl-4 text-ink font-medium leading-snug md:leading-relaxed">
+                  UX / Product Designer with the toolkit of a developer. I turn concepts into working prototypes, using code and AI to accelerate design, validate ideas, and build better products.
                 </p>
                 
                 {showArchetypeBlock && (
@@ -70,7 +69,7 @@ export function HeroSection() {
           {/* Image Section */}
           <div className="lg:col-span-5 flex justify-center lg:justify-end order-1 lg:order-2 animate-brutal-in min-h-0" style={{ animationDelay: '150ms' }}>
             <div 
-              className="relative w-auto h-[28vh] sm:h-[35vh] lg:h-auto lg:w-full lg:max-w-[460px] aspect-[4/5] border-2 md:border-4 border-ink bg-ink group user-select-none shrink-0"
+              className="relative w-3/4 max-w-[240px] sm:max-w-[320px] lg:w-full lg:max-w-[460px] h-auto lg:h-auto aspect-[4/5] border-2 md:border-4 border-ink bg-ink group user-select-none shrink-0"
               style={{ boxShadow: `-8px 8px 0px 0px var(--color-ink)` }}
             >
               {/* Added a decorative element to make the image area pop */}

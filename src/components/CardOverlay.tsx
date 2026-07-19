@@ -67,12 +67,12 @@ export function CardOverlay({ open, onClose, title, meta, color, description, im
           </button>
         </div>
 
-        <div className="flex-1 min-h-0 p-6 md:p-10 grid grid-cols-1 md:grid-cols-5 gap-6 md:gap-10 overflow-y-auto md:overflow-hidden">
+        <div className="flex-1 min-h-0 p-4 sm:p-6 md:p-10 grid grid-cols-1 md:grid-cols-5 gap-4 sm:gap-6 md:gap-10 overflow-y-auto md:overflow-hidden">
           {richContent ? (
              <div className="md:col-span-5 flex flex-col min-h-0">
                <div className="flex-1 md:overflow-y-auto md:pr-6 flex flex-col">
                  <div className="my-auto w-full flex flex-col items-center justify-center py-4">
-                   <h3 className="font-display text-4xl md:text-6xl leading-[0.95] italic text-ink mb-6 shrink-0 text-center w-full">
+                   <h3 className="font-display text-3xl sm:text-4xl md:text-6xl leading-[0.95] italic text-ink mb-6 shrink-0 text-center w-full">
                      {title}
                    </h3>
                    <div className={`${contentWrapper} items-center`}>
@@ -116,10 +116,10 @@ export function CardOverlay({ open, onClose, title, meta, color, description, im
              </div>
           ) : (
             <>
-              <div className={`${image ? "md:col-span-3" : "md:col-span-5"} flex flex-col min-h-0`}>
+              <div className={`${image ? "md:col-span-3 order-2 md:order-1" : "md:col-span-5"} flex flex-col min-h-0`}>
                 <div className="flex-1 md:overflow-y-auto md:pr-6 flex flex-col">
                   <div className="my-auto w-full flex flex-col py-4">
-                    <h3 className="font-display text-4xl md:text-6xl leading-[0.95] italic text-ink mb-6 shrink-0 text-center w-full">
+                    <h3 className="font-display text-3xl sm:text-4xl md:text-6xl leading-[0.95] italic text-ink mb-4 sm:mb-6 shrink-0 text-center w-full">
                       {title}
                     </h3>
                     <div className={contentWrapper}>
@@ -157,7 +157,7 @@ export function CardOverlay({ open, onClose, title, meta, color, description, im
                 </div>
               </div>
               {image && (
-                <div className="md:col-span-2 flex flex-col">
+                <div className="md:col-span-2 flex flex-col order-1 md:order-2 mb-4 md:mb-0">
                   <div className="my-auto w-full">
                     <div
                       className="w-full aspect-video border-4 border-ink grid place-items-center overflow-hidden shrink-0"

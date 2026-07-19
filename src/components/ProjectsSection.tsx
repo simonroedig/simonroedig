@@ -25,7 +25,7 @@ export function ProjectsSection() {
   };
 
   return (
-    <section className="md:snap-start min-h-[100svh] md:h-screen w-full flex flex-col text-ink overflow-hidden">
+    <section className="md:snap-start min-h-[100svh] md:h-screen w-full flex flex-col text-ink overflow-x-hidden lg:overflow-hidden">
       {/* Header */}
       <div className="px-4 md:px-10 py-4 md:py-6 border-b-4 border-ink flex justify-between items-baseline gap-4">
         <div>
@@ -90,7 +90,7 @@ export function ProjectsSection() {
                 <span className="font-mono text-[9px] md:text-[10px] uppercase tracking-widest text-ink/50 font-bold mb-1">
                   {p.date}
                 </span>
-                <h4 className="font-display italic text-xl md:text-2xl leading-[0.95] pb-2 text-ink truncate w-full">
+                <h4 className="font-display italic text-lg sm:text-xl md:text-2xl leading-[0.95] pb-2 text-ink truncate w-full">
                   {p.title}
                 </h4>
                 <p className="font-mono text-[9px] md:text-[10px] uppercase tracking-tight leading-snug text-ink/80 line-clamp-2 md:line-clamp-3">

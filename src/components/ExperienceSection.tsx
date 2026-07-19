@@ -15,7 +15,7 @@ export function ExperienceSection() {
   const showCardNumbers = false; // Toggle this to true to show the numbers again
 
   return (
-    <section className="md:snap-start min-h-[100svh] md:h-screen w-full flex flex-col border-b-4 border-ink overflow-hidden">
+    <section className="md:snap-start min-h-[100svh] md:h-screen w-full flex flex-col border-b-4 border-ink overflow-x-hidden lg:overflow-hidden">
       {/* Header */}
       <div className="px-4 md:px-10 py-4 md:py-6 border-b-4 border-ink flex justify-between items-baseline gap-4">
         <div>
@@ -61,7 +61,7 @@ export function ExperienceSection() {
                   </span>
                 ) : null}
               </div>
-              <h3 className="font-display text-2xl sm:text-3xl md:text-4xl italic leading-[0.95] text-ink pb-3 shrink-0 truncate w-full">
+              <h3 className="font-display text-xl sm:text-3xl md:text-4xl italic leading-[0.95] text-ink pb-3 shrink-0 truncate w-full">
                 {exp.company}
               </h3>
               <p className="font-mono text-[10px] md:text-xs uppercase tracking-tight text-muted-foreground mb-4 md:mb-6 shrink-0">

@@ -19,7 +19,7 @@ import mediaDesignImg from "@/assets/projects/mediadesign.jpg";
 import webDevelopmentImg from "@/assets/projects/webdev.jpg";
 
 // New imports for opencards
-import ocWebRedesign from "@/assets/projects/opencards/website/redesign.jpg";
+import ocWebRedesign from "@/assets/projects/opencards/website/redesign.png";
 
 import ocMeetPortf from "@/assets/projects/opencards/meet/portf.jpg";
 import ocQuarto from "@/assets/projects/opencards/quarto/quarto.jpg";

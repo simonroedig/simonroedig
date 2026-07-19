@@ -17,7 +17,7 @@ export function HeroSection() {
   const [isPortraitTapped, setIsPortraitTapped] = useState(false);
 
   return (
-    <section className="snap-start min-h-[100svh] w-full relative flex flex-col border-b-4 border-ink p-4 sm:p-6 md:p-10 gap-3 sm:gap-8 overflow-x-hidden">
+    <section className="snap-start min-h-[100svh] lg:h-[100svh] w-full relative flex flex-col border-b-4 border-ink p-4 sm:p-6 md:p-10 gap-3 sm:gap-8 overflow-x-hidden lg:overflow-hidden">
       
       {/* Top bar */}
       <div className="flex justify-center md:justify-end items-start shrink-0 w-full mb-2 relative z-10">
@@ -31,25 +31,23 @@ export function HeroSection() {
 
       {/* Main Container */}
       <div className="flex-1 flex flex-col justify-center w-full max-w-6xl mx-auto py-2 lg:py-0 relative z-10 min-h-0">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-16 items-center h-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 lg:gap-8 items-center h-full">
           
           {/* Text Section */}
-          <div className="lg:col-span-7 flex flex-col gap-3 sm:gap-6 md:gap-10 order-2 lg:order-1 animate-brutal-in shrink-0">
-            <h1 className="font-display text-[clamp(3.5rem,10vw,10rem)] leading-[0.85] italic -tracking-[0.05em] text-ink drop-shadow-sm">
-              Simon
-              <br />
-              Rödig
+          <div className="lg:col-span-7 flex flex-col gap-2 sm:gap-4 md:gap-10 [@media(max-height:950px)]:gap-5 order-2 lg:order-1 animate-brutal-in shrink-0">
+            <h1 className="font-display text-[clamp(2.5rem,min(12vw,16vh),12rem)] leading-[0.85] italic -tracking-[0.05em] text-ink drop-shadow-sm">
+              Simon<span className="sm:hidden"> </span><br className="hidden sm:block" />Rödig
             </h1>
 
-            <div className="flex flex-col gap-3 md:gap-5">
-              <p className="text-[1.35rem] sm:text-3xl lg:text-5xl font-bold tracking-tight text-ink max-w-2xl leading-tight">
+            <div className="flex flex-col gap-2 md:gap-5 [@media(max-height:950px)]:gap-3">
+              <p className="text-[1.2rem] sm:text-3xl lg:text-4xl xl:text-6xl [@media(max-height:950px)]:text-3xl font-bold tracking-tight text-ink max-w-2xl leading-tight">
                 <span className="whitespace-nowrap">Human-Centric Design</span>
                 <br />
                 <span className="text-accent italic font-display bg-ink text-paper px-2 md:px-2 md:py-1 inline-block mt-1.5 md:mt-3 -rotate-1">Accelerated by AI.</span>
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-3 md:gap-6 mt-1 md:mt-2 xl:items-start items-start">
-                <p className="max-w-md text-sm md:text-lg border-l-[4px] md:border-l-[6px] border-accent2 pl-3 md:pl-4 text-ink font-medium leading-snug md:leading-relaxed">
+              <div className="flex flex-col sm:flex-row gap-2 md:gap-6 [@media(max-height:950px)]:gap-4 mt-1 md:mt-2 xl:items-start items-start">
+                <p className="max-w-md text-sm md:text-lg [@media(max-height:950px)]:text-base border-l-[4px] md:border-l-[6px] [@media(max-height:950px)]:border-l-[4px] border-accent2 pl-3 md:pl-4 text-ink font-medium leading-snug md:leading-relaxed">
                   UX / Product Designer with the toolkit of a developer. I turn concepts into working prototypes, using code and AI to accelerate design, validate ideas, and build better products.
                 </p>
                 
@@ -69,9 +67,9 @@ export function HeroSection() {
           </div>
 
           {/* Image Section */}
-          <div className="lg:col-span-5 flex justify-center lg:justify-end order-1 lg:order-2 animate-brutal-in min-h-0" style={{ animationDelay: '150ms' }}>
+          <div className="lg:col-span-5 flex justify-center lg:justify-center order-1 lg:order-2 animate-brutal-in min-h-0" style={{ animationDelay: '150ms' }}>
             <div 
-              className="relative w-3/4 max-w-[240px] sm:max-w-[320px] lg:w-full lg:max-w-[460px] h-auto lg:h-auto aspect-[4/5] border-2 md:border-4 border-ink bg-ink group user-select-none shrink-0 cursor-pointer lg:cursor-default"
+              className="relative w-[55%] max-w-[200px] sm:max-w-[280px] lg:w-full lg:max-w-[min(460px,46vh)] h-auto lg:h-auto aspect-[4/5] border-2 md:border-4 border-ink bg-ink group user-select-none shrink-0 cursor-pointer lg:cursor-default"
               style={{ boxShadow: `-8px 8px 0px 0px var(--color-ink)` }}
               onClick={() => setIsPortraitTapped(prev => !prev)}
             >

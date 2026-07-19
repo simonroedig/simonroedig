@@ -49,7 +49,7 @@ export function CardOverlay({ open, onClose, title, meta, color, description, im
         onClick={(e) => e.stopPropagation()}
       >
         <div
-          className="flex items-center justify-between px-4 md:px-6 py-3 border-b-4 border-ink"
+          className="flex items-center justify-between gap-4 md:gap-8 px-4 md:px-6 py-3 border-b-4 border-ink"
           style={{ backgroundColor: color }}
         >
           <span className="font-mono text-xs md:text-sm font-bold uppercase tracking-widest text-ink">
@@ -57,7 +57,7 @@ export function CardOverlay({ open, onClose, title, meta, color, description, im
           </span>
           <button
             onClick={onClose}
-            className="group relative flex items-center gap-2 bg-paper border-2 border-ink px-3 md:px-4 py-1 md:py-1.5 font-mono text-xs md:text-sm font-bold uppercase text-ink transition-all duration-200 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-ink)] active:translate-y-0 active:shadow-none cursor-pointer"
+            className="group relative flex items-center shrink-0 gap-2 bg-paper border-2 border-ink px-3 md:px-4 py-1 md:py-1.5 font-mono text-xs md:text-sm font-bold uppercase text-ink transition-all duration-200 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-ink)] active:translate-y-0 active:shadow-none cursor-pointer"
             aria-label="Close"
           >
             <span>Close</span>

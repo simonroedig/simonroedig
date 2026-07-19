@@ -40,7 +40,7 @@ export function ExperienceSection() {
           <button
             key={exp.id}
             onClick={() => setOpenId(exp.id)}
-            className="group relative text-left shrink-0 w-[260px] sm:w-[300px] md:w-[360px] h-[325px] sm:h-[375px] md:h-[450px] bg-paper border-4 border-ink p-5 md:p-6 flex flex-col justify-between transition-transform duration-200 hover:translate-x-1 hover:translate-y-1 hover:shadow-none cursor-pointer"
+            className="group relative text-left shrink-0 w-[80vw] sm:w-[300px] md:w-[360px] lg:w-[calc(65vh*0.8)] lg:max-w-[560px] h-[55vh] sm:h-[375px] md:h-[450px] lg:h-[65vh] lg:max-h-[700px] bg-paper border-4 border-ink p-5 md:p-6 flex flex-col justify-between transition-transform duration-200 hover:translate-x-1 hover:translate-y-1 hover:shadow-none cursor-pointer"
             style={{
               boxShadow: `10px 10px 0px 0px ${exp.color}`,
             }}
@@ -71,7 +71,7 @@ export function ExperienceSection() {
                 {exp.role}
               </p>
               <div
-                className="w-full h-32 md:h-40 border-2 border-ink mb-4 overflow-hidden shrink-0"
+                className="w-full flex-1 min-h-[100px] border-2 border-ink mb-4 overflow-hidden shrink-0"
                 style={{ backgroundColor: exp.color }}
               >
                 <img

@@ -21,12 +21,12 @@ export const experiences: Experience[] = [
   {
     id: "bsh",
     company: "B/S/H/",
-    role: "User Interaction & AI Prototyping",
+    role: "User Interaction & AI Prototyping Work-Study",
     date: "09/2024 - 09/2026",
     sortDate: "2025-07",
     color: "#f4724a",
     image: bshImg,
-    shortDescription: "User Interaction & AI Prototyping Work-Study.",
+    shortDescription: "Developed concepts and prototypes for ovens, cooktops, and air fryers.",
     fullDescription: `Disclaimer: Due to contractual obligations with BSH and the public availability of my website, I am unable to disclose specific details regarding the projects I worked on. Therefore, I will only provide a brief and general overview about my time at BSH.
 
 Since September 2024, I have been part of the Interaction team at BSH Group’s Munich headquarters, focusing on ovens and cooktops while collaborating with a global shared services team across other home appliances.
@@ -48,12 +48,12 @@ As a co-inventor (holding a 22% contribution share), I designed the core logic t
   {
     id: "rohde-schwarz",
     company: "Rohde & Schwarz",
-    role: "Full-Stack Software Development",
+    role: "Full-Stack Software Development Work-Study",
     date: "01/2024 - 07/2024",
     sortDate: "2024-09",
     color: "#b5b9bc",
     image: rohdeImg,
-    shortDescription: "Full-Stack Softwaredevelopment Work-Study.",
+    shortDescription: "Developed an internal AI tool for customer communication workflows.",
     fullDescription: `Disclaimer: Due to contractual obligations with Rohde & Schwarz and the public availability of my website, I am unable to disclose specific details regarding the projects I worked on. Therefore, I will only provide a brief and general overview about my time at Rohde & Schwarz.
 
 During my time as a working student at Rohde & Schwarz from January to June 2024, I contributed to key initiatives within the Application Development department. My role focused on full-stack software development for internal tools, leveraging artificial intelligence and large language models to automate business processes and streamline communication workflows between customers and sales.
@@ -65,12 +65,12 @@ Working at Rohde & Schwarz was highly rewarding, allowing me to apply my skills 
   {
     id: "bmw",
     company: "BMW",
-    role: "UX & Prototyping Internship",
+    role: "UX & Prototyping Full-Time Internship",
     date: "05/2023 - 11/2023",
     sortDate: "2023-12",
     color: "#accdef",
     image: bmwImg,
-    shortDescription: "UX & Prototyping Full-Time Internship.",
+    shortDescription: "Developed prototypes and concepts for BMW's Neue Klasse cluster.",
     fullDescription: `Disclaimer: Due to contractual obligations with BMW and the public availability of my website, I am unable to disclose specific details regarding the projects I worked on. Therefore, I will only provide a brief and general overview about my time at BMW.
 
 From May to November 2023, I had the privilege of interning full-time at the BMW Group in Munich, where I was an integral part of the User Interaction and UX/UI Department. My role was pivotal in supporting the team in UX design and prototyping, specifically focusing on developing concepts, enhancing user experiences, and creating high-fidelity prototypes for in-vehicle infotainment systems designed for the eagerly anticipated Neue Klasse 2025 cars.
@@ -87,7 +87,7 @@ I am immensely grateful for the experiences and insights gained during my intern
     sortDate: "2023-03",
     color: "#db5971",
     image: teachingImg,
-    shortDescription: "Some Words About My Experience as a Tutor.",
+    shortDescription: "Mentored students and conducted weekly tutorials in digital media.",
     fullDescription: `Back in school, I was always looking forward to presentations. I enjoyed standing in front of the class and speaking about a subject that interested me. My teacher once told me after a good presentation, "You have the skill. When thoroughly understanding a topic, you are able to teach it and enlighten others." He recommended that I pursue this skill in some way after school.
 
 In my third semester at LMU Munich, after feeling confident with my knowledge in a course that I'd successfully passed the year before, I decided to apply for an Assistant/Tutor position in Digital Media. The content of this course includes digitization, compression techniques with algorithms like Huffman coding or LZW, chroma subsampling, video compression, audio editing, number systems, and web development with HTML, CSS, and JavaScript.
@@ -97,12 +97,12 @@ My tasks were presenting the course content in weekly tutorials as well as creat
   {
     id: "wacker",
     company: "Wacker Polysilicon",
-    role: "Semiconductors & Microchips",
+    role: "Semiconductors & Microchips Work-Study",
     date: "2019 - 2022",
     sortDate: "2022-08",
     color: "#beeba3",
     image: wackerImg,
-    shortDescription: "Recurring Work-Study for Semiconductors and Microchips.",
+    shortDescription: "Supported the manufacturing processes of semiconductors and microchips.",
     fullDescription: `Disclaimer: Due to contractual obligations with Wacker and the public availability of my website, I am unable to disclose specific details regarding the projects I worked on. Therefore, I will only provide a brief and general overview about my time at Wacker.
 
 Between 2019 and 2022, I had the unique opportunity to work at Wacker Chemie AG in Burghausen as part of a Werkstudium program. Over the course of three years, I participated annually for two months full-time in various stages of the polysilicon manufacturing process, specifically focused on the semiconductor and microchip industries.

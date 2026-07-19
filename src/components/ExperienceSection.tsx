@@ -9,7 +9,10 @@ export function ExperienceSection() {
   const openExp = experiences.find((e) => e.id === openId);
 
   const setOpenId = (id: string | null) => {
-    navigate({ search: (prev) => ({ ...prev, experience: id || undefined, project: undefined }) });
+    navigate({ 
+      search: (prev) => ({ ...prev, experience: id || undefined, project: undefined }),
+      resetScroll: false,
+    });
   };
 
   const showCardNumbers = false; // Toggle this to true to show the numbers again

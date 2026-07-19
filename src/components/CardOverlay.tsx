@@ -40,12 +40,12 @@ export function CardOverlay({ open, onClose, title, meta, color, description, im
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 md:p-12 bg-ink/70"
+      className="fixed inset-0 z-50 flex items-center justify-center p-6 sm:p-8 md:p-14 bg-ink/70"
       onClick={onClose}
     >
       <div
-        className="relative w-[95vw] h-[95dvh] max-w-[1600px] flex flex-col bg-paper border-4 border-ink animate-overlay-in overflow-hidden"
-        style={{ boxShadow: `16px 16px 0px 0px ${color}` }}
+        className="relative w-full h-full max-w-[1600px] flex flex-col bg-paper border-4 border-ink animate-overlay-in overflow-hidden shadow-[8px_8px_0px_0px_var(--overlay-color)] md:shadow-[16px_16px_0px_0px_var(--overlay-color)]"
+        style={{ "--overlay-color": color } as React.CSSProperties}
         onClick={(e) => e.stopPropagation()}
       >
         <div

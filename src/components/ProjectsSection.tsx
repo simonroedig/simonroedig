@@ -21,7 +21,10 @@ export function ProjectsSection() {
     .sort((a, b) => new Date(b.sortDate).getTime() - new Date(a.sortDate).getTime());
 
   const setOpenId = (id: string | null) => {
-    navigate({ search: (prev) => ({ ...prev, project: id || undefined, experience: undefined }) });
+    navigate({ 
+      search: (prev) => ({ ...prev, project: id || undefined, experience: undefined }),
+      resetScroll: false,
+    });
   };
 
   return (

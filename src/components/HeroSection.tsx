@@ -15,7 +15,7 @@ export function HeroSection() {
   const showArchetypeBlock = false; // Toggle this to true to show the block again
 
   return (
-    <section className="snap-start min-h-[100svh] lg:h-[100svh] w-full relative flex flex-col border-b-4 border-ink p-4 sm:p-6 md:p-10 gap-3 sm:gap-8 overflow-x-hidden lg:overflow-hidden">
+    <section className="snap-start min-h-[100svh] w-full relative flex flex-col border-b-4 border-ink p-4 sm:p-6 md:p-10 gap-3 sm:gap-8 overflow-x-hidden">
       
       {/* Top bar */}
       <div className="flex justify-center md:justify-end items-start shrink-0 w-full mb-2 relative z-10">

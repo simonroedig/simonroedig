@@ -66,7 +66,7 @@ export function ProjectsSection() {
             <button
               key={p.id}
               onClick={() => setOpenId(p.id)}
-              className="group text-left aspect-square bg-paper border-4 border-ink p-3 md:p-4 flex flex-col transition-all duration-200 hover:translate-x-1 hover:translate-y-1 hover:shadow-none cursor-pointer relative overflow-hidden animate-filter-card-in"
+              className="group text-left h-full bg-paper border-4 border-ink p-3 md:p-4 flex flex-col transition-all duration-200 hover:translate-x-1 hover:translate-y-1 hover:shadow-none cursor-pointer relative overflow-hidden animate-filter-card-in"
               style={{
                 animationDelay: `${Math.min(index, 12) * 35}ms`,
                 animationFillMode: "both",
@@ -90,7 +90,7 @@ export function ProjectsSection() {
                 <span className="font-mono text-[9px] md:text-[10px] uppercase tracking-widest text-ink/50 font-bold mb-1">
                   {p.date}
                 </span>
-                <h4 className="font-display italic text-lg sm:text-xl md:text-2xl leading-[0.95] pb-2 text-ink truncate w-full">
+                <h4 className="font-display italic text-lg sm:text-xl md:text-2xl leading-normal pb-1 text-ink line-clamp-2 w-full">
                   {p.title}
                 </h4>
                 <p className="font-mono text-[9px] md:text-[10px] uppercase tracking-tight leading-snug text-ink/80 line-clamp-2 md:line-clamp-3">

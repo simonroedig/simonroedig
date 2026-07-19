@@ -81,14 +81,6 @@ export function ExperienceSection() {
                 {exp.shortDescription}
               </p>
             </div>
-            <div className="mt-4 pt-3 border-t-2 border-ink flex items-center justify-between shrink-0">
-              <span className="font-mono text-[10px] uppercase tracking-widest text-ink group-hover:text-accent">
-                Open case →
-              </span>
-              <div className="w-6 h-6 border-2 border-ink bg-paper grid place-items-center font-mono text-xs group-hover:bg-accent group-hover:text-accent-foreground transition-colors">
-                +
-              </div>
-            </div>
           </button>
         ))}
         <div className="shrink-0 w-2 md:w-6" />

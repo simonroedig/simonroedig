@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import simonPortrait from "@/assets/simon.png";
+import bgImage from "@/assets/bg.png";
+import fgImage from "@/assets/foreground.png";
 
 const calculateAge = (birthDate: Date) => {
   const today = new Date();
@@ -15,7 +16,7 @@ export function HeroSection() {
   const age = calculateAge(new Date('1999-06-25'));
   const showArchetypeBlock = false; // Toggle this to true to show the block again
   const [isPortraitTapped, setIsPortraitTapped] = useState(false);
-  const [rotation, setRotation] = useState({ x: 0, y: 0 });
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [glare, setGlare] = useState({ x: 50, y: 50 });
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -26,26 +27,23 @@ export function HeroSection() {
     const handleMouseMove = (e: MouseEvent) => {
       if (!cardRef.current) return;
       const rect = cardRef.current.getBoundingClientRect();
-      
+
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
-      
-      const distanceX = e.clientX - centerX;
-      const distanceY = e.clientY - centerY;
-      
-      const maxRotate = 15;
-      const rotateY = (distanceX / window.innerWidth) * maxRotate * 2;
-      const rotateX = -(distanceY / window.innerHeight) * maxRotate * 2;
 
-      setRotation({ x: rotateX, y: rotateY });
-      
+      // Normalize from -1 to 1
+      const normalizedX = (e.clientX - centerX) / (window.innerWidth / 2);
+      const normalizedY = (e.clientY - centerY) / (window.innerHeight / 2);
+
+      setMousePos({ x: normalizedX, y: normalizedY });
+
       const glareX = ((e.clientX - rect.left) / rect.width) * 100;
       const glareY = ((e.clientY - rect.top) / rect.height) * 100;
       setGlare({ x: Math.max(-20, Math.min(120, glareX)), y: Math.max(-20, Math.min(120, glareY)) });
     };
 
     const handleMouseLeave = () => {
-      setRotation({ x: 0, y: 0 });
+      setMousePos({ x: 0, y: 0 });
       setGlare({ x: 50, y: 50 });
     };
 
@@ -101,10 +99,10 @@ export function HeroSection() {
       {/* Main Container */}
       <div className="flex-1 flex flex-col justify-center w-full max-w-6xl mx-auto py-2 lg:py-0 relative z-10 min-h-0">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 lg:gap-8 items-center h-full">
-          
+
           {/* Text Section */}
           <div className="lg:col-span-7 flex flex-col gap-2 sm:gap-4 md:gap-10 [@media(max-height:950px)]:gap-5 order-2 lg:order-1 shrink-0">
-            <h1 
+            <h1
               className="font-display text-[clamp(2.5rem,min(12vw,16vh),12rem)] leading-[0.85] italic -tracking-[0.05em] text-ink drop-shadow-sm animate-hero-title"
               style={{ animationDelay: '100ms' }}
             >
@@ -115,22 +113,22 @@ export function HeroSection() {
               <p className="text-[1.2rem] sm:text-3xl lg:text-4xl xl:text-6xl [@media(max-height:950px)]:text-3xl font-bold tracking-tight text-ink max-w-2xl leading-tight">
                 <span className="whitespace-nowrap inline-block animate-hero-title" style={{ animationDelay: '300ms' }}>Human-Centric Design</span>
                 <br />
-                <span 
-                  className="text-accent italic font-display bg-ink text-paper px-2 md:px-2 md:py-1 inline-block mt-1.5 md:mt-3 origin-center animate-hero-badge" 
+                <span
+                  className="text-accent italic font-display bg-ink text-paper px-2 md:px-2 md:py-1 inline-block mt-1.5 md:mt-3 origin-center animate-hero-badge"
                   style={{ animationDelay: '600ms' }}
                 >
                   Accelerated by AI.
                 </span>
               </p>
-              
+
               <div className="flex flex-col sm:flex-row gap-2 md:gap-6 [@media(max-height:950px)]:gap-4 mt-1 md:mt-2 xl:items-start items-start">
-                <p 
+                <p
                   className="max-w-md text-sm md:text-lg [@media(max-height:950px)]:text-base border-l-[4px] md:border-l-[6px] [@media(max-height:950px)]:border-l-[4px] border-accent2 pl-3 md:pl-4 text-ink font-medium leading-snug md:leading-relaxed animate-hero-wipe"
                   style={{ animationDelay: '900ms' }}
                 >
                   UX / Product Designer with the toolkit of a developer. I turn concepts into working prototypes, using code and AI to accelerate design, validate ideas, and build better products.
                 </p>
-                
+
                 {showArchetypeBlock && (
                   <div className="group border-2 border-ink bg-ink text-paper px-3 py-2 md:px-4 md:py-3 shadow-[4px_4px_0px_0px_var(--color-accent)] font-mono text-[10px] sm:text-xs uppercase shrink-0 flex flex-col justify-center w-fit transform rotate-1 hover:-rotate-1 transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_var(--color-accent)] cursor-default">
                     <span className="font-bold tracking-widest text-paper/70 mb-0.5 md:mb-1 flex items-center gap-2">
@@ -147,36 +145,49 @@ export function HeroSection() {
           </div>
 
           {/* Image Section */}
-          <div 
-            className="lg:col-span-5 flex justify-center lg:justify-center order-1 lg:order-2 animate-brutal-in min-h-0" 
-            style={{ animationDelay: '150ms', perspective: '1000px' }}
+          <div
+            className="lg:col-span-5 flex justify-center lg:justify-center order-1 lg:order-2 animate-brutal-in min-h-0"
+            style={{ animationDelay: '150ms' }}
           >
-            <div 
+            <div
               ref={cardRef}
-              className="relative w-[55%] max-w-[200px] sm:max-w-[280px] lg:w-full lg:max-w-[min(460px,46vh)] h-auto lg:h-auto aspect-[4/5] border-2 md:border-4 border-ink bg-ink group user-select-none shrink-0 cursor-pointer lg:cursor-default transition-transform duration-200 ease-out"
-              style={{ 
+              className="relative w-[55%] max-w-[200px] sm:max-w-[280px] lg:w-full lg:max-w-[min(460px,46vh)] h-auto lg:h-auto aspect-[4/5] border-2 md:border-4 border-ink bg-ink group user-select-none shrink-0 cursor-pointer lg:cursor-default"
+              style={{
                 boxShadow: `-8px 8px 0px 0px var(--color-ink)`,
-                transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
-                transformStyle: 'preserve-3d'
               }}
               onClick={() => setIsPortraitTapped(prev => !prev)}
             >
               {/* Added a decorative element to make the image area pop */}
-              <div 
-                className="absolute -inset-2 md:-inset-4 border-2 border-ink -z-10 translate-x-[8px] md:translate-x-[12px] -translate-y-[8px] md:-translate-y-[12px] opacity-20 transition-transform duration-200"
-                style={{ transform: 'translateZ(-30px)' }}
+              <div
+                className="absolute -inset-2 md:-inset-4 border-2 border-ink -z-10 translate-x-[8px] md:translate-x-[12px] -translate-y-[8px] md:-translate-y-[12px] opacity-20"
               ></div>
-              
+
               <div className="relative w-full h-full overflow-hidden">
+                {/* Background Layer */}
                 <img
-                  src={simonPortrait}
-                  alt="Portrait of Simon Rödig"
-                  className={`w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105 ${isPortraitTapped ? "scale-105" : ""}`}
+                  src={bgImage}
+                  alt="Background"
+                  className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-200 ease-out z-0"
+                  style={{
+                    transform: `scale(1.1) translate(${mousePos.x * -8}px, ${mousePos.y * -8}px)`,
+                  }}
                 />
-                
+
+
+
+                {/* Foreground Layer */}
+                <img
+                  src={fgImage}
+                  alt="Portrait of Simon Rödig"
+                  className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-200 ease-out z-20"
+                  style={{
+                    transform: `scale(1.05) translate(${mousePos.x * 12}px, ${mousePos.y * 12}px)`,
+                  }}
+                />
+
                 {/* 3D Glare */}
-                <div 
-                  className="absolute inset-0 pointer-events-none hidden lg:block transition-all duration-200"
+                <div
+                  className="absolute inset-0 pointer-events-none hidden lg:block transition-all duration-200 z-30"
                   style={{
                     background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 60%)`,
                     mixBlendMode: 'overlay'
@@ -184,11 +195,10 @@ export function HeroSection() {
                 />
 
                 {/* Conservative age pop-up */}
-                <div 
-                  className={`absolute bottom-4 right-4 md:bottom-6 md:right-6 border-2 border-ink bg-paper px-3 py-1.5 md:py-2 flex items-center justify-center transition-all duration-300 ease-out z-20 pointer-events-none ${isPortraitTapped ? "opacity-100 translate-y-0" : "opacity-0 group-hover:opacity-100"}`}
-                  style={{ 
+                <div
+                  className={`absolute bottom-4 right-4 md:bottom-6 md:right-6 border-2 border-ink bg-paper px-3 py-1.5 md:py-2 flex items-center justify-center transition-all duration-300 ease-out z-40 pointer-events-none scale-[0.8] origin-bottom-right ${isPortraitTapped ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0"}`}
+                  style={{
                     boxShadow: `4px 4px 0px 0px var(--color-ink)`,
-                    transform: `translateZ(40px) ${isPortraitTapped ? 'translateY(0)' : 'translateY(16px)'}`
                   }}
                 >
                   <span className="font-mono text-xs md:text-sm font-bold uppercase tracking-widest text-ink whitespace-nowrap">
@@ -198,7 +208,7 @@ export function HeroSection() {
               </div>
             </div>
           </div>
-          
+
         </div>
       </div>
 

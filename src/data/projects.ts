@@ -17,6 +17,7 @@ import quartoImg from "@/assets/projects/quarto.jpg";
 import meetImg from "@/assets/projects/meet.jpg";
 import mediaDesignImg from "@/assets/projects/mediadesign.jpg";
 import webDevelopmentImg from "@/assets/projects/webdev.jpg";
+import sonoAdaptImg from "@/assets/projects/sonoadapt.jpg";
 
 // New imports for opencards
 import ocWebRedesign from "@/assets/projects/opencards/website/redesign.png";
@@ -49,6 +50,13 @@ import ocAnodi2 from "@/assets/projects/opencards/anodi/anodi2.png";
 import ocAnodi3 from "@/assets/projects/opencards/anodi/anodi3.png";
 import ocAnodi4 from "@/assets/projects/opencards/anodi/anodi4.png";
 
+import ocSonoAdapt from "@/assets/projects/opencards/sonoadapt/sonoadapt.jpg";
+import ocSonoAdaptApp from "@/assets/projects/opencards/sonoadapt/app.png";
+import ocSonoAdaptFlowchart from "@/assets/projects/opencards/sonoadapt/flowchart.png";
+import ocSonoAdaptVideos from "@/assets/projects/opencards/sonoadapt/videos.png";
+import ocSonoAdaptFormative from "@/assets/projects/opencards/sonoadapt/formative_main_effects.png";
+import ocSonoAdaptSummative from "@/assets/projects/opencards/sonoadapt/summative_main_effects.png";
+
 export type RichContentBlock =
   | { type: "text"; content: string }
   | { type: "image"; src: string; alt?: string; noBorder?: boolean; size?: "xxsmall" | "xsmall" | "small" | "large" | "xlarge" }
@@ -71,6 +79,36 @@ export type Project = {
 };
 
 export const projects: Project[] = [
+  {
+    id: "sonoadapt",
+    category: "University",
+    isStarred: true,
+    title: "SonoAdapt",
+    date: "09/2026",
+    sortDate: "2026-09",
+    color: "#D14F51",
+    image: sonoAdaptImg,
+    shortDescription: "Context-Aware Auditory Notifications on Smart Glasses via Multimodal AI.",
+    fullDescription: "",
+    richContent: [
+      { type: "image", src: ocSonoAdapt },
+      { type: "text", content: "SonoAdapt is my Master Thesis, developed at the Human-Computer Interaction group at LMU Munich. Smart glasses with always-worn personal audio open up the possibility of delivering notifications as spoken messages directly into the wearer's ear, hands-free and without disturbing others. But when should such a device read a message aloud (Speech), signal it with a brief tone (Earcon), or suppress it entirely? And should it deliver immediately or wait for a better moment? The answer depends on the wearer's social setting, ongoing task, the acoustic surroundings, and the notification's urgency and importance. SonoAdapt is an optimization-based system that jointly adapts both the notification type and the delivery timing to the wearer's context." },
+      { type: "text", content: "In a formative online study with 37 participants across nine everyday scenarios, I quantified how social setting, task load, and soundscape shape preferences for notification type and delivery timing. Speech was preferred for urgent/important messages (~73%), yet this preference dropped sharply once social or cognitive constraints were introduced, and rebounded when users gained control over timing. ~89% of participants changed their preferred type across scenarios, confirming that no single static rule can fit all contexts." },
+      { type: "image", src: ocSonoAdaptFormative, noBorder: true },
+      { type: "text", content: "The formative study revealed that social setting drives social acceptability (with the largest effect between alone and interactive settings), task load drives perceived disruption (specifically mental engagement, not physical activity), and the soundscape drives detectability. Together, social acceptability and disruption explain 97.8% of what makes a notification feel appropriate." },
+      { type: "text", content: "Building on these findings, I designed and implemented SonoAdapt, a system that perceives the wearer's visual and acoustic surroundings via a Vision-Language Model (VLM), anticipates how the situation will evolve via a Large Language Model (LLM), and selects the notification type and delivery time that maximise a calibrated utility function, weighing the benefit of delivery against the cost of interruption." },
+      { type: "image", src: ocSonoAdaptFlowchart },
+      { type: "text", content: "The pipeline runs four stages in a continuous loop. Perception captures camera frames and audio from the glasses and queries a VLM to build a structured scene description. An Episodic Memory maintains context across perception cycles. When a notification arrives, an Anticipation step forecasts how the scene will unfold over the next moments. Finally, an Optimization step calculates utility scores, calibrated from the formative study data, for each candidate action and picks the best one. A Re-Planning loop re-evaluates deferred notifications as the scene changes." },
+      { type: "image", src: ocSonoAdaptVideos },
+      { type: "text", content: "An ablation study over 18 egocentric videos (covering all combinations of social setting, task load, and soundscape) and 324 matched trials validated the architecture. The full pipeline significantly outperformed both a naive single-LLM-call approach and random selection, correctly choosing the intended notification type in 98.1% of trials. A comparison against independent human raters confirmed that the model's decisions are statistically indistinguishable from those of individual human judges." },
+      { type: "image", src: ocSonoAdaptApp },
+      { type: "text", content: "SonoAdapt was implemented as a native Android (Kotlin) application interfacing with Ray-Ban Meta Smart Glasses via Meta's Device Access Toolkit. The app handles the full system including smart glasses camera and microphone streaming and Bluetooth audio routing to play notifications directly through the glasses' speakers. The screens above show the full flow from glasses connection to AI pipeline execution and final notification decision." },
+      { type: "image", src: ocSonoAdaptSummative, noBorder: true },
+      { type: "text", content: "In an in-person summative study with 23 participants, SonoAdapt was rated significantly more appropriate, more socially acceptable, and less disruptive than static always-Earcon and always-Speech baselines. 100% of participants preferred the adaptive system when asked directly. The key insight: static delivery is fundamentally flawed because it cannot accommodate the constant variation in both everyday contexts and message importance." },
+      { type: "link", url: "https://lauraschuetz.github.io/", text: "Supervisor: Dr. Laura Schütz" },
+      { type: "link", url: "https://github.com/simonroedig", text: "➜ Github (Coming Soon)" }
+    ]
+  },
   {
     id: "anodi",
     category: "Personal",

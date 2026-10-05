@@ -106,7 +106,7 @@ export const projects: Project[] = [
       { type: "image", src: ocSonoAdaptSummative, noBorder: true },
       { type: "text", content: "In an in-person summative study with 23 participants, SonoAdapt was rated significantly more appropriate, more socially acceptable, and less disruptive than static always-Earcon and always-Speech baselines. 100% of participants preferred the adaptive system when asked directly. The key insight: static delivery is fundamentally flawed because it cannot accommodate the constant variation in both everyday contexts and message importance." },
       { type: "link", url: "https://lauraschuetz.github.io/", text: "Supervisor: Dr. Laura Schütz" },
-      { type: "link", url: "https://github.com/simonroedig", text: "➜ Github (Coming Soon)" }
+      { type: "link", url: "https://github.com/simonroedig/SonoAdapt", text: "➜ Github" }
     ]
   },
   {

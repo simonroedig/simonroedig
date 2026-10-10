@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import type { RichContentBlock } from "@/data/projects";
+import { thock } from "@/lib/sound";
+import { IconClose } from "./icons";
 
 const contentWrapper =
-  "mx-auto w-full max-w-4xl flex flex-col gap-8 text-center text-base md:text-lg leading-relaxed text-ink-soft text-pretty";
+  "mx-auto w-full max-w-4xl flex flex-col gap-8 text-center text-base md:text-lg font-medium leading-relaxed text-ink-soft text-pretty";
 
 const imageSizeClasses = {
   xxsmall: "max-w-[12rem]",
@@ -24,7 +26,10 @@ type Props = {
 };
 
 const linkClass =
-  "neu-key mx-auto inline-flex items-center gap-2 rounded-full px-5 py-3 font-mono text-xs md:text-sm font-bold uppercase tracking-[0.12em] text-ink hover:text-accent-ink";
+  "key mx-auto inline-flex h-12 items-center gap-2 rounded-[1rem] px-6 text-sm font-bold text-ink md:h-14 md:text-base";
+
+const frame =
+  "press-sm mx-auto w-full rounded-[1.6rem] bg-[linear-gradient(150deg,var(--surface-lo),var(--surface))] p-2 md:rounded-[2rem] md:p-3";
 
 export function CardOverlay({
   open,
@@ -59,53 +64,41 @@ export function CardOverlay({
       aria-modal="true"
       aria-label={title}
     >
-      <div className="absolute inset-0 bg-[color-mix(in_srgb,var(--surface)_72%,transparent)] backdrop-blur-xl animate-backdrop-in" />
+      <div className="absolute inset-0 bg-[color-mix(in_srgb,var(--page)_82%,transparent)] backdrop-blur-xl animate-backdrop-in" />
 
       <div
-        className="relative flex h-full w-full max-w-[1500px] flex-col overflow-hidden rounded-[2rem] bg-surface neu-raised-lg animate-overlay-in md:rounded-[2.75rem]"
-        style={{ "--led": color } as React.CSSProperties}
+        className="surface raise-lg relative flex h-full w-full max-w-[1500px] flex-col overflow-hidden rounded-[2rem] animate-overlay-in md:rounded-[2.75rem]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between gap-4 px-3 pt-3 pb-3 md:gap-8 md:px-6 md:pt-5 md:pb-4">
-          <div className="flex min-w-0 items-center gap-3 rounded-2xl bg-lcd px-4 py-2.5 neu-inset-sm md:px-5">
-            <span className="led led-color" aria-hidden="true" />
-            <span className="truncate font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-ink-soft md:text-xs">
+          <div className="lcd flex min-w-0 items-center rounded-[1rem] px-4 py-2.5 md:px-5">
+            <span className="truncate text-[11px] font-extrabold uppercase tracking-[0.14em] md:text-xs">
               {meta}
             </span>
           </div>
           <button
-            onClick={onClose}
-            className="neu-key group flex shrink-0 items-center gap-2.5 rounded-full py-2 pr-2 pl-4 font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-ink-soft hover:text-ink cursor-pointer md:py-2.5 md:pr-2.5 md:pl-5 md:text-xs"
+            onClick={() => {
+              thock();
+              onClose();
+            }}
+            className="key group flex h-11 w-11 shrink-0 items-center justify-center rounded-[0.95rem] text-ink-soft hover:text-ink cursor-pointer md:h-12 md:w-12"
             aria-label="Close"
           >
-            <span className="hidden sm:inline">Close</span>
-            <span className="flex h-7 w-7 items-center justify-center rounded-full neu-inset-xs transition-colors group-hover:text-accent-ink md:h-8 md:w-8">
-              <svg
-                width="10"
-                height="10"
-                viewBox="0 0 10 10"
-                className="transition-transform duration-500 ease-[var(--ease-soft)] group-hover:rotate-90"
-                aria-hidden="true"
-              >
-                <path
-                  d="M1 1l8 8M9 1L1 9"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </span>
+            <IconClose
+              size={18}
+              className="transition-transform duration-500 ease-[var(--ease-spring)] group-hover:rotate-90"
+            />
           </button>
         </div>
-        <div className="groove mx-5 shrink-0 md:mx-8" />
+        <div className="mx-5 h-px shrink-0 bg-[var(--sd-soft)] shadow-[0_1px_0_var(--hl)] md:mx-8" />
 
         <div className="grid min-h-0 flex-1 grid-cols-1 gap-4 overflow-y-auto p-5 styled-scrollbar sm:gap-6 sm:p-7 md:grid-cols-5 md:gap-10 md:overflow-hidden md:p-10">
           {richContent ? (
             <div className="flex min-h-0 flex-col md:col-span-5">
               <div className="flex flex-1 flex-col styled-scrollbar md:overflow-y-auto md:px-4">
                 <div className="my-auto flex w-full flex-col items-center justify-center py-4">
-                  <h3 className="mb-8 w-full shrink-0 text-center font-display text-4xl font-bold leading-[0.95] tracking-[-0.045em] text-ink sm:text-5xl md:text-7xl">
+                  <h3 className="mb-8 w-full shrink-0 text-center font-display text-4xl font-extrabold leading-[0.95] tracking-[-0.05em] text-ink-strong sm:text-5xl md:text-7xl">
                     {title}
                   </h3>
                   <div className={`${contentWrapper} items-center`}>
@@ -131,26 +124,20 @@ export function CardOverlay({
                           );
                         }
                         return (
-                          <div
-                            key={idx}
-                            className={`mx-auto w-full ${sizeClass} rounded-[1.5rem] p-2 neu-inset-sm md:rounded-[1.9rem] md:p-3`}
-                          >
+                          <div key={idx} className={`${frame} ${sizeClass}`}>
                             <img
                               src={block.src}
                               alt={block.alt || title}
                               loading="lazy"
-                              className="h-auto w-full rounded-[1.05rem] object-cover md:rounded-[1.3rem]"
+                              className="h-auto w-full rounded-[1.1rem] object-cover md:rounded-[1.4rem]"
                             />
                           </div>
                         );
                       }
                       if (block.type === "video") {
                         return (
-                          <div
-                            key={idx}
-                            className="mx-auto w-full max-w-4xl shrink-0 rounded-[1.5rem] p-2 neu-inset-sm md:rounded-[1.9rem] md:p-3"
-                          >
-                            <div className="aspect-video w-full overflow-hidden rounded-[1.05rem] md:rounded-[1.3rem]">
+                          <div key={idx} className={`${frame} max-w-4xl shrink-0`}>
+                            <div className="aspect-video w-full overflow-hidden rounded-[1.1rem] md:rounded-[1.4rem]">
                               <iframe
                                 width="100%"
                                 height="100%"
@@ -190,7 +177,7 @@ export function CardOverlay({
               >
                 <div className="flex flex-1 flex-col styled-scrollbar md:overflow-y-auto md:px-4">
                   <div className="my-auto flex w-full flex-col py-4">
-                    <h3 className="mb-6 w-full shrink-0 text-center font-display text-4xl font-bold leading-[0.95] tracking-[-0.045em] text-ink sm:mb-8 sm:text-5xl md:text-7xl">
+                    <h3 className="mb-6 w-full shrink-0 text-center font-display text-4xl font-extrabold leading-[0.95] tracking-[-0.05em] text-ink-strong sm:mb-8 sm:text-5xl md:text-7xl">
                       {title}
                     </h3>
                     <div className={contentWrapper}>
@@ -199,11 +186,9 @@ export function CardOverlay({
                           return (
                             <div
                               key={idx}
-                              className="mx-auto inline-flex items-center gap-2.5 rounded-full px-5 py-2.5 font-mono text-sm font-bold uppercase tracking-[0.15em] text-accent-ink neu-raised-sm md:text-base"
+                              className="lcd mx-auto inline-flex items-center rounded-full px-6 py-2.5 text-sm font-extrabold uppercase tracking-[0.18em]"
                             >
-                              <span className="led led-on" />
-                              <span aria-hidden="true">★</span>
-                              <span>Patent</span>
+                              Patent
                             </div>
                           );
                         }
@@ -211,7 +196,7 @@ export function CardOverlay({
                           return (
                             <h4
                               key={idx}
-                              className="font-display text-2xl font-bold leading-tight tracking-[-0.03em] text-ink md:text-3xl"
+                              className="font-display text-2xl font-extrabold leading-tight tracking-[-0.035em] text-ink-strong md:text-3xl"
                             >
                               {paragraph}
                             </h4>
@@ -221,7 +206,7 @@ export function CardOverlay({
                           return (
                             <p
                               key={idx}
-                              className="mx-auto rounded-2xl px-5 py-4 text-sm italic text-ink-faint neu-inset-xs md:text-base"
+                              className="tray mx-auto rounded-[1.4rem] px-6 py-4 text-sm italic text-ink-faint md:text-base"
                             >
                               {paragraph}
                             </p>
@@ -239,9 +224,9 @@ export function CardOverlay({
               </div>
               {image && (
                 <div className="order-1 mb-4 flex flex-col md:order-2 md:col-span-2 md:mb-0">
-                  <div className="my-auto w-full rounded-[1.5rem] p-2 neu-inset-sm md:rounded-[1.9rem] md:p-3">
+                  <div className={`${frame} my-auto`}>
                     <div
-                      className="grid aspect-video w-full shrink-0 place-items-center overflow-hidden rounded-[1.05rem] md:rounded-[1.3rem]"
+                      className="grid aspect-video w-full shrink-0 place-items-center overflow-hidden rounded-[1.1rem] md:rounded-[1.4rem]"
                       style={{ backgroundColor: color }}
                     >
                       <img src={image} alt={title} className="h-full w-full object-cover" />

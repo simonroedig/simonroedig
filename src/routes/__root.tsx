@@ -11,20 +11,22 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { InteractiveGrid } from "../components/InteractiveGrid";
 import { CustomCursor } from "../components/CustomCursor";
 import faviconUrl from "../assets/favicon.png";
 
 function NotFoundComponent() {
   return (
     <div className="relative z-[1] flex min-h-screen items-center justify-center px-4">
-      <div className="neu-raised-lg max-w-md rounded-[2.5rem] bg-surface px-8 py-10 text-center">
-        <div className="mx-auto mb-6 flex w-fit items-center gap-2 rounded-full px-4 py-2 font-mono text-[11px] uppercase tracking-[0.25em] text-ink-faint neu-inset-sm">
-          <span className="led led-on animate-led-breathe" />
+      <div className="surface raise-lg max-w-md rounded-[2.75rem] px-8 py-10 text-center">
+        <div className="lcd mx-auto mb-7 w-fit rounded-2xl px-6 py-3 text-5xl font-extrabold tracking-tight">
+          404
+        </div>
+        <div className="mb-2 text-xs font-extrabold uppercase tracking-[0.24em] text-ink-faint">
           No signal
         </div>
-        <h1 className="text-emboss font-display text-8xl font-bold tracking-tight">404</h1>
-        <h2 className="mt-4 font-display text-xl font-semibold text-ink">Page not found</h2>
+        <h2 className="mt-4 font-display text-2xl font-extrabold tracking-tight text-ink-strong">
+          Page not found
+        </h2>
         <p className="mt-2 text-sm text-ink-soft">
           The page you're looking for doesn't exist or has been moved.
         </p>
@@ -32,7 +34,7 @@ function NotFoundComponent() {
           <Link
             to="/"
             search={{ project: undefined, experience: undefined }}
-            className="neu-key inline-flex items-center justify-center rounded-full px-6 py-3 font-mono text-xs font-bold uppercase tracking-widest text-ink"
+            className="key inline-flex h-12 items-center justify-center rounded-2xl px-6 text-sm font-bold text-ink"
           >
             Go home
           </Link>
@@ -51,12 +53,11 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
   return (
     <div className="relative z-[1] flex min-h-screen items-center justify-center px-4">
-      <div className="neu-raised-lg max-w-md rounded-[2.5rem] bg-surface px-8 py-10 text-center">
-        <div className="mx-auto mb-6 flex w-fit items-center gap-2 rounded-full px-4 py-2 font-mono text-[11px] uppercase tracking-[0.25em] text-ink-faint neu-inset-sm">
-          <span className="led led-on animate-led-breathe" />
+      <div className="surface raise-lg max-w-md rounded-[2.75rem] px-8 py-10 text-center">
+        <div className="mb-3 text-xs font-extrabold uppercase tracking-[0.24em] text-ink-faint">
           Interference
         </div>
-        <h1 className="font-display text-2xl font-semibold tracking-tight text-ink">
+        <h1 className="font-display text-2xl font-extrabold tracking-tight text-ink-strong">
           This page didn't load
         </h1>
         <p className="mt-2 text-sm text-ink-soft">
@@ -68,13 +69,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
               router.invalidate();
               reset();
             }}
-            className="neu-key inline-flex items-center justify-center rounded-full px-6 py-3 font-mono text-xs font-bold uppercase tracking-widest text-accent-ink"
+            className="key inline-flex h-12 items-center justify-center rounded-2xl px-6 text-sm font-bold text-ink"
           >
             Try again
           </button>
           <a
             href="/"
-            className="neu-key inline-flex items-center justify-center rounded-full px-6 py-3 font-mono text-xs font-bold uppercase tracking-widest text-ink"
+            className="key inline-flex h-12 items-center justify-center rounded-2xl px-6 text-sm font-bold text-ink"
           >
             Go home
           </a>
@@ -91,7 +92,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "author", content: "Simon Rödig" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "theme-color", content: "#e9e6e0" },
+      { name: "theme-color", content: "#dbe4ee" },
     ],
     links: [
       { rel: "icon", type: "image/png", href: faviconUrl },
@@ -100,7 +101,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap",
       },
     ],
     scripts: [
@@ -122,7 +123,7 @@ function RootShell({ children }: { children: ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body className="bg-surface">
+      <body>
         {children}
         <Scripts />
       </body>
@@ -135,7 +136,6 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <InteractiveGrid />
       {/* <CustomCursor /> */}
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />

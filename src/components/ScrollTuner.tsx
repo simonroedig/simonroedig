@@ -1,29 +1,36 @@
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
+import { thock, tick } from "@/lib/sound";
+import { IconChevronLeft, IconChevronRight } from "./icons";
 
 type Props = {
   target: RefObject<HTMLDivElement | null>;
-  /** How far one arrow press scrolls, in px. Defaults to ~one card. */
-  step?: () => number;
+  /** Width of one card incl. gap, in px. */
+  step: () => number;
 };
 
 /**
- * Horizontal scroll control styled like a radio's tuning slider:
- * a recessed groove with a raised thumb, flanked by two round keys.
+ * Horizontal scroll control styled like an equalizer fader: a recessed
+ * groove with scale marks and a ribbed knob. Clicks once per card.
  */
 export function ScrollTuner({ target, step }: Props) {
   const trackRef = useRef<HTMLDivElement>(null);
-  const [state, setState] = useState({ ratio: 0, size: 1 });
+  const [ratio, setRatio] = useState(0);
+  const [scrollable, setScrollable] = useState(false);
   const drag = useRef<{ startX: number; startScroll: number } | null>(null);
+  const lastIndex = useRef(0);
 
   const update = useCallback(() => {
     const el = target.current;
     if (!el) return;
     const max = el.scrollWidth - el.clientWidth;
-    setState({
-      ratio: max > 0 ? el.scrollLeft / max : 0,
-      size: el.scrollWidth > 0 ? Math.min(1, el.clientWidth / el.scrollWidth) : 1,
-    });
-  }, [target]);
+    setScrollable(max > 4);
+    setRatio(max > 0 ? el.scrollLeft / max : 0);
+    const index = Math.round(el.scrollLeft / step());
+    if (index !== lastIndex.current) {
+      lastIndex.current = index;
+      tick(0.8);
+    }
+  }, [target, step]);
 
   useEffect(() => {
     const el = target.current;
@@ -38,32 +45,33 @@ export function ScrollTuner({ target, step }: Props) {
   }, [target, update]);
 
   const scrollBy = (dir: number) => {
-    const el = target.current;
-    if (!el) return;
-    el.scrollBy({ left: dir * (step ? step() : el.clientWidth * 0.6), behavior: "smooth" });
+    thock();
+    target.current?.scrollBy({ left: dir * step(), behavior: "smooth" });
   };
 
-  const onThumbDown = (e: React.PointerEvent) => {
+  const knobWidth = 56;
+
+  const onKnobDown = (e: React.PointerEvent) => {
     const el = target.current;
     if (!el) return;
     e.stopPropagation();
     drag.current = { startX: e.clientX, startScroll: el.scrollLeft };
-    // let the cards follow the thumb freely; snapping resumes on release
+    // let the cards follow the knob freely; snapping resumes on release
     el.style.scrollSnapType = "none";
     e.currentTarget.setPointerCapture(e.pointerId);
   };
 
-  const onThumbMove = (e: React.PointerEvent) => {
+  const onKnobMove = (e: React.PointerEvent) => {
     const el = target.current;
     const track = trackRef.current;
     if (!drag.current || !el || !track) return;
-    const usable = track.clientWidth * (1 - state.size);
+    const usable = track.clientWidth - knobWidth;
     if (usable <= 0) return;
     const max = el.scrollWidth - el.clientWidth;
     el.scrollLeft = drag.current.startScroll + ((e.clientX - drag.current.startX) / usable) * max;
   };
 
-  const onThumbUp = () => {
+  const onKnobUp = () => {
     drag.current = null;
     if (target.current) target.current.style.scrollSnapType = "";
   };
@@ -73,66 +81,51 @@ export function ScrollTuner({ target, step }: Props) {
     const track = trackRef.current;
     if (!el || !track) return;
     const r = track.getBoundingClientRect();
-    const pos = (e.clientX - r.left) / r.width;
+    const pos = (e.clientX - r.left - knobWidth / 2) / (r.width - knobWidth);
     const max = el.scrollWidth - el.clientWidth;
-    el.scrollTo({
-      left: Math.max(0, Math.min(1, (pos - state.size / 2) / (1 - state.size))) * max,
-      behavior: "smooth",
-    });
+    el.scrollTo({ left: Math.max(0, Math.min(1, pos)) * max, behavior: "smooth" });
   };
 
-  if (state.size >= 0.999) return null;
+  if (!scrollable) return null;
 
   const arrow =
-    "neu-key flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-ink-soft hover:text-ink cursor-pointer md:h-11 md:w-11";
+    "key flex h-11 w-11 shrink-0 items-center justify-center rounded-[0.95rem] text-ink-soft hover:text-ink cursor-pointer md:h-12 md:w-12";
+  const ticks =
+    "pointer-events-none absolute inset-x-[28px] h-2 opacity-45 bg-[repeating-linear-gradient(90deg,var(--ink-faint)_0_1px,transparent_1px_14px)]";
 
   return (
-    <div className="flex items-center gap-4 md:gap-5">
+    <div className="flex items-center gap-4 md:gap-6">
       <button type="button" aria-label="Scroll left" onClick={() => scrollBy(-1)} className={arrow}>
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-          <path
-            d="M8.5 2.5 4 7l4.5 4.5"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <IconChevronLeft size={18} />
       </button>
       <div
         ref={trackRef}
         onPointerDown={onTrackDown}
-        className="relative h-4 flex-1 rounded-full bg-surface neu-inset-sm cursor-pointer"
+        className="relative h-14 flex-1 cursor-pointer"
         aria-hidden="true"
       >
+        <div className={`${ticks} top-0`} />
+        <div className={`${ticks} bottom-0`} />
+        <div className="press-xs absolute inset-x-0 top-1/2 h-[7px] -translate-y-1/2 rounded-full bg-[var(--track-off)]" />
         <div
-          onPointerDown={onThumbDown}
-          onPointerMove={onThumbMove}
-          onPointerUp={onThumbUp}
-          onPointerCancel={onThumbUp}
-          className="absolute top-1/2 flex h-7 -translate-y-1/2 items-center justify-center gap-1 rounded-full neu-convex neu-raised-sm cursor-grab active:cursor-grabbing"
+          onPointerDown={onKnobDown}
+          onPointerMove={onKnobMove}
+          onPointerUp={onKnobUp}
+          onPointerCancel={onKnobUp}
+          className="knob absolute top-1/2 flex h-9 -translate-y-1/2 items-center justify-center gap-[5px] rounded-[0.7rem] cursor-grab active:cursor-grabbing"
           style={{
-            width: `${state.size * 100}%`,
-            minWidth: "3.5rem",
-            left: `calc(${state.ratio} * (100% - max(${state.size * 100}%, 3.5rem)))`,
+            width: knobWidth,
+            left: `calc(${ratio} * (100% - ${knobWidth}px))`,
             touchAction: "none",
           }}
         >
-          <span className="h-3 w-[2px] rounded-full neu-inset-xs" />
-          <span className="led led-on h-1.5! w-1.5!" />
-          <span className="h-3 w-[2px] rounded-full neu-inset-xs" />
+          {[0, 1, 2].map((i) => (
+            <span key={i} className="knob-dent h-3.5 w-[3px] rounded-full" />
+          ))}
         </div>
       </div>
       <button type="button" aria-label="Scroll right" onClick={() => scrollBy(1)} className={arrow}>
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-          <path
-            d="M5.5 2.5 10 7l-4.5 4.5"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <IconChevronRight size={18} />
       </button>
     </div>
   );

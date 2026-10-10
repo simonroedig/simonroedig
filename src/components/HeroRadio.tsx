@@ -1,26 +1,36 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { clack, isSoundEnabled, setSoundEnabled, thock, tick } from "@/lib/sound";
+import { clack, tick } from "@/lib/sound";
 import { useTheme } from "@/hooks/use-theme";
-import {
-  IconBulb,
-  IconCode,
-  IconLayers,
-  IconMoon,
-  IconMute,
-  IconPen,
-  IconSound,
-  IconSun,
-} from "./icons";
+import { DeviceSwitch } from "./DeviceSwitch";
+import { IconSpark } from "./icons";
 
+// The path from idea to product. `ai` is where AI speeds up each stage.
 const STATIONS = [
-  { name: "Concept", caption: "Research, ideation & concepts", Icon: IconBulb },
-  { name: "Design", caption: "Interaction, UX & UI design", Icon: IconPen },
-  { name: "Prototype", caption: "Physical & digital prototypes", Icon: IconLayers },
-  { name: "Code", caption: "Frontend, backend & deployment", Icon: IconCode },
+  {
+    name: "Concept",
+    caption: "Research, ideation & concepts",
+    ai: "Faster research & ideation",
+  },
+  {
+    name: "Prototype",
+    caption: "Physical & digital prototypes",
+    ai: "AI-generated prototypes, tested sooner",
+  },
+  {
+    name: "User Study",
+    caption: "Studies & UX/UI iterations",
+    ai: "Quicker analysis & iterations",
+  },
+  {
+    name: "Product",
+    caption: "Implementation, front- to backend",
+    ai: "AI-assisted engineering",
+  },
 ];
 const LAST = STATIONS.length - 1;
 
-const NAME_STEP = 7.2; // em between station names on the LCD scale
+const NAME_STEP = 9; // em between station names on the LCD scale
+const NAME_SIZE = 1.55; // em, station name font size
 const DEG_PER_STATION = 110; // roller rotation per station
 const DRAG_GAIN = 1.5; // a full swipe across the roller moves ~1.5 stations
 const RIDGES = 46;
@@ -28,7 +38,6 @@ const RIDGE_STEP = 360 / RIDGES;
 
 // Dial geometry, in tenths of an em (SVG viewBox 0 0 240 240)
 const C = 120;
-const TRACK_R = 112;
 const polar = (r: number, deg: number) => {
   const rad = ((deg - 90) * Math.PI) / 180;
   return {
@@ -36,15 +45,6 @@ const polar = (r: number, deg: number) => {
     y: Math.round((C + r * Math.sin(rad)) * 100) / 100,
   };
 };
-const arc = (r: number, from: number, to: number) => {
-  const a = polar(r, from);
-  const b = polar(r, to);
-  return `M ${a.x} ${a.y} A ${r} ${r} 0 0 ${to > from ? 1 : 0} ${b.x} ${b.y}`;
-};
-
-// Curved switches hugging the dial (angles clockwise from 12 o'clock)
-const THEME_ARC = { on: 251, off: 225 }; // on = light (upper end)
-const SOUND_ARC = { on: 109, off: 135 }; // on = sound (upper end)
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
@@ -66,13 +66,16 @@ const ridgeStyle = (i: number, angle: number) => {
 const START = STATIONS.length - 1;
 
 /**
- * A Braun-style radio. The roller tunes between the four stages Simon covers;
- * the two curved switches flip light/dark mode and the click sounds.
+ * A Braun-style radio that tunes through the product process. "AI Boost"
+ * scans the whole band and shows where AI speeds up each stage; the AM/PM
+ * selector switches between light and dark mode.
  */
 export function HeroRadio() {
   const [dark, setDark] = useTheme();
-  const [sound, setSound] = useState(true);
   const [station, setStation] = useState(START);
+  const [ai, setAi] = useState(false);
+  const [scanning, setScanning] = useState(false);
+  const scanTimers = useRef<number[]>([]);
 
   const pos = useRef(START);
   const rawPos = useRef(START);
@@ -89,8 +92,6 @@ export function HeroRadio() {
   const nameRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const scaleRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<SVGGElement>(null);
-
-  useEffect(() => setSound(isSoundEnabled()), []);
 
   /** Push the current tuning position into the DOM (no React re-render). */
   const paint = useCallback(() => {
@@ -150,6 +151,23 @@ export function HeroRadio() {
     [animate],
   );
 
+  const stopScan = useCallback(() => {
+    scanTimers.current.forEach(clearTimeout);
+    scanTimers.current = [];
+    setScanning(false);
+  }, []);
+
+  /** AI Boost: run through every stage of the process, one after another. */
+  const runScan = useCallback(() => {
+    stopScan();
+    setScanning(true);
+    tuneTo(0);
+    for (let i = 1; i <= LAST; i++) {
+      scanTimers.current.push(window.setTimeout(() => tuneTo(i), 600 + (i - 1) * 850));
+    }
+    scanTimers.current.push(window.setTimeout(() => setScanning(false), 600 + LAST * 850));
+  }, [stopScan, tuneTo]);
+
   // Intro: sweep across the band and settle on "Concept"
   useEffect(() => {
     paint();
@@ -157,6 +175,7 @@ export function HeroRadio() {
     return () => {
       clearTimeout(t);
       cancelAnimationFrame(raf.current);
+      scanTimers.current.forEach(clearTimeout);
     };
   }, [paint, tuneTo]);
 
@@ -168,6 +187,7 @@ export function HeroRadio() {
 
   const onPointerDown = (e: React.PointerEvent) => {
     if (e.button !== 0) return;
+    stopScan();
     cancelAnimationFrame(raf.current);
     target.current = null;
     vel.current = 0;
@@ -205,6 +225,7 @@ export function HeroRadio() {
     if (!el) return;
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
+      stopScan();
       cancelAnimationFrame(raf.current);
       target.current = null;
       const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
@@ -216,9 +237,10 @@ export function HeroRadio() {
     };
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => el.removeEventListener("wheel", onWheel);
-  }, [paint, tuneTo]);
+  }, [paint, tuneTo, stopScan]);
 
   const onKeyDown = (e: React.KeyboardEvent) => {
+    stopScan();
     const current = Math.round(target.current ?? pos.current);
     if (e.key === "ArrowRight" || e.key === "ArrowUp") {
       e.preventDefault();
@@ -240,20 +262,15 @@ export function HeroRadio() {
     clack();
   };
 
-  const toggleSound = () => {
-    const next = !sound;
-    setSound(next);
-    if (next) {
-      setSoundEnabled(true);
-      clack();
-    } else {
-      clack();
-      setSoundEnabled(false);
-    }
+  const toggleAi = () => {
+    const next = !ai;
+    setAi(next);
+    clack();
+    if (next) runScan();
+    else stopScan();
   };
 
-  const themeAngle = dark ? THEME_ARC.off : THEME_ARC.on;
-  const soundAngle = sound ? SOUND_ARC.on : SOUND_ARC.off;
+  const current = STATIONS[station];
 
   return (
     <div className="@container w-full">
@@ -263,32 +280,6 @@ export function HeroRadio() {
       >
         {/* Dial */}
         <div className="relative mx-auto aspect-square w-[24em]">
-          <svg
-            viewBox="0 0 240 240"
-            className="absolute inset-0 h-full w-full overflow-visible"
-            aria-hidden="true"
-          >
-            <defs>
-              <filter id="radio-track-inset" x="-30%" y="-30%" width="160%" height="160%">
-                <feOffset in="SourceAlpha" dx="2.6" dy="2.6" result="o1" />
-                <feGaussianBlur in="o1" stdDeviation="2.4" result="b1" />
-                <feComposite in="SourceAlpha" in2="b1" operator="out" result="i1" />
-                <feFlood style={{ floodColor: "var(--sd)" }} result="c1" />
-                <feComposite in="c1" in2="i1" operator="in" result="s1" />
-                <feOffset in="SourceAlpha" dx="-2" dy="-2" result="o2" />
-                <feGaussianBlur in="o2" stdDeviation="2" result="b2" />
-                <feComposite in="SourceAlpha" in2="b2" operator="out" result="i2" />
-                <feFlood style={{ floodColor: "var(--hl)" }} result="c2" />
-                <feComposite in="c2" in2="i2" operator="in" result="s2" />
-                <feMerge>
-                  <feMergeNode in="SourceGraphic" />
-                  <feMergeNode in="s1" />
-                  <feMergeNode in="s2" />
-                </feMerge>
-              </filter>
-            </defs>
-          </svg>
-
           {/* Outer ring with fine scale */}
           <div className="surface raise-md absolute left-1/2 top-1/2 h-[21em] w-[21em] -translate-x-1/2 -translate-y-1/2 rounded-full">
             <svg
@@ -319,12 +310,31 @@ export function HeroRadio() {
             </svg>
           </div>
 
+          {/* AI Boost halo */}
+          <div
+            className={`absolute left-1/2 top-1/2 h-[19em] w-[19em] -translate-x-1/2 -translate-y-1/2 rounded-full transition-opacity duration-700 ${ai ? "opacity-100" : "opacity-0"}`}
+            style={{
+              background:
+                "radial-gradient(circle, color-mix(in srgb, var(--go) 70%, transparent) 62%, transparent 96%)",
+            }}
+          />
+
           {/* Bezel */}
           <div className="raise-sm absolute left-1/2 top-1/2 h-[13.2em] w-[13.2em] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[linear-gradient(150deg,var(--knob-hi),var(--knob-lo))]" />
 
           {/* Analog LCD */}
-          <div className="lcd absolute left-1/2 top-1/2 h-[11.2em] w-[11.2em] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full">
-            <div className="absolute left-[calc(50%+0.45em)] top-[1.05em] text-[0.95em] font-bold tabular-nums opacity-75">
+          <div
+            className="lcd absolute left-1/2 top-1/2 h-[11.2em] w-[11.2em] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full transition-[filter] duration-700"
+            style={{ filter: ai ? "brightness(1.07) saturate(1.2)" : "none" }}
+          >
+            <div
+              className={`absolute right-[calc(50%+0.55em)] top-[1.1em] text-[0.8em] font-extrabold tracking-[0.12em] transition-opacity duration-300 ${
+                ai ? (scanning ? "animate-pulse opacity-90" : "opacity-90") : "opacity-[0.16]"
+              }`}
+            >
+              AI
+            </div>
+            <div className="absolute left-[calc(50%+0.55em)] top-[1.05em] text-[0.95em] font-bold tabular-nums opacity-75">
               {station + 1}
             </div>
             {/* scrolling scale */}
@@ -371,8 +381,12 @@ export function HeroRadio() {
                     ref={(el) => {
                       nameRefs.current[i] = el;
                     }}
-                    className="absolute top-0 -translate-x-1/2 whitespace-nowrap text-[1.7em] font-bold leading-[1.4] tracking-[-0.02em]"
-                    style={{ left: `${(i * NAME_STEP) / 1.7}em`, opacity: nameOpacity(i, START) }}
+                    className="absolute top-0 -translate-x-1/2 whitespace-nowrap font-bold leading-[1.5] tracking-[-0.02em]"
+                    style={{
+                      fontSize: `${NAME_SIZE}em`,
+                      left: `${(i * NAME_STEP) / NAME_SIZE}em`,
+                      opacity: nameOpacity(i, START),
+                    }}
                   >
                     {s.name}
                   </span>
@@ -380,50 +394,12 @@ export function HeroRadio() {
               </div>
             </div>
             <div className="absolute inset-x-0 top-[7.6em] flex justify-center gap-[0.9em] text-[0.95em] font-extrabold tracking-[0.12em]">
-              <span className="opacity-80">FM</span>
-              <span className="opacity-25">AM</span>
+              <span className={`transition-opacity ${dark ? "opacity-25" : "opacity-80"}`}>AM</span>
+              <span className={`transition-opacity ${dark ? "opacity-80" : "opacity-25"}`}>PM</span>
             </div>
             {/* needle */}
             <div className="absolute left-1/2 top-[0.4em] h-[4.6em] w-[0.14em] -translate-x-1/2 rounded-full bg-needle shadow-[0_0_0.3em_rgba(212,80,63,0.5)]" />
           </div>
-
-          {/* Curved switches */}
-          <svg
-            viewBox="0 0 240 240"
-            className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
-            aria-hidden="true"
-          >
-            {[THEME_ARC, SOUND_ARC].map((a, i) => (
-              <path
-                key={i}
-                d={arc(TRACK_R, Math.min(a.on, a.off), Math.max(a.on, a.off))}
-                stroke={i === 1 && sound ? "var(--go)" : "var(--track-off)"}
-                strokeWidth="19"
-                strokeLinecap="round"
-                fill="none"
-                filter="url(#radio-track-inset)"
-                style={{ transition: "stroke 0.3s ease" }}
-              />
-            ))}
-          </svg>
-          <ArcSwitch
-            angle={themeAngle}
-            label="Dark mode"
-            checked={dark}
-            onToggle={toggleTheme}
-            iconOn={IconSun}
-            iconOff={IconMoon}
-            arcAngles={THEME_ARC}
-          />
-          <ArcSwitch
-            angle={soundAngle}
-            label="Mute click sounds"
-            checked={!sound}
-            onToggle={toggleSound}
-            iconOn={IconSound}
-            iconOff={IconMute}
-            arcAngles={SOUND_ARC}
-          />
         </div>
 
         {/* Caption */}
@@ -431,7 +407,14 @@ export function HeroRadio() {
           className="relative z-10 mx-auto mt-[0.2em] h-[2.6em] max-w-[22em] text-center text-[max(1.05em,10px)] font-semibold leading-tight text-ink-soft"
           aria-live="polite"
         >
-          {STATIONS[station].caption}
+          {ai ? (
+            <span className="inline-flex items-center gap-[0.35em] text-ink">
+              <IconSpark size="1.05em" className="shrink-0 text-go-deep" />
+              {current.ai}
+            </span>
+          ) : (
+            current.caption
+          )}
         </p>
 
         {/* Lower, wavy layer */}
@@ -472,11 +455,11 @@ export function HeroRadio() {
                 ref={rollerRef}
                 role="slider"
                 tabIndex={0}
-                aria-label="Tuner — what I work on"
+                aria-label="Tuner: from idea to product"
                 aria-valuemin={0}
                 aria-valuemax={LAST}
                 aria-valuenow={station}
-                aria-valuetext={STATIONS[station].name}
+                aria-valuetext={current.name}
                 onPointerDown={onPointerDown}
                 onPointerMove={onPointerMove}
                 onPointerUp={onPointerUp}
@@ -506,100 +489,30 @@ export function HeroRadio() {
               </div>
             </div>
 
-            {/* Preset keys */}
-            <div className="mt-[1.5em] flex justify-between">
-              {STATIONS.map((s, i) => {
-                const active = i === station;
-                return (
-                  <button
-                    key={s.name}
-                    type="button"
-                    aria-label={s.name}
-                    aria-pressed={active}
-                    title={s.name}
-                    onClick={() => {
-                      thock();
-                      tuneTo(i);
-                    }}
-                    className={`key flex h-[4.4em] w-[4.4em] items-center justify-center rounded-[1.25em] text-[1em] cursor-pointer ${
-                      active ? "key-on text-ink" : "text-ink-faint hover:text-ink-soft"
-                    }`}
-                  >
-                    <s.Icon size="1.75em" />
-                  </button>
-                );
-              })}
+            {/* Controls */}
+            <div className="mt-[1.4em] grid grid-cols-[1.3fr_1fr] gap-[0.9em]">
+              <div className="tray flex items-center justify-between gap-[0.6em] rounded-[1.3em] py-[0.75em] pr-[0.75em] pl-[1em]">
+                <span
+                  className={`flex items-center gap-[0.35em] whitespace-nowrap text-[max(0.9em,9px)] font-extrabold uppercase tracking-[0.12em] transition-colors ${ai ? "text-ink" : "text-ink-soft"}`}
+                >
+                  <IconSpark size="1.25em" className={ai ? "text-go-deep" : ""} />
+                  AI Boost
+                </span>
+                <DeviceSwitch on={ai} onToggle={toggleAi} label="AI Boost" green />
+              </div>
+              <div className="tray flex items-center justify-center gap-[0.55em] rounded-[1.3em] px-[0.75em] py-[0.75em] text-[max(0.9em,9px)] font-extrabold tracking-[0.08em]">
+                <span className={`transition-colors ${dark ? "text-ink-faint" : "text-ink"}`}>
+                  AM
+                </span>
+                <DeviceSwitch on={dark} onToggle={toggleTheme} label="Dark mode (PM)" />
+                <span className={`transition-colors ${dark ? "text-ink" : "text-ink-faint"}`}>
+                  PM
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  );
-}
-
-type ArcSwitchProps = {
-  angle: number;
-  checked: boolean;
-  label: string;
-  onToggle: () => void;
-  iconOn: typeof IconSun;
-  iconOff: typeof IconSun;
-  arcAngles: { on: number; off: number };
-};
-
-/** Knob riding along a curved track around the dial. */
-function ArcSwitch({
-  angle,
-  checked,
-  label,
-  onToggle,
-  iconOn: On,
-  iconOff: Off,
-  arcAngles,
-}: ArcSwitchProps) {
-  // icons sit just outside each end of the track; the lower one is nudged
-  // up a little so it never touches the caption below the dial
-  const mid = (arcAngles.on + arcAngles.off) / 2;
-  const iconPos = (deg: number) => {
-    const nudge = deg === arcAngles.off ? Math.sign(mid - deg) * 7 : 0;
-    const p = polar(TRACK_R + 19, deg + nudge);
-    return { left: `${(p.x / 10).toFixed(3)}em`, top: `${(p.y / 10).toFixed(3)}em` };
-  };
-  return (
-    <>
-      <span
-        className={`pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 text-[1.15em] transition-colors ${checked ? "text-ink-faint opacity-60" : "text-ink"}`}
-        style={iconPos(arcAngles.on)}
-      >
-        <On />
-      </span>
-      <span
-        className={`pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 text-[1.15em] transition-colors ${checked ? "text-ink" : "text-ink-faint opacity-60"}`}
-        style={iconPos(arcAngles.off)}
-      >
-        <Off />
-      </span>
-      <div
-        className="absolute left-1/2 top-1/2 h-0 w-0 transition-transform duration-700 ease-[var(--ease-spring)]"
-        style={{ transform: `rotate(${angle}deg)` }}
-      >
-        <button
-          type="button"
-          role="switch"
-          aria-checked={checked}
-          aria-label={label}
-          title={label}
-          onClick={onToggle}
-          className="group absolute left-0 top-0 flex h-[3em] w-[3em] cursor-pointer items-center justify-center rounded-full"
-          style={{
-            transform: `translate(-50%, -50%) translateY(${-TRACK_R / 10}em) rotate(${-angle}deg)`,
-          }}
-        >
-          <span className="knob flex h-[1.75em] w-[1.75em] items-center justify-center rounded-full transition-transform duration-300 ease-[var(--ease-spring)] group-hover:scale-110 group-active:scale-90">
-            <span className="knob-dent block h-[0.8em] w-[0.8em] rounded-full" />
-          </span>
-        </button>
-      </div>
-    </>
   );
 }

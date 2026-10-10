@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import type { RichContentBlock } from "@/data/projects";
 import { thock } from "@/lib/sound";
 import { IconClose } from "./icons";
+import { LoadingImage } from "./LoadingImage";
 
 const contentWrapper =
   "mx-auto w-full max-w-4xl flex flex-col gap-8 text-center text-base md:text-lg font-medium leading-relaxed text-ink-soft text-pretty";
@@ -114,23 +115,31 @@ export function CardOverlay({
                         const sizeClass = block.size ? imageSizeClasses[block.size] : "max-w-4xl";
                         if (block.noBorder) {
                           return (
-                            <img
+                            <div
                               key={idx}
-                              src={block.src}
-                              alt={block.alt || title}
-                              loading="lazy"
-                              className={`mx-auto h-auto w-full ${sizeClass} object-cover`}
-                            />
+                              className={`relative mx-auto w-full ${sizeClass} overflow-hidden rounded-[1.4rem]`}
+                            >
+                              <LoadingImage
+                                src={block.src}
+                                alt={block.alt || title}
+                                loading="lazy"
+                                placeholderAspect="1 / 1"
+                                className="block h-auto w-full object-cover"
+                              />
+                            </div>
                           );
                         }
                         return (
                           <div key={idx} className={`${frame} ${sizeClass}`}>
-                            <img
-                              src={block.src}
-                              alt={block.alt || title}
-                              loading="lazy"
-                              className="h-auto w-full rounded-[1.1rem] object-cover md:rounded-[1.4rem]"
-                            />
+                            <div className="relative overflow-hidden rounded-[1.1rem] md:rounded-[1.4rem]">
+                              <LoadingImage
+                                src={block.src}
+                                alt={block.alt || title}
+                                loading="lazy"
+                                placeholderAspect="16 / 9"
+                                className="block h-auto w-full object-cover"
+                              />
+                            </div>
                           </div>
                         );
                       }
@@ -226,10 +235,14 @@ export function CardOverlay({
                 <div className="order-1 mb-4 flex flex-col md:order-2 md:col-span-2 md:mb-0">
                   <div className={`${frame} my-auto`}>
                     <div
-                      className="grid aspect-video w-full shrink-0 place-items-center overflow-hidden rounded-[1.1rem] md:rounded-[1.4rem]"
+                      className="relative grid aspect-video w-full shrink-0 place-items-center overflow-hidden rounded-[1.1rem] md:rounded-[1.4rem]"
                       style={{ backgroundColor: color }}
                     >
-                      <img src={image} alt={title} className="h-full w-full object-cover" />
+                      <LoadingImage
+                        src={image}
+                        alt={title}
+                        className="h-full w-full object-cover"
+                      />
                     </div>
                   </div>
                 </div>

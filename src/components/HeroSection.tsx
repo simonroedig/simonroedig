@@ -38,53 +38,38 @@ export function HeroSection() {
       id="top"
       className="snap-start relative flex min-h-[100svh] w-full overflow-x-hidden px-5 pt-10 pb-14 sm:px-8 md:px-12 lg:h-[100svh] lg:overflow-hidden lg:py-0"
     >
-      <div className="hero-grid mx-auto w-full max-w-7xl content-center gap-x-14 gap-y-10 lg:gap-y-8">
-        {/* Intro */}
+      <div className="hero-grid mx-auto w-full max-w-7xl content-center gap-x-16 gap-y-10 lg:gap-y-9">
+        {/* Intro: portrait + name */}
         <div className="[grid-area:intro] lg:self-end">
           <div
             className="flex items-center gap-3 text-xs font-extrabold uppercase tracking-[0.24em] text-ink-soft animate-rise-in"
             style={{ animationDelay: "80ms" }}
           >
             Product Designer
-            <span className="h-[3px] w-10 rounded-full press-xs" />
+            <span className="press-xs h-[3px] w-10 rounded-full" />
           </div>
-          <h1
-            className="mt-4 font-display text-[clamp(3.6rem,min(16vw,7.5rem),8.75rem)] lg:text-[clamp(3.6rem,9vw,8.75rem)] font-extrabold leading-[0.88] tracking-[-0.055em] text-ink-strong animate-rise-in [text-shadow:0_1px_0_var(--hl),0_0.05em_0.1em_var(--sd-soft)] md:mt-6"
-            style={{ animationDelay: "160ms" }}
-          >
-            Simon
-            <br />
-            Rödig
-          </h1>
-          <p
-            className="mt-5 font-display text-[clamp(1.6rem,3.1vw,2.6rem)] font-bold leading-tight tracking-[-0.03em] text-ink animate-rise-in md:mt-7"
-            style={{ animationDelay: "260ms" }}
-          >
-            From concept to code.
-          </p>
-        </div>
 
-        {/* Device stack */}
-        <div className="flex justify-center [grid-area:stage] lg:justify-end">
-          <div className="@container relative aspect-[100/102] w-full max-w-[600px] lg:aspect-[100/86] lg:max-w-[min(700px,calc((100svh-4rem)/0.86))]">
+          <div className="mt-6 grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-5 gap-y-6 sm:gap-x-7 md:mt-8 lg:gap-x-9">
             <div
-              className="absolute right-0 top-[56%] h-[26%] w-[40%] animate-pop-in lg:top-0 lg:h-[27%] lg:w-[45%]"
-              style={{ animationDelay: "250ms" }}
-            >
-              <SpeakerGrille />
-            </div>
-            <div
-              className="absolute right-0 top-0 w-[48%] animate-pop-in lg:right-[2%] lg:top-[14%] lg:w-[53%]"
-              style={{ animationDelay: "380ms" }}
+              className="w-[6.75rem] animate-pop-in sm:w-[8.5rem] md:row-span-2 md:w-[11rem] lg:w-[min(14rem,16vw)]"
+              style={{ animationDelay: "200ms" }}
             >
               <PortraitCard age={age} />
             </div>
-            <div
-              className="absolute left-0 top-[4%] w-[60%] animate-pop-in lg:top-[2%] lg:w-[49%]"
-              style={{ animationDelay: "520ms" }}
+            <h1
+              className="font-display text-[clamp(3rem,14vw,4.6rem)] font-extrabold leading-[0.88] tracking-[-0.055em] text-ink-strong animate-rise-in [text-shadow:0_1px_0_var(--hl),0_0.05em_0.1em_var(--sd-soft)] sm:text-[5.25rem] md:self-end md:text-[6rem] lg:text-[clamp(4.5rem,7.2vw,7.5rem)]"
+              style={{ animationDelay: "160ms" }}
             >
-              <HeroRadio />
-            </div>
+              Simon
+              <br />
+              Rödig
+            </h1>
+            <p
+              className="col-span-2 font-display text-[clamp(1.6rem,6.5vw,2rem)] font-bold leading-tight tracking-[-0.03em] text-ink animate-rise-in md:col-span-1 md:col-start-2 md:self-start md:text-[2.1rem] lg:text-[clamp(1.75rem,2.6vw,2.4rem)]"
+              style={{ animationDelay: "260ms" }}
+            >
+              From idea to product.
+            </p>
           </div>
         </div>
 
@@ -94,10 +79,10 @@ export function HeroSection() {
             className="max-w-xl text-base font-medium leading-relaxed text-ink-soft animate-rise-in md:text-lg"
             style={{ animationDelay: "380ms" }}
           >
-            I design new products end to end — from research and first concepts through interaction
-            and UI design to prototypes and implementation. Being a developer as well, I can judge
-            feasibility early, speak engineering&rsquo;s language and use AI where it genuinely
-            speeds up the process.
+            I take new products from the first idea to the finished implementation: research and
+            concepts, prototypes and user studies, refined through UX and UI iterations. Being a
+            developer as well, I can judge feasibility early, speak engineering&rsquo;s language and
+            use AI where it genuinely speeds up the process.
           </p>
 
           <div
@@ -138,6 +123,24 @@ export function HeroSection() {
                   <Icon size={20} />
                 </a>
               ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Devices: radio in front of its speaker */}
+        <div className="flex justify-center [grid-area:stage] lg:justify-end">
+          <div className="@container relative aspect-[100/120] w-full sm:aspect-[100/104] max-w-[560px] lg:max-w-[min(600px,calc((100svh-5rem)/1.04))]">
+            <div
+              className="absolute right-0 top-[9%] h-[76%] w-[36%] animate-pop-in sm:w-[44%]"
+              style={{ animationDelay: "300ms" }}
+            >
+              <SpeakerGrille />
+            </div>
+            <div
+              className="absolute left-0 top-0 w-[72%] animate-pop-in sm:w-[62%]"
+              style={{ animationDelay: "450ms" }}
+            >
+              <HeroRadio />
             </div>
           </div>
         </div>

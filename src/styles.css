@@ -21,6 +21,7 @@
   --color-ink-soft: var(--ink-soft);
   --color-ink-faint: var(--ink-faint);
   --color-go: var(--go);
+  --color-go-deep: var(--go-deep);
   --color-needle: var(--needle);
   --color-lcd-ink: var(--lcd-ink);
 
@@ -70,8 +71,9 @@
   --ink: #3b424c;
   --ink-soft: #5b6573;
   --ink-faint: #7d8896;
-  --go: #6bcb5b;
-  --go-deep: #4fae41;
+  --go-hi: #a9c49a;
+  --go: #8aa97b;
+  --go-deep: #6f8e62;
   --needle: #d4503f;
   --lcd-hi: #d3dac5;
   --lcd-lo: #b5bfa7;
@@ -313,12 +315,34 @@
 @utility hero-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-areas: "intro" "stage" "body";
+  grid-template-areas: "intro" "body" "stage";
   @media (width >= 64rem) {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
     grid-template-rows: auto auto;
     grid-template-areas: "intro stage" "body stage";
   }
+}
+
+/* Placeholder sweep while an image loads */
+@keyframes shimmer {
+  from {
+    background-position: 160% 0;
+  }
+  to {
+    background-position: -60% 0;
+  }
+}
+
+@utility shimmer {
+  background-color: var(--surface-lo);
+  background-image: linear-gradient(
+    100deg,
+    transparent 25%,
+    var(--hl) 50%,
+    transparent 75%
+  );
+  background-size: 220% 100%;
+  animation: shimmer 1.5s var(--ease-soft) infinite;
 }
 
 /* Small uppercase device label */

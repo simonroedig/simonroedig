@@ -1,13 +1,15 @@
+import type { ComponentType } from "react";
 import { clack } from "@/lib/sound";
 
 type Props = {
   checked: boolean;
   onChange: (checked: boolean) => void;
   label: string;
+  icon?: ComponentType<{ size?: number; className?: string }>;
 };
 
 /** Braun-style switch: recessed track, dented knob, springs across and turns green when on. */
-export function Toggle({ checked, onChange, label }: Props) {
+export function Toggle({ checked, onChange, label, icon: Icon }: Props) {
   return (
     <button
       type="button"
@@ -25,10 +27,10 @@ export function Toggle({ checked, onChange, label }: Props) {
         className="relative block h-[1.65rem] w-[3rem] shrink-0 rounded-full transition-[background,box-shadow] duration-300"
         style={{
           background: checked
-            ? "linear-gradient(180deg, #82d973, var(--go) 55%, var(--go-deep))"
+            ? "linear-gradient(180deg, var(--go-hi), var(--go) 55%, var(--go-deep))"
             : "linear-gradient(150deg, var(--surface-lo), var(--surface) 70%)",
           boxShadow: checked
-            ? "0 0 0 transparent, 0 0 0 transparent, 0 0 0 transparent, inset 2px 2px 5px rgba(30, 90, 20, 0.45), inset -2px -2px 4px rgba(255, 255, 255, 0.3)"
+            ? "0 0 0 transparent, 0 0 0 transparent, 0 0 0 transparent, inset 2px 2px 5px rgba(45, 70, 35, 0.4), inset -2px -2px 4px rgba(255, 255, 255, 0.25)"
             : "var(--press-xs)",
         }}
       >
@@ -39,7 +41,10 @@ export function Toggle({ checked, onChange, label }: Props) {
           <span className="knob-dent block h-[0.6rem] w-[0.6rem] rounded-full" />
         </span>
       </span>
-      {label}
+      <span className="flex items-center gap-1.5">
+        {Icon && <Icon size={15} className="shrink-0" />}
+        {label}
+      </span>
     </button>
   );
 }

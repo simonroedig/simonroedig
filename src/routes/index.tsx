@@ -18,7 +18,7 @@ export const Route = createFileRoute("/")({
         content:
           "Portfolio of Simon Rödig, HCI graduate and UX/Product Designer based in Germany. Combining design craft with engineering to ship human-centric, AI-augmented products.",
       },
-      { property: "og:title", content: "Simon Rödig — Human-Centric Design Accelerated by AI" },
+      { property: "og:title", content: "Simon Rödig, Product Designer: From idea to product." },
       {
         property: "og:description",
         content: "Portfolio of Simon Rödig, HCI graduate and UX/Product Designer based in Germany.",

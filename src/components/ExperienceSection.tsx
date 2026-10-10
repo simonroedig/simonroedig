@@ -4,6 +4,7 @@ import { CardOverlay } from "./CardOverlay";
 import { SectionHeader } from "./SectionHeader";
 import { ScrollTuner } from "./ScrollTuner";
 import { IconArrowUpRight } from "./icons";
+import { LoadingImage } from "./LoadingImage";
 import { Route } from "@/routes/index";
 import { useNavigate } from "@tanstack/react-router";
 
@@ -38,13 +39,13 @@ export function ExperienceSection() {
         {/* Horizontal scroll cards */}
         <div
           ref={scrollRef}
-          className="flex snap-x snap-mandatory items-stretch gap-7 overflow-x-auto overflow-y-hidden px-5 py-10 no-scrollbar scroll-px-5 sm:px-8 sm:scroll-px-8 md:gap-10 md:px-12 md:py-12 md:scroll-px-12"
+          className="flex snap-x snap-mandatory items-stretch gap-7 overflow-x-auto overflow-y-hidden px-5 pt-12 pb-20 no-scrollbar scroll-px-5 sm:px-8 sm:scroll-px-8 md:gap-10 md:pt-14 md:pb-24 md:[padding-inline:max(3rem,calc((100%_-_1600px)/2))] md:[scroll-padding-inline:max(3rem,calc((100%_-_1600px)/2))]"
         >
           {experiences.map((exp, i) => (
             <button
               key={exp.id}
               onClick={() => setOpenId(exp.id)}
-              className="card group relative flex h-[58vh] w-[82vw] shrink-0 snap-start flex-col rounded-[2.25rem] p-5 text-left cursor-pointer sm:h-[420px] sm:w-[320px] md:h-[470px] md:w-[380px] md:p-6 lg:h-[min(58vh,640px)] lg:w-[calc(min(58vh,640px)*0.82)] lg:max-w-[540px]"
+              className="card group relative flex h-[58vh] w-[82vw] shrink-0 snap-start flex-col rounded-[2.25rem] p-5 text-left cursor-pointer sm:h-[420px] sm:w-[320px] md:h-[470px] md:w-[380px] md:p-6 lg:h-[min(54vh,620px)] lg:w-[calc(min(54vh,620px)*0.92)] lg:max-w-[540px]"
             >
               <div className="mb-4 flex shrink-0 items-center justify-between gap-3">
                 <span className="press-xs rounded-full px-3.5 py-1.5 text-xs font-bold tabular-nums text-ink-soft">
@@ -61,7 +62,7 @@ export function ExperienceSection() {
                 ) : null}
               </div>
 
-              <h3 className="w-full shrink-0 truncate pb-1 font-display text-[1.75rem] font-extrabold leading-[1.05] tracking-[-0.04em] text-ink-strong sm:text-3xl md:text-[2.5rem]">
+              <h3 className="w-full shrink-0 truncate pb-1 font-display text-[1.75rem] font-extrabold leading-[1.05] tracking-[-0.04em] text-ink-strong sm:text-3xl md:text-[clamp(1.9rem,2.6vw,2.5rem)]">
                 {exp.company}
               </h3>
               <p className="mb-5 shrink-0 text-[11px] font-bold uppercase leading-snug tracking-[0.1em] text-ink-faint md:text-xs">
@@ -70,10 +71,10 @@ export function ExperienceSection() {
 
               <div className="press-sm min-h-[100px] w-full flex-1 rounded-[1.6rem] bg-[linear-gradient(150deg,var(--surface-lo),var(--surface))] p-2 md:p-2.5">
                 <div
-                  className="h-full w-full overflow-hidden rounded-[1.15rem]"
+                  className="relative h-full w-full overflow-hidden rounded-[1.15rem]"
                   style={{ backgroundColor: exp.color }}
                 >
-                  <img
+                  <LoadingImage
                     src={exp.image}
                     alt={exp.company}
                     loading="lazy"
@@ -98,7 +99,8 @@ export function ExperienceSection() {
           <div className="w-1 shrink-0 md:w-4" />
         </div>
 
-        <div className="mx-auto w-full max-w-3xl px-5 pb-10 sm:px-8 md:px-12 md:pb-12">
+        {/* pulled up into the scroller's bottom padding, which only exists for the card shadows */}
+        <div className="relative mx-auto -mt-10 w-full max-w-3xl px-5 pb-10 sm:px-8 md:-mt-14 md:px-12 md:pb-12">
           <ScrollTuner target={scrollRef} step={cardStep} />
         </div>
       </div>

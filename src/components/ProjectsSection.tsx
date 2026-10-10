@@ -2,7 +2,9 @@ import { projects } from "@/data/projects";
 import { CardOverlay } from "./CardOverlay";
 import { SectionHeader } from "./SectionHeader";
 import { Toggle } from "./Toggle";
-import { IconStar } from "./icons";
+import { RollingNumber } from "./RollingNumber";
+import { LoadingImage } from "./LoadingImage";
+import { IconGraduation, IconStar, IconUser } from "./icons";
 import { Route } from "@/routes/index";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
@@ -46,15 +48,19 @@ export function ProjectsSection() {
           role="group"
           aria-label="Filter projects"
         >
-          <Toggle label="Starred" checked={starredOnly} onChange={setStarredOnly} />
-          <Toggle label="Personal" checked={personal} onChange={setPersonal} />
-          <Toggle label="University" checked={university} onChange={setUniversity} />
-          <span
-            className="lcd ml-auto min-w-[2.6rem] rounded-[0.6rem] px-2.5 py-1 text-center text-sm font-extrabold tabular-nums"
-            aria-live="polite"
-            aria-label={`${filteredProjects.length} projects`}
-          >
-            {String(filteredProjects.length).padStart(2, "0")}
+          <Toggle label="Starred" icon={IconStar} checked={starredOnly} onChange={setStarredOnly} />
+          <Toggle label="Personal" icon={IconUser} checked={personal} onChange={setPersonal} />
+          <Toggle
+            label="University"
+            icon={IconGraduation}
+            checked={university}
+            onChange={setUniversity}
+          />
+          <span className="lcd ml-auto inline-flex rounded-[0.6rem] px-2.5 py-1 text-sm font-extrabold tabular-nums">
+            <RollingNumber value={filteredProjects.length} />
+            <span className="sr-only" aria-live="polite">
+              {filteredProjects.length} projects
+            </span>
           </span>
         </div>
       </SectionHeader>
@@ -79,10 +85,10 @@ export function ProjectsSection() {
               >
                 <div className="press-xs shrink-0 rounded-[1.2rem] bg-[linear-gradient(150deg,var(--surface-lo),var(--surface))] p-1.5 md:rounded-[1.4rem]">
                   <div
-                    className="aspect-video w-full overflow-hidden rounded-[0.85rem] md:rounded-[1rem]"
+                    className="relative aspect-video w-full overflow-hidden rounded-[0.85rem] md:rounded-[1rem]"
                     style={{ backgroundColor: p.color }}
                   >
-                    <img
+                    <LoadingImage
                       src={p.image}
                       alt={p.title}
                       loading="lazy"
@@ -99,7 +105,7 @@ export function ProjectsSection() {
                     {p.isStarred && (
                       <IconStar
                         size={13}
-                        className="text-ink-faint"
+                        className="text-ink-soft"
                         aria-hidden={false}
                         aria-label="Starred"
                         role="img"

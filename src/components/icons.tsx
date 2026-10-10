@@ -79,8 +79,29 @@ export const IconChevronRight = (p: IconProps) => (
 );
 
 export const IconStar = (p: IconProps) => (
-  <Stroke {...p}>
+  <Stroke fill="currentColor" {...p}>
     <path d="m12 3.5 2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z" />
+  </Stroke>
+);
+
+export const IconUser = (p: IconProps) => (
+  <Stroke {...p}>
+    <circle cx="12" cy="8" r="4" />
+    <path d="M4.5 20.5c1.2-3.6 4-5.5 7.5-5.5s6.3 1.9 7.5 5.5" />
+  </Stroke>
+);
+
+export const IconGraduation = (p: IconProps) => (
+  <Stroke {...p}>
+    <path d="M2.5 9 12 4.5 21.5 9 12 13.5z" />
+    <path d="M6.5 11v4.6c1.4 1.5 3.4 2.4 5.5 2.4s4.1-.9 5.5-2.4V11M21.5 9v5" />
+  </Stroke>
+);
+
+export const IconSpark = (p: IconProps) => (
+  <Stroke {...p}>
+    <path d="M12 3c.6 4.2 2.8 6.4 7 7-4.2.6-6.4 2.8-7 7-.6-4.2-2.8-6.4-7-7 4.2-.6 6.4-2.8 7-7z" />
+    <path d="M19 15.5c.3 1.6 1 2.3 2.5 2.5-1.5.3-2.2 1-2.5 2.5-.3-1.5-1-2.2-2.5-2.5 1.5-.2 2.2-.9 2.5-2.5z" />
   </Stroke>
 );
 

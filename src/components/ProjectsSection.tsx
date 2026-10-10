@@ -65,7 +65,7 @@ export function ProjectsSection() {
           <Toggle
             label="University"
             icon={IconGraduation}
-            tone="go"
+            tone="uni"
             checked={university}
             onChange={setUniversity}
           />

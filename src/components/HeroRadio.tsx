@@ -28,12 +28,13 @@ const STATIONS = [
     ai: "I ship faster with AI-assisted engineering.",
   },
 ];
+const HOME_CAPTION = "From idea to product.";
 const AI_INTRO = "Where I bring in AI:";
 const AI_FINAL = "I bring AI into every stage and help the whole team move faster.";
 const AI_FINAL_MARK = ["every", "stage"];
 
 // AI Boost scan timing
-const INTRO_MS = 2800; // intro line while the tuner returns to the start
+const INTRO_MS = 2800; // intro line, shown at the rest position
 const DWELL_MS = 2800; // time to read each stage
 const GLIDE_MS = 1000; // a slow glide to the next stage
 const FINAL_HOLD_MS = 7500; // closing line stays up, then AI Boost switches itself off
@@ -58,7 +59,15 @@ const polar = (r: number, deg: number) => {
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
+// Rest position "0", a little left of the first stage: "Concepts" peeks in from
+// the right, inviting a turn. Index -1 stands for it everywhere below.
+const HOME = -0.5;
+const HOME_SPLIT = HOME * 0.45; // left of this the tuner settles back home
+const positionOf = (i: number) => (i < 0 ? HOME : clamp(i, 0, LAST));
+const stationAt = (p: number) => (p < HOME_SPLIT ? -1 : clamp(Math.round(p), 0, LAST));
+
 const nameOpacity = (i: number, p: number) => clamp(1 - Math.abs(i - p) * 0.78, 0.16, 1);
+const homeHintOpacity = (p: number) => clamp(1 - Math.abs(p - HOME) * 3.2, 0, 1);
 
 /** Ridges travel around a vertical cylinder; only the front half is visible. */
 const ridgeStyle = (i: number, angle: number) => {
@@ -72,8 +81,8 @@ const ridgeStyle = (i: number, angle: number) => {
   };
 };
 
-// The radio starts on the last station and sweeps to the first on load.
-const START = STATIONS.length - 1;
+// The radio starts at rest; a couple of small nudges on load hint that it turns.
+const START = HOME;
 
 /**
  * A Braun-style radio that tunes through the product process. "AI Boost"
@@ -83,7 +92,7 @@ const START = STATIONS.length - 1;
 export function HeroRadio() {
   const [dark, setDark] = useTheme();
   const panelRef = useCursorLight<HTMLDivElement>();
-  const [station, setStation] = useState(START);
+  const [station, setStation] = useState(-1);
   const [ai, setAi] = useState(false);
   const [scanning, setScanning] = useState(false);
   const [aiPhase, setAiPhase] = useState<"intro" | "stages" | "final">("stages");
@@ -105,6 +114,7 @@ export function HeroRadio() {
   const nameRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const scaleRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<SVGGElement>(null);
+  const homeHintRef = useRef<HTMLDivElement>(null);
 
   /** Push the current tuning position into the DOM (no React re-render). */
   const paint = useCallback(() => {
@@ -117,6 +127,7 @@ export function HeroRadio() {
       if (el) el.style.opacity = String(nameOpacity(i, p));
     });
     if (ringRef.current) ringRef.current.setAttribute("transform", `rotate(${p * 22} ${C} ${C})`);
+    if (homeHintRef.current) homeHintRef.current.style.opacity = String(homeHintOpacity(p));
 
     ridgeRefs.current.forEach((el, i) => {
       if (el) Object.assign(el.style, ridgeStyle(i, angle));
@@ -128,7 +139,7 @@ export function HeroRadio() {
       tick(0.7 + Math.min(Math.abs(vel.current) * 0.4, 0.5));
     }
 
-    const nearest = clamp(Math.round(p), 0, LAST);
+    const nearest = stationAt(p);
     setStation((s) => (s === nearest ? s : nearest));
   }, []);
 
@@ -156,14 +167,19 @@ export function HeroRadio() {
     raf.current = requestAnimationFrame(step);
   }, [paint]);
 
-  /** Tune to a station: snappy by default, a slow glide for the AI Boost scan. */
-  const tuneTo = useCallback(
-    (i: number, glide = false) => {
+  const moveTo = useCallback(
+    (p: number, glide = false) => {
       spring.current = glide ? { k: 55, c: 13.5 } : { k: 170, c: 17 };
-      target.current = clamp(i, 0, LAST);
+      target.current = p;
       animate();
     },
     [animate],
+  );
+
+  /** Tune to a station (-1 = rest): snappy by default, a slow glide for AI Boost. */
+  const tuneTo = useCallback(
+    (i: number, glide = false) => moveTo(positionOf(Math.max(-1, i)), glide),
+    [moveTo],
   );
 
   const stopScan = useCallback(() => {
@@ -182,12 +198,11 @@ export function HeroRadio() {
     stopScan();
     setScanning(true);
     setAiPhase("intro");
-    tuneTo(0);
+    tuneTo(-1);
     const at = (ms: number, fn: () => void) => scanTimers.current.push(window.setTimeout(fn, ms));
     let t = INTRO_MS;
     at(t, () => setAiPhase("stages"));
-    t += DWELL_MS;
-    for (let i = 1; i <= LAST; i++) {
+    for (let i = 0; i <= LAST; i++) {
       at(t, () => tuneTo(i, true));
       t += GLIDE_MS + DWELL_MS;
     }
@@ -199,24 +214,30 @@ export function HeroRadio() {
       setAi(false);
       setAiPhase("stages");
       clack();
+      tuneTo(-1, true); // back to rest: "From idea to product."
     });
   }, [stopScan, tuneTo]);
 
-  // Intro: sweep across the band and settle on "Concept"
+  // On load: two small nudges to the right and back, so it is clear the tuner turns.
   useEffect(() => {
     paint();
-    const t = window.setTimeout(() => tuneTo(0), 700);
+    const timers = scanTimers.current;
+    const nudge = HOME + 0.2;
+    [1300, 2300].forEach((at) => {
+      timers.push(window.setTimeout(() => moveTo(nudge), at));
+      timers.push(window.setTimeout(() => moveTo(HOME), at + 380));
+    });
     return () => {
-      clearTimeout(t);
       cancelAnimationFrame(raf.current);
       scanTimers.current.forEach(clearTimeout);
     };
-  }, [paint, tuneTo]);
+  }, [paint, moveTo]);
 
   // Rubber band past both ends of the band
   const setPos = (raw: number) => {
     rawPos.current = raw;
-    pos.current = raw < 0 ? raw * 0.3 : raw > LAST ? LAST + (raw - LAST) * 0.3 : raw;
+    pos.current =
+      raw < HOME ? HOME + (raw - HOME) * 0.3 : raw > LAST ? LAST + (raw - LAST) * 0.3 : raw;
   };
 
   const onPointerDown = (e: React.PointerEvent) => {
@@ -250,7 +271,7 @@ export function HeroRadio() {
     if (!drag.current?.active) return;
     drag.current = null;
     const fling = clamp(vel.current * 0.12, -1, 1);
-    tuneTo(Math.round(pos.current + fling));
+    tuneTo(stationAt(pos.current + fling));
   };
 
   // Mouse wheel / trackpad over the roller
@@ -263,11 +284,11 @@ export function HeroRadio() {
       cancelAnimationFrame(raf.current);
       target.current = null;
       const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      setPos(clamp(pos.current + d * 0.0035, -0.25, LAST + 0.25));
+      setPos(clamp(pos.current + d * 0.0035, HOME - 0.25, LAST + 0.25));
       vel.current = 0;
       paint();
       clearTimeout(wheelTimer.current);
-      wheelTimer.current = window.setTimeout(() => tuneTo(Math.round(pos.current)), 140);
+      wheelTimer.current = window.setTimeout(() => tuneTo(stationAt(pos.current)), 140);
     };
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => el.removeEventListener("wheel", onWheel);
@@ -275,7 +296,7 @@ export function HeroRadio() {
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     stopScan();
-    const current = Math.round(target.current ?? pos.current);
+    const current = stationAt(target.current ?? pos.current);
     if (e.key === "ArrowRight" || e.key === "ArrowUp") {
       e.preventDefault();
       tuneTo(current + 1);
@@ -284,7 +305,7 @@ export function HeroRadio() {
       tuneTo(current - 1);
     } else if (e.key === "Home") {
       e.preventDefault();
-      tuneTo(0);
+      tuneTo(-1);
     } else if (e.key === "End") {
       e.preventDefault();
       tuneTo(LAST);
@@ -304,14 +325,14 @@ export function HeroRadio() {
     else stopScan();
   };
 
-  const current = STATIONS[station];
+  const current = station >= 0 ? STATIONS[station] : null;
   const finale = ai && aiPhase === "final";
   const captionProps = !ai
-    ? { id: `plain-${station}`, text: current.caption, kind: "plain" as const }
-    : aiPhase === "intro"
-      ? { id: "ai-intro", text: AI_INTRO, kind: "ai" as const }
-      : finale
-        ? { id: "ai-final", text: AI_FINAL, kind: "final" as const, highlight: AI_FINAL_MARK }
+    ? { id: `plain-${station}`, text: current?.caption ?? HOME_CAPTION, kind: "plain" as const }
+    : finale
+      ? { id: "ai-final", text: AI_FINAL, kind: "final" as const, highlight: AI_FINAL_MARK }
+      : aiPhase === "intro" || !current
+        ? { id: "ai-intro", text: AI_INTRO, kind: "ai" as const }
         : { id: `ai-${station}`, text: current.ai, kind: "ai" as const };
 
   return (
@@ -353,12 +374,12 @@ export function HeroRadio() {
             </svg>
           </div>
 
-          {/* AI Boost: red ring lighting up around the display */}
+          {/* AI Boost: green ring lighting up around the display */}
           <div
             className={`absolute left-1/2 top-1/2 h-[19em] w-[19em] -translate-x-1/2 -translate-y-1/2 rounded-full transition-opacity duration-700 ${ai ? "opacity-100" : "opacity-0"}`}
             style={{
               background:
-                "radial-gradient(circle, color-mix(in srgb, var(--ai) 46%, transparent) 62%, transparent 96%)",
+                "radial-gradient(circle, color-mix(in srgb, var(--ai) 70%, transparent) 62%, transparent 96%)",
             }}
           />
 
@@ -385,7 +406,7 @@ export function HeroRadio() {
                 className={`absolute right-[calc(50%+0.55em)] top-[1.1em] text-[0.8em] font-extrabold tracking-[0.12em] transition-opacity duration-300 ${
                   ai ? (scanning ? "animate-pulse opacity-100" : "opacity-100") : "opacity-[0.16]"
                 }`}
-                style={ai ? { color: "var(--ai-deep)" } : undefined}
+                style={ai ? { color: "var(--ai-lcd)" } : undefined}
               >
                 AI
               </div>
@@ -448,6 +469,31 @@ export function HeroRadio() {
                   ))}
                 </div>
               </div>
+              {/* at rest: chevrons pointing towards "Concepts", peeking in on the right */}
+              <div
+                ref={homeHintRef}
+                className="absolute left-[calc(50%-1.55em)] top-[5.15em] flex items-center gap-[0.05em]"
+                style={{ opacity: homeHintOpacity(START) }}
+                aria-hidden="true"
+              >
+                {[0, 1, 2].map((i) => (
+                  <svg
+                    key={i}
+                    viewBox="0 0 10 16"
+                    className="h-[1.05em] w-[0.66em]"
+                    style={{ animation: `hint-chevron 1.6s ease-in-out ${i * 0.18}s infinite` }}
+                  >
+                    <path
+                      d="M2.5 2.5 8 8l-5.5 5.5"
+                      fill="none"
+                      stroke="var(--lcd-ink)"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                ))}
+              </div>
               <div className="absolute inset-x-0 top-[7.6em] flex justify-center gap-[0.9em] text-[0.95em] font-extrabold tracking-[0.12em]">
                 <span className={`transition-opacity ${dark ? "opacity-25" : "opacity-80"}`}>
                   AM
@@ -460,47 +506,87 @@ export function HeroRadio() {
               <div className="absolute left-1/2 top-[0.4em] h-[4.6em] w-[0.14em] -translate-x-1/2 rounded-full bg-needle shadow-[0_0_0.3em_rgba(212,80,63,0.5)]" />
             </div>
 
-            {/* AI Boost finale: every stage, enhanced by Simon + AI */}
+            {/* AI Boost finale: every stage done, by Simon (ink) + AI (green) */}
             <div
-              className={`absolute inset-0 flex flex-col items-center justify-center transition-[opacity,filter] duration-500 ${finale ? "opacity-100 blur-0 delay-200" : "pointer-events-none opacity-0 blur-[4px]"}`}
+              className={`absolute inset-0 transition-[opacity,filter] duration-500 ${finale ? "opacity-100 blur-0 delay-200" : "pointer-events-none opacity-0 blur-[4px]"}`}
               aria-hidden={!finale}
             >
-              <div
-                className="mb-[0.55em] text-[0.72em] font-extrabold uppercase tracking-[0.2em]"
-                style={{ color: "var(--ai-deep)" }}
+              <svg
+                viewBox="0 0 100 100"
+                className="absolute inset-0 h-full w-full"
+                aria-hidden="true"
               >
-                Simon + AI
-              </div>
-              <ul className="flex flex-col items-start gap-[0.1em]">
-                {STATIONS.map((s, i) => (
-                  <li
-                    key={s.name}
-                    className="flex items-center gap-[0.4em] text-[0.95em] font-bold leading-[1.3]"
-                    style={
-                      finale
-                        ? { animation: `word-in 0.5s var(--ease-soft) ${350 + i * 150}ms both` }
-                        : undefined
-                    }
-                  >
-                    <svg
-                      viewBox="0 0 12 12"
-                      className="h-[0.8em] w-[0.8em] shrink-0"
-                      style={{ color: "var(--ai-deep)" }}
-                      aria-hidden="true"
+                {Array.from({ length: 60 }).map((_, k) => {
+                  const a = (k * 6 * Math.PI) / 180;
+                  const r1 = k % 5 === 0 ? 41.5 : 43.5;
+                  return (
+                    <line
+                      key={k}
+                      x1={Math.round((50 + r1 * Math.sin(a)) * 100) / 100}
+                      y1={Math.round((50 - r1 * Math.cos(a)) * 100) / 100}
+                      x2={Math.round((50 + 46 * Math.sin(a)) * 100) / 100}
+                      y2={Math.round((50 - 46 * Math.cos(a)) * 100) / 100}
+                      stroke="var(--lcd-ink)"
+                      strokeOpacity={k % 5 === 0 ? 0.4 : 0.2}
+                      strokeWidth={k % 5 === 0 ? 0.9 : 0.6}
+                      strokeLinecap="round"
+                    />
+                  );
+                })}
+                {/* closes all the way round: every stage covered */}
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  fill="none"
+                  stroke="var(--ai-lcd)"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeDasharray="283"
+                  strokeDashoffset="283"
+                  transform="rotate(-90 50 50)"
+                  style={
+                    finale
+                      ? { animation: "ring-fill 1.4s var(--ease-soft) 1.1s forwards" }
+                      : undefined
+                  }
+                />
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <div className="mb-[0.5em] text-[0.74em] font-extrabold uppercase tracking-[0.2em]">
+                  Simon <span style={{ color: "var(--ai-lcd)" }}>+ AI</span>
+                </div>
+                <ul className="flex flex-col items-start gap-[0.08em]">
+                  {STATIONS.map((st, k) => (
+                    <li
+                      key={st.name}
+                      className="flex items-center gap-[0.4em] text-[0.95em] font-bold leading-[1.3]"
+                      style={
+                        finale
+                          ? { animation: `word-in 0.5s var(--ease-soft) ${350 + k * 150}ms both` }
+                          : undefined
+                      }
                     >
-                      <path
-                        d="M2 6.4 4.8 9 10 3"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.9"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                    {s.name}
-                  </li>
-                ))}
-              </ul>
+                      <svg
+                        viewBox="0 0 12 12"
+                        className="h-[0.8em] w-[0.8em] shrink-0"
+                        style={{ color: "var(--ai-lcd)" }}
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M2 6.4 4.8 9 10 3"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                      {st.name}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -541,7 +627,8 @@ export function HeroRadio() {
           <div className="absolute inset-x-0 top-[5.9em] bottom-0 bg-[linear-gradient(180deg,var(--surface),var(--surface-lo))]" />
 
           <div className="relative">
-            <div className="text-center text-[max(0.95em,9px)] font-extrabold uppercase tracking-[0.24em] text-ink">
+            {/* sits left, inside the raised part of the wave */}
+            <div className="pl-[0.9em] text-[max(0.95em,9px)] font-extrabold uppercase tracking-[0.24em] text-ink">
               Tuner
             </div>
 
@@ -552,10 +639,10 @@ export function HeroRadio() {
                 role="slider"
                 tabIndex={0}
                 aria-label="Tuner: from idea to product"
-                aria-valuemin={0}
+                aria-valuemin={-1}
                 aria-valuemax={LAST}
                 aria-valuenow={station}
-                aria-valuetext={current.name}
+                aria-valuetext={current?.name ?? "Start: from idea to product"}
                 onPointerDown={onPointerDown}
                 onPointerMove={onPointerMove}
                 onPointerUp={onPointerUp}

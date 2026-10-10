@@ -79,11 +79,18 @@
   --go-deep: #6f8e62;
   --go-ink: #4f7342;
   /* muted accent families for switches: sound, starred, personal, university */
-  /* AI Boost: muted signal red, matching the tuner needle */
-  --ai-hi: #ec9a8e;
-  --ai: #d8695c;
-  --ai-deep: #b44c40;
-  --ai-ink: #a83c31;
+  /* AI Boost uses the green family */
+  --ai-hi: var(--go-hi);
+  --ai: var(--go);
+  --ai-deep: var(--go-deep);
+  --ai-ink: var(--go-ink);
+  --ai-lcd: #3d6631; /* readable green on the pale LCD glass */
+  --ai-mark-bg: #5f7f53;
+  --ai-mark-ink: #ffffff;
+  /* university filter */
+  --uni-hi: #edb7a2;
+  --uni: #d48f75;
+  --uni-deep: #b26f57;
   --graphite-hi: #8b939e;
   --graphite: #6c747f;
   --graphite-deep: #535a64;
@@ -149,7 +156,8 @@
   --lcd-hi: #c3cfae;
   --lcd-lo: #a3b08f;
   --go-ink: #a9cf99;
-  --ai-ink: #ff9384;
+  --ai-mark-bg: #9cc08c;
+  --ai-mark-ink: #1b2016;
   --graphite-hi: #a6aeb9;
   --graphite: #88919c;
   --graphite-deep: #6a737e;
@@ -581,12 +589,34 @@
   }
 }
 
-@keyframes marker-draw {
+@keyframes mark-swipe {
+  to {
+    transform: rotate(-2deg) skewX(-6deg) scaleX(1);
+  }
+}
+
+@keyframes mark-ink {
+  to {
+    color: var(--ai-mark-ink);
+  }
+}
+
+@keyframes ring-fill {
   from {
-    transform: scaleX(0);
+    stroke-dashoffset: 283;
   }
   to {
-    transform: scaleX(1);
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes hint-chevron {
+  0%,
+  100% {
+    opacity: 0.18;
+  }
+  40% {
+    opacity: 0.85;
   }
 }
 

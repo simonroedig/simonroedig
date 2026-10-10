@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { clack, isSoundEnabled, onSound, setSoundEnabled } from "@/lib/sound";
 import { DeviceSwitch } from "./DeviceSwitch";
+import { useCursorLight } from "@/hooks/use-cursor-light";
 
 /** Perforated speaker panel with the sound switch. It thumps along whenever a UI sound plays. */
 export function SpeakerGrille() {
+  const panelRef = useCursorLight<HTMLDivElement>();
   const pulseRef = useRef<HTMLDivElement>(null);
   const [sound, setSound] = useState(true);
 
@@ -35,6 +37,7 @@ export function SpeakerGrille() {
   return (
     <div className="@container h-full w-full">
       <div
+        ref={panelRef}
         className="surface raise-md relative h-full rounded-[2.6em] p-[1.7em]"
         style={{ fontSize: "calc(100cqw / 24)" }}
       >
@@ -51,7 +54,7 @@ export function SpeakerGrille() {
           >
             Sound
           </span>
-          <DeviceSwitch on={sound} onToggle={toggleSound} label="Click sounds" green />
+          <DeviceSwitch on={sound} onToggle={toggleSound} label="Click sounds" tone="go" />
         </div>
       </div>
     </div>

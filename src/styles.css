@@ -22,6 +22,7 @@
   --color-ink-faint: var(--ink-faint);
   --color-go: var(--go);
   --color-go-deep: var(--go-deep);
+  --color-ai-ink: var(--ai-ink);
   --color-needle: var(--needle);
   --color-lcd-ink: var(--lcd-ink);
 
@@ -74,6 +75,20 @@
   --go-hi: #a9c49a;
   --go: #8aa97b;
   --go-deep: #6f8e62;
+  /* muted accent families for switches: AI, starred, personal, university */
+  --ai-hi: #dcb6e2;
+  --ai: #bb8dca;
+  --ai-deep: #9566a8;
+  --ai-ink: #7a4b8c;
+  --star-hi: #ecd396;
+  --star: #d2ad5e;
+  --star-deep: #ae8a3f;
+  --personal-hi: #aecbe3;
+  --personal: #80a7c9;
+  --personal-deep: #5f86a8;
+  --uni-hi: #edb7a2;
+  --uni: #d48f75;
+  --uni-deep: #b26f57;
   --needle: #d4503f;
   --lcd-hi: #d3dac5;
   --lcd-lo: #b5bfa7;
@@ -126,6 +141,7 @@
   --ink-faint: #848e9b;
   --lcd-hi: #c3cfae;
   --lcd-lo: #a3b08f;
+  --ai-ink: #d6aee2;
   --knob-hi: #4a525d;
   --knob-lo: #343a43;
   --track-off: #1c2025;
@@ -436,6 +452,21 @@
     transform: translateY(0) scale(1);
     opacity: 1;
   }
+}
+
+@keyframes caption-in {
+  from {
+    transform: translateY(0.35em);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@utility animate-caption-in {
+  animation: caption-in 0.5s var(--ease-soft) both;
 }
 
 @utility animate-rise-in {

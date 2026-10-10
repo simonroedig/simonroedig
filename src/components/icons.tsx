@@ -98,13 +98,6 @@ export const IconGraduation = (p: IconProps) => (
   </Stroke>
 );
 
-export const IconSpark = (p: IconProps) => (
-  <Stroke {...p}>
-    <path d="M12 3c.6 4.2 2.8 6.4 7 7-4.2.6-6.4 2.8-7 7-.6-4.2-2.8-6.4-7-7 4.2-.6 6.4-2.8 7-7z" />
-    <path d="M19 15.5c.3 1.6 1 2.3 2.5 2.5-1.5.3-2.2 1-2.5 2.5-.3-1.5-1-2.2-2.5-2.5 1.5-.2 2.2-.9 2.5-2.5z" />
-  </Stroke>
-);
-
 export const IconSun = (p: IconProps) => (
   <Stroke {...p}>
     <circle cx="12" cy="12" r="4" />

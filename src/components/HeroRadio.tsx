@@ -1,32 +1,39 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { clack, tick } from "@/lib/sound";
 import { useTheme } from "@/hooks/use-theme";
+import { useCursorLight } from "@/hooks/use-cursor-light";
 import { DeviceSwitch } from "./DeviceSwitch";
-import { IconSpark } from "./icons";
-
-// The path from idea to product. `ai` is where AI speeds up each stage.
+// The path from idea to product, told in first person. `ai` is where AI
+// speeds up each stage (shown in AI Boost mode).
 const STATIONS = [
   {
     name: "Concept",
-    caption: "Research, ideation & concepts",
-    ai: "Faster research & ideation",
+    caption: "I research, ideate and shape concepts.",
+    ai: "AI helps me research and explore more ideas, faster.",
   },
   {
     name: "Prototype",
-    caption: "Physical & digital prototypes",
-    ai: "AI-generated prototypes, tested sooner",
+    caption: "I build physical and digital prototypes.",
+    ai: "I let AI build first prototypes, so we test sooner.",
   },
   {
     name: "User Study",
-    caption: "Studies & UX/UI iterations",
-    ai: "Quicker analysis & iterations",
+    caption: "I run user studies and iterate on UX/UI.",
+    ai: "AI speeds up my study analysis and iterations.",
   },
   {
     name: "Product",
-    caption: "Implementation, front- to backend",
-    ai: "AI-assisted engineering",
+    caption: "I implement it, from frontend to backend.",
+    ai: "I ship faster with AI-assisted engineering.",
   },
 ];
+const AI_INTRO = "Where I bring in AI, stage by stage:";
+const AI_FINAL = "I bring AI into every stage and help the whole team move faster.";
+
+// AI Boost scan timing
+const DWELL_MS = 2400; // time to read each stage
+const GLIDE_MS = 1000; // a slow glide to the next stage
+const INTRO_MS = 1700; // intro line while the tuner returns to the start
 const LAST = STATIONS.length - 1;
 
 const NAME_STEP = 9; // em between station names on the LCD scale
@@ -72,9 +79,12 @@ const START = STATIONS.length - 1;
  */
 export function HeroRadio() {
   const [dark, setDark] = useTheme();
+  const panelRef = useCursorLight<HTMLDivElement>();
   const [station, setStation] = useState(START);
   const [ai, setAi] = useState(false);
   const [scanning, setScanning] = useState(false);
+  const [aiPhase, setAiPhase] = useState<"intro" | "stages" | "final">("stages");
+  const spring = useRef({ k: 170, c: 17 });
   const scanTimers = useRef<number[]>([]);
 
   const pos = useRef(START);
@@ -128,7 +138,7 @@ export function HeroRadio() {
       last = now;
       const goal = target.current;
       if (goal === null) return;
-      const force = -170 * (pos.current - goal) - 17 * vel.current;
+      const force = -spring.current.k * (pos.current - goal) - spring.current.c * vel.current;
       vel.current += force * dt;
       pos.current += vel.current * dt;
       paint();
@@ -143,8 +153,10 @@ export function HeroRadio() {
     raf.current = requestAnimationFrame(step);
   }, [paint]);
 
+  /** Tune to a station: snappy by default, a slow glide for the AI Boost scan. */
   const tuneTo = useCallback(
-    (i: number) => {
+    (i: number, glide = false) => {
+      spring.current = glide ? { k: 55, c: 13.5 } : { k: 170, c: 17 };
       target.current = clamp(i, 0, LAST);
       animate();
     },
@@ -155,17 +167,31 @@ export function HeroRadio() {
     scanTimers.current.forEach(clearTimeout);
     scanTimers.current = [];
     setScanning(false);
+    setAiPhase("stages");
   }, []);
 
-  /** AI Boost: run through every stage of the process, one after another. */
+  /**
+   * AI Boost: an intro line while the tuner returns to the start, then a slow
+   * pass through every stage, then the closing line. Fixed timeline, so it
+   * runs the same way no matter where the tuner was.
+   */
   const runScan = useCallback(() => {
     stopScan();
     setScanning(true);
+    setAiPhase("intro");
     tuneTo(0);
+    const at = (ms: number, fn: () => void) => scanTimers.current.push(window.setTimeout(fn, ms));
+    let t = INTRO_MS;
+    at(t, () => setAiPhase("stages"));
+    t += DWELL_MS;
     for (let i = 1; i <= LAST; i++) {
-      scanTimers.current.push(window.setTimeout(() => tuneTo(i), 600 + (i - 1) * 850));
+      at(t, () => tuneTo(i, true));
+      t += GLIDE_MS + DWELL_MS;
     }
-    scanTimers.current.push(window.setTimeout(() => setScanning(false), 600 + LAST * 850));
+    at(t, () => {
+      setScanning(false);
+      setAiPhase("final");
+    });
   }, [stopScan, tuneTo]);
 
   // Intro: sweep across the band and settle on "Concept"
@@ -271,10 +297,18 @@ export function HeroRadio() {
   };
 
   const current = STATIONS[station];
+  const caption = !ai
+    ? current.caption
+    : aiPhase === "intro"
+      ? AI_INTRO
+      : aiPhase === "final"
+        ? AI_FINAL
+        : current.ai;
 
   return (
     <div className="@container w-full">
       <div
+        ref={panelRef}
         className="surface raise-lg relative overflow-hidden rounded-[3.2em] px-[2em] pt-[2em] pb-[2em]"
         style={{ fontSize: "calc(100cqw / 28)" }}
       >
@@ -310,17 +344,15 @@ export function HeroRadio() {
             </svg>
           </div>
 
-          {/* AI Boost halo */}
+          {/* Bezel: glows softly while AI Boost is on */}
           <div
-            className={`absolute left-1/2 top-1/2 h-[19em] w-[19em] -translate-x-1/2 -translate-y-1/2 rounded-full transition-opacity duration-700 ${ai ? "opacity-100" : "opacity-0"}`}
+            className="absolute left-1/2 top-1/2 h-[13.2em] w-[13.2em] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[linear-gradient(150deg,var(--knob-hi),var(--knob-lo))] transition-[box-shadow] duration-700"
             style={{
-              background:
-                "radial-gradient(circle, color-mix(in srgb, var(--go) 70%, transparent) 62%, transparent 96%)",
+              boxShadow: ai
+                ? "var(--raise-sm), 0 0 1.6em 0.35em color-mix(in srgb, var(--ai) 55%, transparent)"
+                : "var(--raise-sm), 0 0 0 0 transparent",
             }}
           />
-
-          {/* Bezel */}
-          <div className="raise-sm absolute left-1/2 top-1/2 h-[13.2em] w-[13.2em] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[linear-gradient(150deg,var(--knob-hi),var(--knob-lo))]" />
 
           {/* Analog LCD */}
           <div
@@ -329,8 +361,9 @@ export function HeroRadio() {
           >
             <div
               className={`absolute right-[calc(50%+0.55em)] top-[1.1em] text-[0.8em] font-extrabold tracking-[0.12em] transition-opacity duration-300 ${
-                ai ? (scanning ? "animate-pulse opacity-90" : "opacity-90") : "opacity-[0.16]"
+                ai ? (scanning ? "animate-pulse opacity-100" : "opacity-100") : "opacity-[0.16]"
               }`}
+              style={ai ? { color: "var(--ai-deep)" } : undefined}
             >
               AI
             </div>
@@ -407,14 +440,12 @@ export function HeroRadio() {
           className="relative z-10 mx-auto mt-[0.2em] h-[2.6em] max-w-[22em] text-center text-[max(1.05em,10px)] font-semibold leading-tight text-ink-soft"
           aria-live="polite"
         >
-          {ai ? (
-            <span className="inline-flex items-center gap-[0.35em] text-ink">
-              <IconSpark size="1.05em" className="shrink-0 text-go-deep" />
-              {current.ai}
-            </span>
-          ) : (
-            current.caption
-          )}
+          <span
+            key={caption}
+            className={`inline-block animate-caption-in ${ai ? "font-bold text-ai-ink" : ""}`}
+          >
+            {caption}
+          </span>
         </p>
 
         {/* Lower, wavy layer */}
@@ -493,12 +524,11 @@ export function HeroRadio() {
             <div className="mt-[1.4em] grid grid-cols-[1.3fr_1fr] gap-[0.9em]">
               <div className="tray flex items-center justify-between gap-[0.6em] rounded-[1.3em] py-[0.75em] pr-[0.75em] pl-[1em]">
                 <span
-                  className={`flex items-center gap-[0.35em] whitespace-nowrap text-[max(0.9em,9px)] font-extrabold uppercase tracking-[0.12em] transition-colors ${ai ? "text-ink" : "text-ink-soft"}`}
+                  className={`whitespace-nowrap text-[max(0.9em,9px)] font-extrabold uppercase tracking-[0.12em] transition-colors ${ai ? "text-ai-ink" : "text-ink-soft"}`}
                 >
-                  <IconSpark size="1.25em" className={ai ? "text-go-deep" : ""} />
                   AI Boost
                 </span>
-                <DeviceSwitch on={ai} onToggle={toggleAi} label="AI Boost" green />
+                <DeviceSwitch on={ai} onToggle={toggleAi} label="AI Boost" tone="ai" />
               </div>
               <div className="tray flex items-center justify-center gap-[0.55em] rounded-[1.3em] px-[0.75em] py-[0.75em] text-[max(0.9em,9px)] font-extrabold tracking-[0.08em]">
                 <span className={`transition-colors ${dark ? "text-ink-faint" : "text-ink"}`}>

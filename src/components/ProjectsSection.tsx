@@ -48,11 +48,24 @@ export function ProjectsSection() {
           role="group"
           aria-label="Filter projects"
         >
-          <Toggle label="Starred" icon={IconStar} checked={starredOnly} onChange={setStarredOnly} />
-          <Toggle label="Personal" icon={IconUser} checked={personal} onChange={setPersonal} />
+          <Toggle
+            label="Starred"
+            icon={IconStar}
+            tone="star"
+            checked={starredOnly}
+            onChange={setStarredOnly}
+          />
+          <Toggle
+            label="Personal"
+            icon={IconUser}
+            tone="personal"
+            checked={personal}
+            onChange={setPersonal}
+          />
           <Toggle
             label="University"
             icon={IconGraduation}
+            tone="uni"
             checked={university}
             onChange={setUniversity}
           />

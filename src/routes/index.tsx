@@ -8,7 +8,7 @@ export const Route = createFileRoute("/")({
     return {
       project: search.project as string | undefined,
       experience: search.experience as string | undefined,
-    }
+    };
   },
   head: () => ({
     meta: [
@@ -21,8 +21,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Simon Rödig — Human-Centric Design Accelerated by AI" },
       {
         property: "og:description",
-        content:
-          "Portfolio of Simon Rödig, HCI graduate and UX/Product Designer based in Germany.",
+        content: "Portfolio of Simon Rödig, HCI graduate and UX/Product Designer based in Germany.",
       },
       { property: "og:type", content: "website" },
     ],
@@ -32,7 +31,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <main className="md:snap-y md:snap-proximity md:h-screen md:overflow-y-scroll bg-paper text-ink no-scrollbar">
+    <main className="relative z-[1] md:snap-y md:snap-proximity md:h-screen md:overflow-y-scroll text-ink no-scrollbar">
       <HeroSection />
       <ExperienceSection />
       <ProjectsSection />

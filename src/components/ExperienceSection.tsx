@@ -1,5 +1,8 @@
+import { useRef } from "react";
 import { experiences } from "@/data/experiences";
 import { CardOverlay } from "./CardOverlay";
+import { SectionHeader } from "./SectionHeader";
+import { ScrollTuner } from "./ScrollTuner";
 import { Route } from "@/routes/index";
 import { useNavigate } from "@tanstack/react-router";
 
@@ -7,9 +10,10 @@ export function ExperienceSection() {
   const { experience: openId } = Route.useSearch();
   const navigate = useNavigate({ from: Route.id });
   const openExp = experiences.find((e) => e.id === openId);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const setOpenId = (id: string | null) => {
-    navigate({ 
+    navigate({
       search: (prev) => ({ ...prev, experience: id || undefined, project: undefined }),
       resetScroll: false,
     });
@@ -17,76 +21,111 @@ export function ExperienceSection() {
 
   const showCardNumbers = false; // Toggle this to true to show the numbers again
 
-  return (
-    <section className="md:snap-start min-h-[100svh] md:h-screen w-full flex flex-col border-b-4 border-ink overflow-x-hidden lg:overflow-hidden">
-      {/* Header */}
-      <div className="px-4 md:px-10 py-4 md:py-6 border-b-4 border-ink flex justify-between items-baseline gap-4">
-        <div>
-          <div className="font-mono text-[10px] md:text-xs text-accent uppercase tracking-[0.3em] mb-1">
-            01 / Career
-          </div>
-          <h2 className="font-display text-3xl md:text-5xl lg:text-6xl italic leading-none text-ink">
-            Experience
-          </h2>
-        </div>
-        <span className="font-mono text-[10px] md:text-xs uppercase tracking-widest text-muted-foreground hidden sm:block">
-          TIMELINE // {experiences.length} ROLES
-        </span>
-      </div>
+  const cardStep = () => {
+    const first = scrollRef.current?.firstElementChild as HTMLElement | null;
+    return first ? first.getBoundingClientRect().width + 40 : 400;
+  };
 
-      {/* Horizontal scroll cards */}
-      <div className="flex-1 flex items-center overflow-x-auto overflow-y-hidden no-scrollbar gap-6 md:gap-10 px-4 md:px-10 py-6">
-        {experiences.map((exp, i) => (
-          <button
-            key={exp.id}
-            onClick={() => setOpenId(exp.id)}
-            className="group relative text-left shrink-0 w-[80vw] sm:w-[300px] md:w-[360px] lg:w-[calc(65vh*0.8)] lg:max-w-[560px] h-[55vh] sm:h-[375px] md:h-[450px] lg:h-[65vh] lg:max-h-[700px] bg-paper border-4 border-ink p-5 md:p-6 flex flex-col justify-between transition-transform duration-200 hover:translate-x-1 hover:translate-y-1 hover:shadow-none cursor-pointer"
-            style={{
-              boxShadow: `10px 10px 0px 0px ${exp.color}`,
-            }}
-          >
-            <div className="flex flex-col flex-1 min-h-0 w-full">
-              <div className="flex items-center justify-between mb-3 md:mb-4 shrink-0">
-                <span className="font-mono text-xs md:text-sm font-bold text-ink">
+  return (
+    <section
+      id="experience"
+      className="md:snap-start flex min-h-[100svh] w-full flex-col overflow-x-hidden md:h-screen lg:overflow-hidden"
+    >
+      <SectionHeader
+        index="01"
+        kicker="Career"
+        title="Experience"
+        readout={
+          <>
+            <span className="led led-on h-1.5! w-1.5!" />
+            Timeline
+            <span className="font-bold text-ink">
+              {String(experiences.length).padStart(2, "0")}
+            </span>
+            Roles
+          </>
+        }
+      />
+
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col justify-center">
+        {/* Horizontal scroll cards */}
+        <div
+          ref={scrollRef}
+          className="flex snap-x snap-mandatory items-stretch gap-7 overflow-x-auto overflow-y-hidden px-5 py-10 no-scrollbar scroll-px-5 md:gap-10 md:px-10 md:py-12 md:scroll-px-10"
+        >
+          {experiences.map((exp, i) => (
+            <button
+              key={exp.id}
+              onClick={() => setOpenId(exp.id)}
+              className="group relative flex h-[56vh] w-[80vw] shrink-0 snap-start flex-col rounded-[2rem] p-4 text-left neu-card cursor-pointer sm:h-[400px] sm:w-[310px] md:h-[460px] md:w-[370px] md:rounded-[2.25rem] md:p-5 lg:h-[min(58vh,640px)] lg:w-[calc(min(58vh,640px)*0.82)] lg:max-w-[540px]"
+              style={{ "--led": exp.color } as React.CSSProperties}
+            >
+              <div className="mb-3 flex shrink-0 items-center justify-between md:mb-4">
+                <span className="rounded-full px-3 py-1.5 font-mono text-[10px] font-bold tracking-wide text-ink-soft neu-inset-xs md:text-xs">
                   {exp.date}
                 </span>
                 {exp.id === "bsh" ? (
-                  <div className="bg-accent text-paper px-2 py-0.5 border-2 border-ink font-mono text-[10px] md:text-xs font-bold uppercase flex items-center gap-1.5 shadow-[2px_2px_0px_0px_var(--color-ink)] transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:rotate-2">
-                    <span className="text-[10px] md:text-xs">★</span>
-                    <span>Patent</span>
-                  </div>
+                  <span className="flex items-center gap-1.5 rounded-full px-3 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-accent-ink neu-raised-xs md:text-[11px]">
+                    <span aria-hidden="true">★</span>
+                    Patent
+                  </span>
                 ) : showCardNumbers ? (
-                  <span
-                    className="font-mono text-[10px] uppercase px-2 py-0.5 border-2 border-ink"
-                    style={{ backgroundColor: exp.color, color: "#000" }}
-                  >
+                  <span className="font-mono text-[10px] text-ink-faint">
                     {String(experiences.length - i).padStart(2, "0")}
                   </span>
-                ) : null}
+                ) : (
+                  <span className="led led-color mr-1" aria-hidden="true" />
+                )}
               </div>
-              <h3 className="font-display text-xl sm:text-3xl md:text-4xl italic leading-[0.95] text-ink pb-3 shrink-0 truncate w-full">
+
+              <h3 className="w-full shrink-0 truncate pb-1 font-display text-2xl font-bold leading-[1.05] tracking-[-0.035em] text-ink sm:text-3xl md:text-[2.4rem]">
                 {exp.company}
               </h3>
-              <p className="font-mono text-[10px] md:text-xs uppercase tracking-tight text-muted-foreground mb-4 md:mb-6 shrink-0">
+              <p className="mb-4 shrink-0 font-mono text-[10px] uppercase leading-snug tracking-[0.08em] text-ink-faint md:mb-5 md:text-[11px]">
                 {exp.role}
               </p>
-              <div
-                className="w-full flex-1 min-h-[100px] border-2 border-ink mb-4 overflow-hidden shrink-0"
-                style={{ backgroundColor: exp.color }}
-              >
-                <img
-                  src={exp.image}
-                  alt={exp.company}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 ease-out"
-                />
+
+              <div className="mb-4 min-h-[100px] w-full flex-1 rounded-[1.4rem] p-2 neu-inset-sm md:rounded-[1.6rem] md:p-2.5">
+                <div
+                  className="h-full w-full overflow-hidden rounded-[1rem] md:rounded-[1.15rem]"
+                  style={{ backgroundColor: exp.color }}
+                >
+                  <img
+                    src={exp.image}
+                    alt={exp.company}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-700 ease-[var(--ease-soft)] group-hover:scale-[1.04]"
+                  />
+                </div>
               </div>
-              <p className="text-sm md:text-[15px] leading-snug text-ink shrink-0 line-clamp-2 md:line-clamp-3">
-                {exp.shortDescription}
-              </p>
-            </div>
-          </button>
-        ))}
-        <div className="shrink-0 w-2 md:w-6" />
+
+              <div className="flex shrink-0 items-end gap-4">
+                <p className="line-clamp-2 flex-1 text-sm leading-snug text-ink-soft md:line-clamp-3 md:text-[15px]">
+                  {exp.shortDescription}
+                </p>
+                <span
+                  aria-hidden="true"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-ink-faint neu-raised-sm transition-all duration-300 group-hover:text-accent-ink group-hover:[box-shadow:var(--neu-in-sm)]"
+                >
+                  <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                    <path
+                      d="M4 10 10 4M5 4h5v5"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </button>
+          ))}
+          <div className="w-1 shrink-0 md:w-4" />
+        </div>
+
+        <div className="mx-auto w-full max-w-3xl px-5 pb-8 md:px-10 md:pb-10">
+          <ScrollTuner target={scrollRef} step={cardStep} />
+        </div>
       </div>
 
       {openExp && (

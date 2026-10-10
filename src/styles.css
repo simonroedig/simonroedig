@@ -5,84 +5,105 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --radius-sm: 0px;
-  --radius-md: 0px;
-  --radius-lg: 0px;
-  --radius-xl: 0px;
-  --radius-2xl: 0px;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.75rem;
+  --radius-3xl: 2.25rem;
 
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-paper: var(--paper);
+  /* Neumorphic surface + ink */
+  --color-surface: var(--surface);
+  --color-surface-hi: var(--surface-hi);
+  --color-surface-lo: var(--surface-lo);
   --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
   --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
   --color-accent2: var(--accent2);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-border: var(--border);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
+  --color-lcd: var(--lcd);
 
-  --font-display: "Playfair Display", ui-serif, Georgia, serif;
+  /* shadcn compatibility */
+  --color-background: var(--surface);
+  --color-foreground: var(--ink);
+  --color-paper: var(--surface);
+  --color-accent-foreground: #ffffff;
+  --color-muted: var(--surface-lo);
+  --color-muted-foreground: var(--ink-soft);
+  --color-border: var(--surface-lo);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--ink);
+  --color-popover: var(--surface);
+  --color-popover-foreground: var(--ink);
+  --color-primary: var(--ink);
+  --color-primary-foreground: var(--surface);
+  --color-secondary: var(--surface-lo);
+  --color-secondary-foreground: var(--ink);
+  --color-destructive: oklch(0.577 0.245 27.325);
+  --color-destructive-foreground: #ffffff;
+  --color-input: var(--surface-lo);
+  --color-ring: var(--accent);
+
+  --font-display: "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  --ease-brutal: cubic-bezier(0, 0, 0, 1);
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/*
+ * Light is the default: a warm "Braun white" panel lit from the top left.
+ * Every shadow token has exactly four layers (2 outer + 2 inset) so raised
+ * and pressed states interpolate smoothly into each other.
+ */
 :root {
-  --paper: #ffffff;
-  --ink: oklch(0 0 0);
-  --background: #E0DCD3;
-  --foreground: oklch(0 0 0);
-  --accent: #000000;
+  color-scheme: light;
+
+  --surface: #e9e6e0;
+  --surface-hi: #f5f3ef;
+  --surface-lo: #d9d5cd;
+  --ink: #262422;
+  --ink-soft: #57534d;
+  --ink-faint: #6e6961;
+  --accent: #f0611d;
+  --accent-deep: #c5440a;
+  --accent-ink: #cf4c0e;
   --accent2: #8bb37b;
-  --accent-foreground: oklch(1 0 0);
-  --muted: oklch(0.95 0.002 90);
-  --muted-foreground: oklch(0.45 0 0);
-  --border: oklch(0 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0 0 0);
-  --primary: oklch(0 0 0);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.95 0.002 90);
-  --secondary-foreground: oklch(0 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(1 0 0);
-  --input: oklch(0 0 0);
-  --ring: oklch(0.66 0.24 35);
+  --lcd: #dcd8cf;
+
+  --sh-d: rgba(160, 148, 130, 0.55);
+  --sh-l: rgba(255, 255, 255, 0.95);
+  --hole: rgba(92, 82, 70, 0.32);
+  --led-off: #cdc8bf;
+
+  --neu-xs: 2px 2px 5px var(--sh-d), -2px -2px 5px var(--sh-l), inset 0 0 0 transparent, inset 0 0 0 transparent;
+  --neu-sm: 5px 5px 11px var(--sh-d), -5px -5px 11px var(--sh-l), inset 0 0 0 transparent, inset 0 0 0 transparent;
+  --neu-md: 10px 10px 22px var(--sh-d), -10px -10px 22px var(--sh-l), inset 0 0 0 transparent, inset 0 0 0 transparent;
+  --neu-lg: 18px 18px 40px var(--sh-d), -16px -16px 36px var(--sh-l), inset 0 0 0 transparent, inset 0 0 0 transparent;
+  --neu-in-xs: 0 0 0 transparent, 0 0 0 transparent, inset 2px 2px 4px var(--sh-d), inset -2px -2px 4px var(--sh-l);
+  --neu-in-sm: 0 0 0 transparent, 0 0 0 transparent, inset 4px 4px 8px var(--sh-d), inset -4px -4px 8px var(--sh-l);
+  --neu-in-md: 0 0 0 transparent, 0 0 0 transparent, inset 8px 8px 16px var(--sh-d), inset -8px -8px 16px var(--sh-l);
 }
 
 .dark {
-  --paper: oklch(0.12 0 0);
-  --ink: oklch(0.98 0 0);
-  --background: oklch(0.12 0 0);
-  --foreground: oklch(0.98 0 0);
-  --muted: oklch(0.2 0 0);
-  --muted-foreground: oklch(0.7 0 0);
-  --border: oklch(0.98 0 0);
-  --card: oklch(0.16 0 0);
-  --card-foreground: oklch(0.98 0 0);
-  --popover: oklch(0.16 0 0);
-  --popover-foreground: oklch(0.98 0 0);
-  --primary: oklch(0.98 0 0);
-  --primary-foreground: oklch(0 0 0);
-  --secondary: oklch(0.2 0 0);
-  --secondary-foreground: oklch(0.98 0 0);
-  --input: oklch(0.98 0 0);
+  color-scheme: dark;
+
+  --surface: #2a2b2f;
+  --surface-hi: #323338;
+  --surface-lo: #222326;
+  --ink: #ecebe7;
+  --ink-soft: #b9b6af;
+  --ink-faint: #9a978f;
+  --accent: #ff6a26;
+  --accent-deep: #d24b0d;
+  --accent-ink: #ff7d40;
+  --lcd: #232427;
+
+  --sh-d: rgba(0, 0, 0, 0.55);
+  --sh-l: rgba(255, 255, 255, 0.065);
+  --hole: rgba(0, 0, 0, 0.6);
+  --led-off: #1d1e21;
 }
 
 @layer base {
@@ -90,16 +111,194 @@
     border-color: var(--color-border);
   }
 
-  html, body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
+  html,
+  body {
+    background-color: var(--surface);
+    color: var(--ink);
     font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.5s var(--ease-soft), color 0.5s var(--ease-soft);
   }
 
   body {
     margin: 0;
   }
+
+  ::selection {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
 }
+
+/* ---------- Neumorphic surfaces ---------- */
+
+@utility neu-raised-xs {
+  box-shadow: var(--neu-xs);
+}
+@utility neu-raised-sm {
+  box-shadow: var(--neu-sm);
+}
+@utility neu-raised {
+  box-shadow: var(--neu-md);
+}
+@utility neu-raised-lg {
+  box-shadow: var(--neu-lg);
+}
+@utility neu-inset-xs {
+  box-shadow: var(--neu-in-xs);
+}
+@utility neu-inset-sm {
+  box-shadow: var(--neu-in-sm);
+}
+@utility neu-inset {
+  box-shadow: var(--neu-in-md);
+}
+@utility neu-convex {
+  background: linear-gradient(145deg, var(--surface-hi), var(--surface-lo));
+}
+@utility neu-concave {
+  background: linear-gradient(145deg, var(--surface-lo), var(--surface-hi));
+}
+
+/* A physical key: raised at rest, lifts on hover, presses in on click. */
+@utility neu-key {
+  background: var(--surface);
+  box-shadow: var(--neu-sm);
+  transition:
+    box-shadow 0.28s var(--ease-soft),
+    transform 0.28s var(--ease-soft),
+    color 0.2s ease;
+  @media (hover: hover) {
+    &:hover {
+      box-shadow: var(--neu-md);
+    }
+  }
+  &:active {
+    box-shadow: var(--neu-in-sm);
+    transform: scale(0.98);
+  }
+}
+
+/* A card that floats and sinks back in when pressed. */
+@utility neu-card {
+  background: var(--surface);
+  box-shadow: var(--neu-md);
+  transition:
+    box-shadow 0.4s var(--ease-soft),
+    transform 0.4s var(--ease-soft);
+  @media (hover: hover) {
+    &:hover {
+      box-shadow: var(--neu-lg);
+      transform: translateY(-4px);
+    }
+  }
+  &:active {
+    box-shadow: var(--neu-in-sm);
+    transform: translateY(0) scale(0.99);
+  }
+}
+
+@utility neu-card-sm {
+  background: var(--surface);
+  box-shadow: var(--neu-sm);
+  transition:
+    box-shadow 0.4s var(--ease-soft),
+    transform 0.4s var(--ease-soft);
+  @media (hover: hover) {
+    &:hover {
+      box-shadow: var(--neu-md);
+      transform: translateY(-3px);
+    }
+  }
+  &:active {
+    box-shadow: var(--neu-in-sm);
+    transform: translateY(0) scale(0.985);
+  }
+}
+
+/* Engraved hairline used instead of hard borders. */
+@utility groove {
+  height: 3px;
+  border-radius: 9999px;
+  box-shadow: var(--neu-in-xs);
+}
+
+/* Recessed perforation pattern (speaker grille). */
+@utility grille {
+  --hole-r: 2.2px;
+  --hole-gap: 13px;
+  background-image:
+    radial-gradient(circle, var(--hole) 0 var(--hole-r), transparent calc(var(--hole-r) + 0.7px)),
+    radial-gradient(circle, var(--sh-l) 0 var(--hole-r), transparent calc(var(--hole-r) + 0.7px));
+  background-size:
+    var(--hole-gap) var(--hole-gap),
+    var(--hole-gap) var(--hole-gap);
+  background-position:
+    0 0,
+    0.8px 0.8px;
+}
+
+/* ---------- LEDs ---------- */
+
+@utility led {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  background: var(--led-off);
+  box-shadow:
+    inset 1px 1px 2px rgba(0, 0, 0, 0.3),
+    1px 1px 1px var(--sh-l);
+  transition:
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+@utility led-on {
+  background: radial-gradient(circle at 35% 35%, #ffe0cc 0, var(--accent) 45%, var(--accent-deep) 100%);
+  box-shadow:
+    0 0 5px 1px color-mix(in srgb, var(--accent) 75%, transparent),
+    0 0 14px 3px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+/* LED tinted with an arbitrary color passed via --led */
+@utility led-color {
+  background: radial-gradient(
+    circle at 35% 35%,
+    color-mix(in srgb, var(--led) 35%, white) 0,
+    var(--led) 50%,
+    color-mix(in srgb, var(--led) 75%, black) 100%
+  );
+  box-shadow:
+    0 0 5px 1px color-mix(in srgb, var(--led) 70%, transparent),
+    0 0 12px 2px color-mix(in srgb, var(--led) 30%, transparent);
+}
+
+/* ---------- Typography effects ---------- */
+
+/* Letters pushed out of the surface */
+@utility text-emboss {
+  color: var(--surface);
+  text-shadow:
+    -0.035em -0.035em 0.06em var(--sh-l),
+    0.045em 0.045em 0.09em var(--sh-d);
+}
+
+/* Small labels cut into the surface */
+@utility text-engrave {
+  text-shadow:
+    1px 1px 0 var(--sh-l),
+    -0.5px -0.5px 0 rgba(0, 0, 0, 0.08);
+}
+
+/* ---------- Scrollbars ---------- */
 
 @utility no-scrollbar {
   &::-webkit-scrollbar {
@@ -112,38 +311,25 @@
 @utility styled-scrollbar {
   &::-webkit-scrollbar {
     width: 10px;
+    height: 10px;
   }
   &::-webkit-scrollbar-track {
-    background: var(--color-paper);
-    border-left: 2px solid var(--color-ink);
+    background: transparent;
   }
   &::-webkit-scrollbar-thumb {
-    background: var(--color-ink);
-    border: 2px solid var(--color-paper);
-    border-right: none;
+    background: var(--surface-lo);
+    border-radius: 9999px;
+    border: 3px solid var(--surface);
   }
-  scrollbar-color: var(--color-ink) var(--color-paper);
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface-lo) transparent;
 }
 
-@utility brutal-shadow {
-  box-shadow: 10px 10px 0px 0px var(--color-ink);
-}
+/* ---------- Motion ---------- */
 
-@utility brutal-shadow-sm {
-  box-shadow: 6px 6px 0px 0px var(--color-ink);
-}
-
-@utility brutal-shadow-accent {
-  box-shadow: 10px 10px 0px 0px var(--color-accent);
-}
-
-@utility brutal-shadow-color {
-  box-shadow: 10px 10px 0px 0px var(--card-shadow, var(--color-ink));
-}
-
-@keyframes brutal-in {
+@keyframes rise-in {
   from {
-    transform: translateY(40px);
+    transform: translateY(28px);
     opacity: 0;
   }
   to {
@@ -152,13 +338,47 @@
   }
 }
 
-@keyframes overlay-in {
+@keyframes surface-in {
   from {
-    transform: scale(0.92);
+    box-shadow: 0 0 0 transparent, 0 0 0 transparent, inset 0 0 0 transparent, inset 0 0 0 transparent;
+    transform: scale(0.97);
     opacity: 0;
   }
   to {
+    box-shadow: var(--neu-lg);
     transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes key-press {
+  0%,
+  35% {
+    box-shadow: var(--neu-md);
+    transform: translateY(-2px);
+  }
+  100% {
+    box-shadow: var(--neu-in-sm);
+    transform: translateY(0);
+  }
+}
+
+@keyframes overlay-in {
+  from {
+    transform: translateY(16px) scale(0.97);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
     opacity: 1;
   }
 }
@@ -174,14 +394,69 @@
   }
 }
 
-@utility animate-brutal-in {
-  animation: brutal-in 0.6s var(--ease-brutal) both;
+@keyframes scroll-dot {
+  0% {
+    transform: translateY(-7px);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(7px);
+    opacity: 0;
+  }
+}
+
+@keyframes led-breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@utility animate-rise-in {
+  animation: rise-in 0.9s var(--ease-soft) both;
+}
+
+@utility animate-surface-in {
+  animation: surface-in 1.1s var(--ease-soft) both;
+}
+
+@utility animate-key-press {
+  animation: key-press 1s var(--ease-soft) both;
 }
 
 @utility animate-overlay-in {
-  animation: overlay-in 0.25s var(--ease-brutal) both;
+  animation: overlay-in 0.45s var(--ease-soft) both;
 }
 
+@utility animate-backdrop-in {
+  animation: backdrop-in 0.3s ease both;
+}
+
+/* backwards (not both) so hover transforms still apply once the card has landed */
 @utility animate-filter-card-in {
-  animation: filter-card-in 0.35s var(--ease-brutal) both;
+  animation: filter-card-in 0.45s var(--ease-soft) backwards;
+}
+
+@utility animate-scroll-dot {
+  animation: scroll-dot 1.8s var(--ease-soft) infinite;
+}
+
+@utility animate-led-breathe {
+  animation: led-breathe 2.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }

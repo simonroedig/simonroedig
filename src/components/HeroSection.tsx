@@ -1,6 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import bgImage from "@/assets/bg.png";
-import fgImage from "@/assets/foreground.png";
+import { TuningDial } from "./TuningDial";
+import { ThemeSwitch } from "./ThemeSwitch";
 
 const calculateAge = (birthDate: Date) => {
   const today = new Date();
@@ -12,210 +11,174 @@ const calculateAge = (birthDate: Date) => {
   return age;
 };
 
+const socials = [
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/simonroedig/" },
+  { label: "Github", href: "https://github.com/simonroedig" },
+  { label: "YouTube", href: "https://www.youtube.com/channel/UCisvFnG8YWMEamSpQ3NiKew" },
+];
+
+const scrollToSection = (id: string) => {
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+};
+
 export function HeroSection() {
-  const age = calculateAge(new Date('1999-06-25'));
-  const showArchetypeBlock = false; // Toggle this to true to show the block again
-  const [isPortraitTapped, setIsPortraitTapped] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [glare, setGlare] = useState({ x: 50, y: 50 });
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Only apply effect on non-touch devices
-    if (window.matchMedia("(pointer: coarse)").matches) return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!cardRef.current) return;
-      const rect = cardRef.current.getBoundingClientRect();
-
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-
-      // Normalize from -1 to 1
-      const normalizedX = (e.clientX - centerX) / (window.innerWidth / 2);
-      const normalizedY = (e.clientY - centerY) / (window.innerHeight / 2);
-
-      setMousePos({ x: normalizedX, y: normalizedY });
-
-      const glareX = ((e.clientX - rect.left) / rect.width) * 100;
-      const glareY = ((e.clientY - rect.top) / rect.height) * 100;
-      setGlare({ x: Math.max(-20, Math.min(120, glareX)), y: Math.max(-20, Math.min(120, glareY)) });
-    };
-
-    const handleMouseLeave = () => {
-      setMousePos({ x: 0, y: 0 });
-      setGlare({ x: 50, y: 50 });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseleave", handleMouseLeave);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseleave", handleMouseLeave);
-    };
-  }, []);
+  const age = calculateAge(new Date("1999-06-25"));
 
   return (
-    <section className="snap-start min-h-[100svh] lg:h-[100svh] w-full relative flex flex-col border-b-4 border-ink p-4 sm:p-6 md:p-10 gap-3 sm:gap-8 overflow-x-hidden lg:overflow-hidden">
-      <style>{`
-        @keyframes slideUpFade {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes stampIn {
-          0% { opacity: 0; transform: scale(1.5) rotate(10deg); }
-          50% { opacity: 1; transform: scale(0.9) rotate(-2deg); }
-          100% { opacity: 1; transform: scale(1) rotate(-1deg); }
-        }
-        @keyframes revealTextWipe {
-          from { clip-path: inset(0 100% 0 0); opacity: 0; }
-          to { clip-path: inset(0 0 0 0); opacity: 1; }
-        }
-        
-        .animate-hero-title {
-          animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-          opacity: 0;
-        }
-        .animate-hero-badge {
-          animation: stampIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-          opacity: 0;
-        }
-        .animate-hero-wipe {
-          animation: revealTextWipe 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-          opacity: 0;
-        }
-      `}</style>
+    <section
+      id="top"
+      className="snap-start relative flex min-h-[100svh] w-full flex-col gap-4 overflow-x-hidden px-4 pt-4 pb-6 sm:px-6 md:px-10 md:pt-6 lg:h-[100svh] lg:overflow-hidden"
+    >
       {/* Top bar */}
-      <div className="flex justify-center md:justify-end items-start shrink-0 w-full mb-2 relative z-10 animate-brutal-in">
-        <div className="flex flex-wrap justify-center gap-1 md:gap-3 font-mono text-[11px] md:text-sm uppercase font-bold items-center">
-          <a href="https://www.linkedin.com/in/simonroedig/" target="_blank" rel="noreferrer" className="px-2 md:px-3 py-1.5 md:py-2 border-2 border-transparent hover:border-ink hover:bg-paper transition-all hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-ink)] text-ink">LinkedIn</a>
-          <a href="https://github.com/simonroedig" target="_blank" rel="noreferrer" className="px-2 md:px-3 py-1.5 md:py-2 border-2 border-transparent hover:border-ink hover:bg-paper transition-all hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-ink)] text-ink">Github</a>
-          <a href="https://www.youtube.com/channel/UCisvFnG8YWMEamSpQ3NiKew" target="_blank" rel="noreferrer" className="px-2 md:px-3 py-1.5 md:py-2 border-2 border-transparent hover:border-ink hover:bg-paper transition-all hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-ink)] text-ink">YouTube</a>
-          <a href="mailto:simonroedig@web.de" className="px-2 md:px-3 py-1.5 md:py-2 border-2 border-ink bg-ink text-paper transition-all hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_var(--color-accent)]">Email</a>
+      <header
+        className="relative z-10 mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-x-3 gap-y-4 animate-rise-in"
+        style={{ animationDelay: "50ms" }}
+      >
+        <div className="order-1 flex items-center gap-3">
+          <span className="led led-on animate-led-breathe" />
+          <span className="font-display text-base font-bold tracking-tight text-ink md:text-lg">
+            simon rödig
+          </span>
+          <span className="hidden font-mono text-[10px] uppercase tracking-[0.25em] text-ink-faint lg:inline">
+            Portfolio ’26
+          </span>
         </div>
-      </div>
 
-      {/* Main Container */}
-      <div className="flex-1 flex flex-col justify-center w-full max-w-6xl mx-auto py-2 lg:py-0 relative z-10 min-h-0">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 lg:gap-8 items-center h-full">
-
-          {/* Text Section */}
-          <div className="lg:col-span-7 flex flex-col gap-2 sm:gap-4 md:gap-10 [@media(max-height:950px)]:gap-5 order-2 lg:order-1 shrink-0">
-            <h1
-              className="font-display text-[clamp(2.5rem,min(12vw,16vh),12rem)] leading-[0.85] italic -tracking-[0.05em] text-ink drop-shadow-sm animate-hero-title"
-              style={{ animationDelay: '100ms' }}
+        <nav className="order-3 flex w-full items-center justify-center gap-2.5 md:order-2 md:mr-2 md:ml-auto md:w-auto lg:mr-3 lg:gap-3">
+          {socials.map((s) => (
+            <a
+              key={s.label}
+              href={s.href}
+              target="_blank"
+              rel="noreferrer"
+              className="neu-key rounded-full px-3.5 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-ink-soft hover:text-ink lg:px-5 lg:py-2.5 lg:text-xs"
             >
-              Simon<span className="sm:hidden"> </span><br className="hidden sm:block" />Rödig
+              {s.label}
+            </a>
+          ))}
+          <a
+            href="mailto:simonroedig@web.de"
+            className="neu-key flex items-center gap-2 rounded-full px-3.5 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.15em] text-accent-ink lg:px-5 lg:py-2.5 lg:text-xs"
+          >
+            <span className="led led-on h-1.5! w-1.5!" />
+            Email
+          </a>
+        </nav>
+
+        <div className="order-2 md:order-3">
+          <ThemeSwitch />
+        </div>
+      </header>
+
+      {/* Main */}
+      <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-7xl flex-1 flex-col justify-center py-2 lg:py-0">
+        <div className="grid h-full grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-12">
+          {/* Text */}
+          <div className="order-2 flex flex-col gap-5 md:gap-8 lg:order-1 lg:col-span-7 [@media(max-height:820px)]:gap-5">
+            <h1
+              className="font-display font-bold leading-[0.86] tracking-[-0.055em] text-[clamp(3.4rem,min(12vw,17vh),10.5rem)] animate-rise-in"
+              style={{ animationDelay: "150ms" }}
+            >
+              <span className="text-emboss block">Simon</span>
+              <span className="block text-ink [text-shadow:0.03em_0.03em_0.06em_var(--sh-d),-0.02em_-0.02em_0.04em_var(--sh-l)]">
+                Rödig
+              </span>
             </h1>
 
-            <div className="flex flex-col gap-2 md:gap-5 [@media(max-height:950px)]:gap-3">
-              <p className="text-[1.2rem] sm:text-3xl lg:text-4xl xl:text-6xl [@media(max-height:950px)]:text-3xl font-bold tracking-tight text-ink max-w-2xl leading-tight">
-                <span className="whitespace-nowrap inline-block animate-hero-title" style={{ animationDelay: '300ms' }}>Human-Centric Design</span>
-                <br />
+            <div className="flex flex-col gap-3 md:gap-4">
+              <p
+                className="font-display text-[1.45rem] font-semibold leading-tight tracking-tight text-ink sm:text-3xl xl:text-[2.6rem] animate-rise-in"
+                style={{ animationDelay: "350ms" }}
+              >
+                Human-Centric Design
+              </p>
+              <div className="animate-rise-in" style={{ animationDelay: "500ms" }}>
                 <span
-                  className="text-accent italic font-display bg-ink text-paper px-2 md:px-2 md:py-1 inline-block mt-1.5 md:mt-3 origin-center animate-hero-badge"
-                  style={{ animationDelay: '600ms' }}
+                  className="inline-flex items-center gap-3 rounded-2xl bg-surface px-4 py-2 font-display text-[1.45rem] font-semibold leading-tight tracking-tight text-accent-ink sm:text-3xl xl:text-[2.6rem] animate-key-press md:rounded-3xl md:px-6 md:py-3"
+                  style={{ animationDelay: "700ms" }}
                 >
+                  <span className="led led-on" />
                   Accelerated by AI.
                 </span>
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-2 md:gap-6 [@media(max-height:950px)]:gap-4 mt-1 md:mt-2 xl:items-start items-start">
-                <p
-                  className="max-w-md text-sm md:text-lg [@media(max-height:950px)]:text-base border-l-[4px] md:border-l-[6px] [@media(max-height:950px)]:border-l-[4px] border-accent2 pl-3 md:pl-4 text-ink font-medium leading-snug md:leading-relaxed animate-hero-wipe"
-                  style={{ animationDelay: '900ms' }}
-                >
-                  UX / Product Designer with the toolkit of a developer. I turn concepts into working prototypes, using code and AI to accelerate design, validate ideas, and build better products.
-                </p>
-
-                {showArchetypeBlock && (
-                  <div className="group border-2 border-ink bg-ink text-paper px-3 py-2 md:px-4 md:py-3 shadow-[4px_4px_0px_0px_var(--color-accent)] font-mono text-[10px] sm:text-xs uppercase shrink-0 flex flex-col justify-center w-fit transform rotate-1 hover:-rotate-1 transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_var(--color-accent)] cursor-default">
-                    <span className="font-bold tracking-widest text-paper/70 mb-0.5 md:mb-1 flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse shadow-[0_0_8px_var(--color-accent)]"></span>
-                      Archetype
-                    </span>
-                    <span className="tracking-tighter font-extrabold text-xs md:text-sm whitespace-nowrap text-paper group-hover:text-accent transition-colors">
-                      Design Engineer
-                    </span>
-                  </div>
-                )}
               </div>
+            </div>
+
+            <div
+              className="flex max-w-xl gap-4 animate-rise-in"
+              style={{ animationDelay: "800ms" }}
+            >
+              <div className="relative w-1.5 shrink-0 rounded-full bg-surface neu-inset-xs">
+                <div className="absolute inset-x-0 top-0 h-2/5 rounded-full bg-accent shadow-[0_0_10px_var(--accent)]" />
+              </div>
+              <p className="text-sm font-medium leading-relaxed text-ink-soft md:text-lg">
+                UX / Product Designer with the toolkit of a developer. I turn concepts into working
+                prototypes, using code and AI to accelerate design, validate ideas, and build better
+                products.
+              </p>
+            </div>
+
+            <div
+              className="flex flex-wrap gap-3 md:gap-4 animate-rise-in"
+              style={{ animationDelay: "950ms" }}
+            >
+              {[
+                { id: "experience", n: "01", label: "Experience" },
+                { id: "projects", n: "02", label: "Projects" },
+              ].map((b) => (
+                <button
+                  key={b.id}
+                  type="button"
+                  onClick={() => scrollToSection(b.id)}
+                  className="neu-key group flex items-center gap-3 rounded-full py-2.5 pl-3 pr-5 cursor-pointer md:py-3 md:pl-3.5 md:pr-6"
+                >
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full font-mono text-[10px] font-bold text-ink-faint neu-inset-xs transition-colors group-hover:text-accent-ink md:h-8 md:w-8">
+                    {b.n}
+                  </span>
+                  <span className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-ink md:text-xs">
+                    {b.label}
+                  </span>
+                  <span
+                    className="text-ink-faint transition-transform duration-300 group-hover:translate-y-0.5"
+                    aria-hidden="true"
+                  >
+                    ↓
+                  </span>
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Image Section */}
+          {/* Device */}
           <div
-            className="lg:col-span-5 flex justify-center lg:justify-center order-1 lg:order-2 animate-brutal-in min-h-0"
-            style={{ animationDelay: '150ms' }}
+            className="order-1 flex justify-center lg:order-2 lg:col-span-5 lg:justify-end animate-rise-in"
+            style={{ animationDelay: "200ms" }}
           >
-            <div
-              ref={cardRef}
-              className="relative w-[55%] max-w-[200px] sm:max-w-[280px] lg:w-full lg:max-w-[min(460px,46vh)] h-auto lg:h-auto aspect-[4/5] border-2 md:border-4 border-ink bg-ink group user-select-none shrink-0 cursor-pointer lg:cursor-default"
-              style={{
-                boxShadow: `-8px 8px 0px 0px var(--color-ink)`,
-              }}
-              onClick={() => setIsPortraitTapped(prev => !prev)}
-            >
-              {/* Added a decorative element to make the image area pop */}
-              <div
-                className="absolute -inset-2 md:-inset-4 border-2 border-ink -z-10 translate-x-[8px] md:translate-x-[12px] -translate-y-[8px] md:-translate-y-[12px] opacity-20"
-              ></div>
-
-              <div className="relative w-full h-full overflow-hidden">
-                {/* Background Layer */}
-                <img
-                  src={bgImage}
-                  alt="Background"
-                  className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-200 ease-out z-0"
-                  style={{
-                    transform: `scale(1.1) translate(${mousePos.x * -8}px, ${mousePos.y * -8}px)`,
-                  }}
-                />
-
-
-
-                {/* Foreground Layer */}
-                <img
-                  src={fgImage}
-                  alt="Portrait of Simon Rödig"
-                  className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-200 ease-out z-20"
-                  style={{
-                    transform: `scale(1.05) translate(${mousePos.x * 12}px, ${mousePos.y * 12}px)`,
-                  }}
-                />
-
-                {/* 3D Glare */}
-                <div
-                  className="absolute inset-0 pointer-events-none hidden lg:block transition-all duration-200 z-30"
-                  style={{
-                    background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 60%)`,
-                    mixBlendMode: 'overlay'
-                  }}
-                />
-
-                {/* Conservative age pop-up */}
-                <div
-                  className={`absolute bottom-4 right-4 md:bottom-6 md:right-6 border-2 border-ink bg-paper px-3 py-1.5 md:py-2 flex items-center justify-center transition-all duration-300 ease-out z-40 pointer-events-none scale-[0.8] origin-bottom-right ${isPortraitTapped ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0"}`}
-                  style={{
-                    boxShadow: `4px 4px 0px 0px var(--color-ink)`,
-                  }}
-                >
-                  <span className="font-mono text-xs md:text-sm font-bold uppercase tracking-widest text-ink whitespace-nowrap">
-                    <span className="text-ink/60 mr-2">AGE</span>{age}
+            <div className="relative flex w-fit flex-col gap-4 rounded-[2.5rem] bg-surface p-5 [--dial:min(74vw,320px)] neu-raised-lg sm:[--dial:340px] md:gap-5 md:rounded-[3rem] md:p-7 lg:[--dial:min(400px,47vh)]">
+              <div className="flex items-center justify-between px-1">
+                <div className="flex items-center gap-2">
+                  <span className="led led-on animate-led-breathe" />
+                  <span className="font-mono text-[9px] font-bold uppercase tracking-[0.25em] text-ink-faint text-engrave">
+                    On · Tuner
                   </span>
                 </div>
+                <span className="font-display text-xs font-bold tracking-[0.12em] text-ink-faint text-engrave">
+                  SR 26
+                </span>
               </div>
+              <TuningDial age={age} />
             </div>
           </div>
-
         </div>
       </div>
 
-      {/* Bottom Bar: Scroll Indicator */}
-      <div className="hidden lg:flex items-center gap-3 font-mono text-xs uppercase tracking-[0.2em] font-bold text-ink/40 w-full max-w-6xl mx-auto mt-auto pb-2 relative z-10">
-        <div className="w-12 h-[2px] bg-ink/40"></div>
-        SCROLL_DOWN
+      {/* Scroll indicator */}
+      <div className="relative z-10 mx-auto hidden w-full max-w-7xl items-center gap-3 lg:flex">
+        <div className="relative flex h-9 w-5 justify-center rounded-full bg-surface neu-inset-xs">
+          <span className="led led-on mt-[13px] h-1.5! w-1.5! animate-scroll-dot" />
+        </div>
+        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-ink-faint">
+          Scroll
+        </span>
       </div>
     </section>
   );

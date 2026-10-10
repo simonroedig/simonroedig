@@ -54,7 +54,7 @@ export function SpeakerGrille() {
           >
             Sound
           </span>
-          <DeviceSwitch on={sound} onToggle={toggleSound} label="Click sounds" tone="go" />
+          <DeviceSwitch on={sound} onToggle={toggleSound} label="Click sounds" tone="graphite" />
         </div>
       </div>
     </div>

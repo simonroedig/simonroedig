@@ -3,6 +3,7 @@ import { clack, tick } from "@/lib/sound";
 import { useTheme } from "@/hooks/use-theme";
 import { useCursorLight } from "@/hooks/use-cursor-light";
 import { DeviceSwitch } from "./DeviceSwitch";
+import { RevealText, TypeText } from "./AiText";
 // The path from idea to product, told in first person. `ai` is where AI
 // speeds up each stage (shown in AI Boost mode).
 const STATIONS = [
@@ -34,6 +35,7 @@ const AI_FINAL = "I bring AI into every stage and help the whole team move faste
 const DWELL_MS = 2400; // time to read each stage
 const GLIDE_MS = 1000; // a slow glide to the next stage
 const INTRO_MS = 1700; // intro line while the tuner returns to the start
+const FINAL_HOLD_MS = 5200; // closing line stays up, then AI Boost switches itself off
 const LAST = STATIONS.length - 1;
 
 const NAME_STEP = 9; // em between station names on the LCD scale
@@ -192,6 +194,11 @@ export function HeroRadio() {
       setScanning(false);
       setAiPhase("final");
     });
+    at(t + FINAL_HOLD_MS, () => {
+      setAi(false);
+      setAiPhase("stages");
+      clack();
+    });
   }, [stopScan, tuneTo]);
 
   // Intro: sweep across the band and settle on "Concept"
@@ -344,12 +351,21 @@ export function HeroRadio() {
             </svg>
           </div>
 
-          {/* Bezel: glows softly while AI Boost is on */}
+          {/* AI Boost: green ring lighting up around the display */}
+          <div
+            className={`absolute left-1/2 top-1/2 h-[19em] w-[19em] -translate-x-1/2 -translate-y-1/2 rounded-full transition-opacity duration-700 ${ai ? "opacity-100" : "opacity-0"}`}
+            style={{
+              background:
+                "radial-gradient(circle, color-mix(in srgb, var(--go) 70%, transparent) 62%, transparent 96%)",
+            }}
+          />
+
+          {/* Bezel */}
           <div
             className="absolute left-1/2 top-1/2 h-[13.2em] w-[13.2em] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[linear-gradient(150deg,var(--knob-hi),var(--knob-lo))] transition-[box-shadow] duration-700"
             style={{
               boxShadow: ai
-                ? "var(--raise-sm), 0 0 1.6em 0.35em color-mix(in srgb, var(--ai) 55%, transparent)"
+                ? "var(--raise-sm), 0 0 1.4em 0.3em color-mix(in srgb, var(--go) 45%, transparent)"
                 : "var(--raise-sm), 0 0 0 0 transparent",
             }}
           />
@@ -363,7 +379,7 @@ export function HeroRadio() {
               className={`absolute right-[calc(50%+0.55em)] top-[1.1em] text-[0.8em] font-extrabold tracking-[0.12em] transition-opacity duration-300 ${
                 ai ? (scanning ? "animate-pulse opacity-100" : "opacity-100") : "opacity-[0.16]"
               }`}
-              style={ai ? { color: "var(--ai-deep)" } : undefined}
+              style={ai ? { color: "var(--go-ink)" } : undefined}
             >
               AI
             </div>
@@ -436,16 +452,23 @@ export function HeroRadio() {
         </div>
 
         {/* Caption */}
-        <p
-          className="relative z-10 mx-auto mt-[0.2em] h-[2.6em] max-w-[22em] text-center text-[max(1.05em,10px)] font-semibold leading-tight text-ink-soft"
-          aria-live="polite"
-        >
-          <span
-            key={caption}
-            className={`inline-block animate-caption-in ${ai ? "font-bold text-ai-ink" : ""}`}
-          >
+        <p className="relative z-10 mx-auto mt-[0.2em] h-[2.6em] max-w-[22em] text-center text-[max(1.05em,10px)] font-semibold leading-tight text-ink-soft">
+          <span className="sr-only" aria-live="polite">
             {caption}
           </span>
+          {!ai ? (
+            <span key={caption} className="inline-block animate-caption-in" aria-hidden="true">
+              {caption}
+            </span>
+          ) : aiPhase === "final" ? (
+            <span key="final" className="font-bold text-go-ink">
+              <RevealText text={caption} />
+            </span>
+          ) : (
+            <span key={caption} className="font-bold text-go-ink">
+              <TypeText text={caption} />
+            </span>
+          )}
         </p>
 
         {/* Lower, wavy layer */}
@@ -524,11 +547,11 @@ export function HeroRadio() {
             <div className="mt-[1.4em] grid grid-cols-[1.3fr_1fr] gap-[0.9em]">
               <div className="tray flex items-center justify-between gap-[0.6em] rounded-[1.3em] py-[0.75em] pr-[0.75em] pl-[1em]">
                 <span
-                  className={`whitespace-nowrap text-[max(0.9em,9px)] font-extrabold uppercase tracking-[0.12em] transition-colors ${ai ? "text-ai-ink" : "text-ink-soft"}`}
+                  className={`whitespace-nowrap text-[max(0.9em,9px)] font-extrabold uppercase tracking-[0.12em] transition-colors ${ai ? "text-go-ink" : "text-ink-soft"}`}
                 >
                   AI Boost
                 </span>
-                <DeviceSwitch on={ai} onToggle={toggleAi} label="AI Boost" tone="ai" />
+                <DeviceSwitch on={ai} onToggle={toggleAi} label="AI Boost" tone="go" />
               </div>
               <div className="tray flex items-center justify-center gap-[0.55em] rounded-[1.3em] px-[0.75em] py-[0.75em] text-[max(0.9em,9px)] font-extrabold tracking-[0.08em]">
                 <span className={`transition-colors ${dark ? "text-ink-faint" : "text-ink"}`}>

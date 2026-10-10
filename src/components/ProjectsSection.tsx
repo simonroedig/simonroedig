@@ -78,8 +78,9 @@ export function ProjectsSection() {
         </div>
       </SectionHeader>
 
-      {/* Grid (scrollable internally — full grid visible without page scroll on desktop) */}
-      <div className="relative z-10 flex-1 overflow-y-auto styled-scrollbar px-5 pt-8 pb-12 sm:px-8 md:px-12 md:pt-10">
+      {/* Grid: scrolls internally on desktop. Its edges fade out so cards (and their
+          hover glow) dissolve before they reach the title instead of hitting a hard edge. */}
+      <div className="relative z-10 flex-1 overflow-y-auto styled-scrollbar px-5 pt-8 pb-12 sm:px-8 md:px-12 md:mt-4 md:pt-8 md:fade-y">
         {filteredProjects.length === 0 ? (
           <div className="tray mx-auto mt-6 max-w-md rounded-[1.6rem] px-6 py-8 text-center text-sm font-semibold text-ink-soft">
             Nothing on this band. Switch a category back on.

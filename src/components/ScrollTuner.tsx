@@ -112,15 +112,21 @@ export function ScrollTuner({ target, step }: Props) {
           onPointerMove={onKnobMove}
           onPointerUp={onKnobUp}
           onPointerCancel={onKnobUp}
-          className="knob absolute top-1/2 flex h-9 -translate-y-1/2 items-center justify-center gap-[5px] rounded-[0.7rem] cursor-grab active:cursor-grabbing"
+          className="absolute top-1/2 flex h-9 -translate-y-1/2 items-center justify-center gap-[6px] rounded-[0.7rem] cursor-grab active:cursor-grabbing"
           style={{
             width: knobWidth,
             left: `calc(${ratio} * (100% - ${knobWidth}px))`,
             touchAction: "none",
+            background: "linear-gradient(150deg, var(--fader-hi), var(--fader-lo))",
+            boxShadow:
+              "2px 3px 6px var(--sd), -1px -1px 2px var(--hl), inset 1px 1px 0 var(--hl-edge)",
           }}
         >
           {[0, 1, 2].map((i) => (
-            <span key={i} className="knob-dent h-3.5 w-[3px] rounded-full" />
+            <span
+              key={i}
+              className="h-4 w-[2px] rounded-full bg-[var(--grip)] shadow-[1px_0_0_var(--hl-edge)]"
+            />
           ))}
         </div>
       </div>

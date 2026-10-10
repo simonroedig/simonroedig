@@ -22,7 +22,7 @@
   --color-ink-faint: var(--ink-faint);
   --color-go: var(--go);
   --color-go-deep: var(--go-deep);
-  --color-ai-ink: var(--ai-ink);
+  --color-go-ink: var(--go-ink);
   --color-needle: var(--needle);
   --color-lcd-ink: var(--lcd-ink);
 
@@ -75,11 +75,11 @@
   --go-hi: #a9c49a;
   --go: #8aa97b;
   --go-deep: #6f8e62;
-  /* muted accent families for switches: AI, starred, personal, university */
-  --ai-hi: #dcb6e2;
-  --ai: #bb8dca;
-  --ai-deep: #9566a8;
-  --ai-ink: #7a4b8c;
+  --go-ink: #4f7342;
+  /* muted accent families for switches: sound, starred, personal, university */
+  --graphite-hi: #8b939e;
+  --graphite: #6c747f;
+  --graphite-deep: #535a64;
   --star-hi: #ecd396;
   --star: #d2ad5e;
   --star-deep: #ae8a3f;
@@ -97,6 +97,9 @@
   --knob-hi: #ffffff;
   --knob-lo: #e2e8f0;
   --track-off: #d0d9e4;
+  --fader-hi: #eef2f7;
+  --fader-lo: #c8d1dc;
+  --grip: rgba(80, 96, 118, 0.55);
 
   --hl: rgba(255, 255, 255, 0.95);
   --hl-edge: rgba(255, 255, 255, 0.75);
@@ -141,10 +144,16 @@
   --ink-faint: #848e9b;
   --lcd-hi: #c3cfae;
   --lcd-lo: #a3b08f;
-  --ai-ink: #d6aee2;
+  --go-ink: #a9cf99;
+  --graphite-hi: #a6aeb9;
+  --graphite: #88919c;
+  --graphite-deep: #6a737e;
   --knob-hi: #4a525d;
   --knob-lo: #343a43;
   --track-off: #1c2025;
+  --fader-hi: #4a525d;
+  --fader-lo: #343a43;
+  --grip: rgba(0, 0, 0, 0.55);
 
   --hl: rgba(255, 255, 255, 0.055);
   --hl-edge: rgba(255, 255, 255, 0.07);
@@ -192,13 +201,23 @@
 
 /* Molded plastic: a touch lighter at the top left */
 @utility surface {
-  background: linear-gradient(150deg, var(--surface-hi) 0%, var(--surface) 42%, var(--surface-lo) 100%);
+  background: linear-gradient(
+    150deg,
+    var(--surface-hi) 0%,
+    var(--surface) 42%,
+    var(--surface-lo) 100%
+  );
 }
 @utility surface-flat {
   background: var(--surface);
 }
 @utility surface-dish {
-  background: linear-gradient(150deg, var(--surface-lo) 0%, var(--surface) 60%, var(--surface-hi) 100%);
+  background: linear-gradient(
+    150deg,
+    var(--surface-lo) 0%,
+    var(--surface) 60%,
+    var(--surface-hi) 100%
+  );
 }
 
 @utility raise-xs {
@@ -225,7 +244,12 @@
 
 /* A physical key: springs up on hover, squishes in when pressed. */
 @utility key {
-  background: linear-gradient(150deg, var(--surface-hi) 0%, var(--surface) 50%, var(--surface-lo) 100%);
+  background: linear-gradient(
+    150deg,
+    var(--surface-hi) 0%,
+    var(--surface) 50%,
+    var(--surface-lo) 100%
+  );
   box-shadow: var(--raise-sm);
   transition:
     transform 0.55s var(--ease-spring),
@@ -246,7 +270,12 @@
 
 /* A key that stays pressed in (active state) */
 @utility key-on {
-  background: linear-gradient(150deg, var(--surface-lo) 0%, var(--surface) 70%, var(--surface-hi) 100%);
+  background: linear-gradient(
+    150deg,
+    var(--surface-lo) 0%,
+    var(--surface) 70%,
+    var(--surface-hi) 100%
+  );
   box-shadow: var(--press-sm);
   @media (hover: hover) {
     &:hover {
@@ -258,7 +287,12 @@
 
 /* Big cards: float up with a spring, squish on press. */
 @utility card {
-  background: linear-gradient(155deg, var(--surface-hi) 0%, var(--surface) 38%, var(--surface-lo) 100%);
+  background: linear-gradient(
+    155deg,
+    var(--surface-hi) 0%,
+    var(--surface) 38%,
+    var(--surface-lo) 100%
+  );
   box-shadow: var(--raise-md);
   transition:
     transform 0.6s var(--ease-spring),
@@ -278,7 +312,12 @@
 
 /* Panel inside a panel: barely recessed with a crisp rim, like the EQ box */
 @utility tray {
-  background: linear-gradient(150deg, var(--surface-lo) 0%, var(--surface) 35%, var(--surface) 100%);
+  background: linear-gradient(
+    150deg,
+    var(--surface-lo) 0%,
+    var(--surface) 35%,
+    var(--surface) 100%
+  );
   box-shadow:
     inset 1.5px 1.5px 3px var(--sd-soft),
     inset -1px -1px 0 var(--hl-edge),
@@ -351,14 +390,27 @@
 
 @utility shimmer {
   background-color: var(--surface-lo);
-  background-image: linear-gradient(
-    100deg,
-    transparent 25%,
-    var(--hl) 50%,
-    transparent 75%
-  );
+  background-image: linear-gradient(100deg, transparent 25%, var(--hl) 50%, transparent 75%);
   background-size: 220% 100%;
   animation: shimmer 1.5s var(--ease-soft) infinite;
+}
+
+/* Fade a scroll area out at its top and bottom edges instead of cutting it off */
+@utility fade-y {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 1.75rem,
+    #000 calc(100% - 2.5rem),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 1.75rem,
+    #000 calc(100% - 2.5rem),
+    transparent 100%
+  );
 }
 
 /* Small uppercase device label */
@@ -467,6 +519,60 @@
 
 @utility animate-caption-in {
   animation: caption-in 0.5s var(--ease-soft) both;
+}
+
+/* AI Boost text: blinking caret, words resolving out of a blur, status dot */
+@keyframes caret-blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  55%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes word-in {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(0.45em);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes dot-in {
+  from {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes dot-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
+@utility animate-caret {
+  animation: caret-blink 0.9s steps(1) infinite;
+}
+
+@utility animate-word-in {
+  animation: word-in 0.55s var(--ease-soft) both;
 }
 
 @utility animate-rise-in {

@@ -3,22 +3,22 @@ import { clack, tick } from "@/lib/sound";
 import { useTheme } from "@/hooks/use-theme";
 import { useCursorLight } from "@/hooks/use-cursor-light";
 import { DeviceSwitch } from "./DeviceSwitch";
-import { RevealText, TypeText } from "./AiText";
+import { CaptionFade } from "./AiText";
 // The path from idea to product, told in first person. `ai` is where AI
 // speeds up each stage (shown in AI Boost mode).
 const STATIONS = [
   {
-    name: "Concept",
+    name: "Concepts",
     caption: "I research, ideate and shape concepts.",
     ai: "AI helps me research and explore more ideas, faster.",
   },
   {
-    name: "Prototype",
+    name: "Prototypes",
     caption: "I build physical and digital prototypes.",
     ai: "I let AI build first prototypes, so we test sooner.",
   },
   {
-    name: "User Study",
+    name: "User Studies",
     caption: "I run user studies and iterate on UX/UI.",
     ai: "AI speeds up my study analysis and iterations.",
   },
@@ -28,18 +28,19 @@ const STATIONS = [
     ai: "I ship faster with AI-assisted engineering.",
   },
 ];
-const AI_INTRO = "Where I bring in AI, stage by stage:";
+const AI_INTRO = "Where I bring in AI:";
 const AI_FINAL = "I bring AI into every stage and help the whole team move faster.";
+const AI_FINAL_MARK = ["every", "stage"];
 
 // AI Boost scan timing
-const DWELL_MS = 2400; // time to read each stage
+const INTRO_MS = 2800; // intro line while the tuner returns to the start
+const DWELL_MS = 2800; // time to read each stage
 const GLIDE_MS = 1000; // a slow glide to the next stage
-const INTRO_MS = 1700; // intro line while the tuner returns to the start
-const FINAL_HOLD_MS = 5200; // closing line stays up, then AI Boost switches itself off
+const FINAL_HOLD_MS = 7500; // closing line stays up, then AI Boost switches itself off
 const LAST = STATIONS.length - 1;
 
-const NAME_STEP = 9; // em between station names on the LCD scale
-const NAME_SIZE = 1.55; // em, station name font size
+const NAME_STEP = 10.5; // em between station names on the LCD scale
+const NAME_SIZE = 1.4; // em, station name font size
 const DEG_PER_STATION = 110; // roller rotation per station
 const DRAG_GAIN = 1.5; // a full swipe across the roller moves ~1.5 stations
 const RIDGES = 46;
@@ -304,13 +305,14 @@ export function HeroRadio() {
   };
 
   const current = STATIONS[station];
-  const caption = !ai
-    ? current.caption
+  const finale = ai && aiPhase === "final";
+  const captionProps = !ai
+    ? { id: `plain-${station}`, text: current.caption, kind: "plain" as const }
     : aiPhase === "intro"
-      ? AI_INTRO
-      : aiPhase === "final"
-        ? AI_FINAL
-        : current.ai;
+      ? { id: "ai-intro", text: AI_INTRO, kind: "ai" as const }
+      : finale
+        ? { id: "ai-final", text: AI_FINAL, kind: "final" as const, highlight: AI_FINAL_MARK }
+        : { id: `ai-${station}`, text: current.ai, kind: "ai" as const };
 
   return (
     <div className="@container w-full">
@@ -351,12 +353,12 @@ export function HeroRadio() {
             </svg>
           </div>
 
-          {/* AI Boost: green ring lighting up around the display */}
+          {/* AI Boost: red ring lighting up around the display */}
           <div
             className={`absolute left-1/2 top-1/2 h-[19em] w-[19em] -translate-x-1/2 -translate-y-1/2 rounded-full transition-opacity duration-700 ${ai ? "opacity-100" : "opacity-0"}`}
             style={{
               background:
-                "radial-gradient(circle, color-mix(in srgb, var(--go) 70%, transparent) 62%, transparent 96%)",
+                "radial-gradient(circle, color-mix(in srgb, var(--ai) 46%, transparent) 62%, transparent 96%)",
             }}
           />
 
@@ -365,7 +367,7 @@ export function HeroRadio() {
             className="absolute left-1/2 top-1/2 h-[13.2em] w-[13.2em] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[linear-gradient(150deg,var(--knob-hi),var(--knob-lo))] transition-[box-shadow] duration-700"
             style={{
               boxShadow: ai
-                ? "var(--raise-sm), 0 0 1.4em 0.3em color-mix(in srgb, var(--go) 45%, transparent)"
+                ? "var(--raise-sm), 0 0 1.4em 0.3em color-mix(in srgb, var(--ai) 45%, transparent)"
                 : "var(--raise-sm), 0 0 0 0 transparent",
             }}
           />
@@ -373,102 +375,142 @@ export function HeroRadio() {
           {/* Analog LCD */}
           <div
             className="lcd absolute left-1/2 top-1/2 h-[11.2em] w-[11.2em] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full transition-[filter] duration-700"
-            style={{ filter: ai ? "brightness(1.07) saturate(1.2)" : "none" }}
+            style={{ filter: ai ? "brightness(1.05)" : "none" }}
           >
+            {/* Tuning view (fades away for the AI Boost finale) */}
             <div
-              className={`absolute right-[calc(50%+0.55em)] top-[1.1em] text-[0.8em] font-extrabold tracking-[0.12em] transition-opacity duration-300 ${
-                ai ? (scanning ? "animate-pulse opacity-100" : "opacity-100") : "opacity-[0.16]"
-              }`}
-              style={ai ? { color: "var(--go-ink)" } : undefined}
-            >
-              AI
-            </div>
-            <div className="absolute left-[calc(50%+0.55em)] top-[1.05em] text-[0.95em] font-bold tabular-nums opacity-75">
-              {station + 1}
-            </div>
-            {/* scrolling scale */}
-            <div
-              className="absolute inset-x-0 top-[3em] h-[1.1em]"
-              style={{
-                WebkitMaskImage:
-                  "linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent)",
-                maskImage: "linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent)",
-              }}
+              className={`absolute inset-0 transition-[opacity,filter] duration-500 ${finale ? "opacity-0 blur-[4px]" : "opacity-100 blur-0"}`}
             >
               <div
-                ref={scaleRef}
-                className="absolute left-1/2 top-0 h-full w-0"
-                style={{ transform: `translateX(${-START * NAME_STEP}em)` }}
+                className={`absolute right-[calc(50%+0.55em)] top-[1.1em] text-[0.8em] font-extrabold tracking-[0.12em] transition-opacity duration-300 ${
+                  ai ? (scanning ? "animate-pulse opacity-100" : "opacity-100") : "opacity-[0.16]"
+                }`}
+                style={ai ? { color: "var(--ai-deep)" } : undefined}
               >
-                {Array.from({ length: (LAST + 2) * 8 + 1 }).map((_, i) => {
-                  const x = (i / 8 - 1) * NAME_STEP;
-                  const major = i % 8 === 0;
-                  return (
+                AI
+              </div>
+              <div className="absolute left-[calc(50%+0.55em)] top-[1.05em] text-[0.95em] font-bold tabular-nums opacity-75">
+                {station + 1}
+              </div>
+              {/* scrolling scale */}
+              <div
+                className="absolute inset-x-0 top-[3em] h-[1.1em]"
+                style={{
+                  WebkitMaskImage:
+                    "linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent)",
+                  maskImage: "linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent)",
+                }}
+              >
+                <div
+                  ref={scaleRef}
+                  className="absolute left-1/2 top-0 h-full w-0"
+                  style={{ transform: `translateX(${-START * NAME_STEP}em)` }}
+                >
+                  {Array.from({ length: (LAST + 2) * 8 + 1 }).map((_, i) => {
+                    const x = (i / 8 - 1) * NAME_STEP;
+                    const major = i % 8 === 0;
+                    return (
+                      <span
+                        key={i}
+                        className="absolute bottom-0 w-[0.08em] rounded-full bg-lcd-ink"
+                        style={{
+                          left: `${x}em`,
+                          height: major ? "100%" : "45%",
+                          opacity: major ? 0.7 : 0.35,
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+              {/* station names */}
+              <div className="absolute inset-x-0 top-[4.55em] h-[2.4em]">
+                <div
+                  ref={namesRef}
+                  className="absolute left-1/2 top-0 h-full w-0"
+                  style={{ transform: `translateX(${-START * NAME_STEP}em)` }}
+                >
+                  {STATIONS.map((s, i) => (
                     <span
-                      key={i}
-                      className="absolute bottom-0 w-[0.08em] rounded-full bg-lcd-ink"
-                      style={{
-                        left: `${x}em`,
-                        height: major ? "100%" : "45%",
-                        opacity: major ? 0.7 : 0.35,
+                      key={s.name}
+                      ref={(el) => {
+                        nameRefs.current[i] = el;
                       }}
-                    />
-                  );
-                })}
+                      className="absolute top-0 -translate-x-1/2 whitespace-nowrap font-bold leading-[1.5] tracking-[-0.02em]"
+                      style={{
+                        fontSize: `${NAME_SIZE}em`,
+                        left: `${(i * NAME_STEP) / NAME_SIZE}em`,
+                        opacity: nameOpacity(i, START),
+                      }}
+                    >
+                      {s.name}
+                    </span>
+                  ))}
+                </div>
               </div>
+              <div className="absolute inset-x-0 top-[7.6em] flex justify-center gap-[0.9em] text-[0.95em] font-extrabold tracking-[0.12em]">
+                <span className={`transition-opacity ${dark ? "opacity-25" : "opacity-80"}`}>
+                  AM
+                </span>
+                <span className={`transition-opacity ${dark ? "opacity-80" : "opacity-25"}`}>
+                  PM
+                </span>
+              </div>
+              {/* needle */}
+              <div className="absolute left-1/2 top-[0.4em] h-[4.6em] w-[0.14em] -translate-x-1/2 rounded-full bg-needle shadow-[0_0_0.3em_rgba(212,80,63,0.5)]" />
             </div>
-            {/* station names */}
-            <div className="absolute inset-x-0 top-[4.55em] h-[2.4em]">
+
+            {/* AI Boost finale: every stage, enhanced by Simon + AI */}
+            <div
+              className={`absolute inset-0 flex flex-col items-center justify-center transition-[opacity,filter] duration-500 ${finale ? "opacity-100 blur-0 delay-200" : "pointer-events-none opacity-0 blur-[4px]"}`}
+              aria-hidden={!finale}
+            >
               <div
-                ref={namesRef}
-                className="absolute left-1/2 top-0 h-full w-0"
-                style={{ transform: `translateX(${-START * NAME_STEP}em)` }}
+                className="mb-[0.55em] text-[0.72em] font-extrabold uppercase tracking-[0.2em]"
+                style={{ color: "var(--ai-deep)" }}
               >
-                {STATIONS.map((s, i) => (
-                  <span
-                    key={s.name}
-                    ref={(el) => {
-                      nameRefs.current[i] = el;
-                    }}
-                    className="absolute top-0 -translate-x-1/2 whitespace-nowrap font-bold leading-[1.5] tracking-[-0.02em]"
-                    style={{
-                      fontSize: `${NAME_SIZE}em`,
-                      left: `${(i * NAME_STEP) / NAME_SIZE}em`,
-                      opacity: nameOpacity(i, START),
-                    }}
-                  >
-                    {s.name}
-                  </span>
-                ))}
+                Simon + AI
               </div>
+              <ul className="flex flex-col items-start gap-[0.1em]">
+                {STATIONS.map((s, i) => (
+                  <li
+                    key={s.name}
+                    className="flex items-center gap-[0.4em] text-[0.95em] font-bold leading-[1.3]"
+                    style={
+                      finale
+                        ? { animation: `word-in 0.5s var(--ease-soft) ${350 + i * 150}ms both` }
+                        : undefined
+                    }
+                  >
+                    <svg
+                      viewBox="0 0 12 12"
+                      className="h-[0.8em] w-[0.8em] shrink-0"
+                      style={{ color: "var(--ai-deep)" }}
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M2 6.4 4.8 9 10 3"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.9"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    {s.name}
+                  </li>
+                ))}
+              </ul>
             </div>
-            <div className="absolute inset-x-0 top-[7.6em] flex justify-center gap-[0.9em] text-[0.95em] font-extrabold tracking-[0.12em]">
-              <span className={`transition-opacity ${dark ? "opacity-25" : "opacity-80"}`}>AM</span>
-              <span className={`transition-opacity ${dark ? "opacity-80" : "opacity-25"}`}>PM</span>
-            </div>
-            {/* needle */}
-            <div className="absolute left-1/2 top-[0.4em] h-[4.6em] w-[0.14em] -translate-x-1/2 rounded-full bg-needle shadow-[0_0_0.3em_rgba(212,80,63,0.5)]" />
           </div>
         </div>
 
         {/* Caption */}
         <p className="relative z-10 mx-auto mt-[0.2em] h-[2.6em] max-w-[22em] text-center text-[max(1.05em,10px)] font-semibold leading-tight text-ink-soft">
           <span className="sr-only" aria-live="polite">
-            {caption}
+            {captionProps.text}
           </span>
-          {!ai ? (
-            <span key={caption} className="inline-block animate-caption-in" aria-hidden="true">
-              {caption}
-            </span>
-          ) : aiPhase === "final" ? (
-            <span key="final" className="font-bold text-go-ink">
-              <RevealText text={caption} />
-            </span>
-          ) : (
-            <span key={caption} className="font-bold text-go-ink">
-              <TypeText text={caption} />
-            </span>
-          )}
+          <CaptionFade {...captionProps} />
         </p>
 
         {/* Lower, wavy layer */}
@@ -547,11 +589,11 @@ export function HeroRadio() {
             <div className="mt-[1.4em] grid grid-cols-[1.3fr_1fr] gap-[0.9em]">
               <div className="tray flex items-center justify-between gap-[0.6em] rounded-[1.3em] py-[0.75em] pr-[0.75em] pl-[1em]">
                 <span
-                  className={`whitespace-nowrap text-[max(0.9em,9px)] font-extrabold uppercase tracking-[0.12em] transition-colors ${ai ? "text-go-ink" : "text-ink-soft"}`}
+                  className={`whitespace-nowrap text-[max(0.9em,9px)] font-extrabold uppercase tracking-[0.12em] transition-colors ${ai ? "text-ai-ink" : "text-ink-soft"}`}
                 >
                   AI Boost
                 </span>
-                <DeviceSwitch on={ai} onToggle={toggleAi} label="AI Boost" tone="go" />
+                <DeviceSwitch on={ai} onToggle={toggleAi} label="AI Boost" tone="ai" />
               </div>
               <div className="tray flex items-center justify-center gap-[0.55em] rounded-[1.3em] px-[0.75em] py-[0.75em] text-[max(0.9em,9px)] font-extrabold tracking-[0.08em]">
                 <span className={`transition-colors ${dark ? "text-ink-faint" : "text-ink"}`}>

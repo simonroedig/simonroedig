@@ -23,6 +23,8 @@
   --color-go: var(--go);
   --color-go-deep: var(--go-deep);
   --color-go-ink: var(--go-ink);
+  --color-ai: var(--ai);
+  --color-ai-ink: var(--ai-ink);
   --color-needle: var(--needle);
   --color-lcd-ink: var(--lcd-ink);
 
@@ -77,6 +79,11 @@
   --go-deep: #6f8e62;
   --go-ink: #4f7342;
   /* muted accent families for switches: sound, starred, personal, university */
+  /* AI Boost: muted signal red, matching the tuner needle */
+  --ai-hi: #ec9a8e;
+  --ai: #d8695c;
+  --ai-deep: #b44c40;
+  --ai-ink: #a83c31;
   --graphite-hi: #8b939e;
   --graphite: #6c747f;
   --graphite-deep: #535a64;
@@ -86,9 +93,6 @@
   --personal-hi: #aecbe3;
   --personal: #80a7c9;
   --personal-deep: #5f86a8;
-  --uni-hi: #edb7a2;
-  --uni: #d48f75;
-  --uni-deep: #b26f57;
   --needle: #d4503f;
   --lcd-hi: #d3dac5;
   --lcd-lo: #b5bfa7;
@@ -145,6 +149,7 @@
   --lcd-hi: #c3cfae;
   --lcd-lo: #a3b08f;
   --go-ink: #a9cf99;
+  --ai-ink: #ff9384;
   --graphite-hi: #a6aeb9;
   --graphite: #88919c;
   --graphite-deep: #6a737e;
@@ -312,16 +317,8 @@
 
 /* Panel inside a panel: barely recessed with a crisp rim, like the EQ box */
 @utility tray {
-  background: linear-gradient(
-    150deg,
-    var(--surface-lo) 0%,
-    var(--surface) 35%,
-    var(--surface) 100%
-  );
-  box-shadow:
-    inset 1.5px 1.5px 3px var(--sd-soft),
-    inset -1px -1px 0 var(--hl-edge),
-    0 0 0 1px var(--hl-edge);
+  background: linear-gradient(150deg, var(--surface-lo) 0%, var(--surface) 70%);
+  box-shadow: var(--press-xs);
 }
 
 /* Analog LCD glass */
@@ -569,6 +566,32 @@
 
 @utility animate-caret {
   animation: caret-blink 0.9s steps(1) infinite;
+}
+
+@keyframes caption-out {
+  from {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(-0.35em);
+  }
+}
+
+@keyframes marker-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@utility animate-caption-out {
+  animation: caption-out 0.42s var(--ease-soft) forwards;
 }
 
 @utility animate-word-in {

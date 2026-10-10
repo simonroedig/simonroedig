@@ -1,4 +1,4 @@
-export type SwitchTone = "go" | "graphite" | "star" | "personal" | "uni";
+export type SwitchTone = "go" | "ai" | "graphite" | "star" | "personal";
 
 /** Track background + inset shading for a lit switch of the given tone. */
 export const litTrack = (tone: SwitchTone) => ({

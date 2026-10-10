@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState } from "react";
 import { HeroRadio } from "./HeroRadio";
 import { PortraitCard } from "./PortraitCard";
 import { SpeakerGrille } from "./SpeakerGrille";
@@ -25,6 +26,68 @@ const socials = [
   { label: "Email", href: "mailto:simonroedig@web.de", Icon: IconMail },
 ];
 
+// Desktop device stack, relative to the radio's width R: how much of the
+// speaker peeks out to the right, and its size and position.
+const SPEAKER_VISIBLE = 0.42;
+const SPEAKER_WIDTH = 0.72;
+
+type Stage = { width: number; height: number; radio: number; offset: number };
+
+/**
+ * On desktop, sizes the radio so it is exactly as tall as the text column
+ * (from "Product Designer" down to the bottom of the buttons).
+ */
+function useStageFit() {
+  const introRef = useRef<HTMLDivElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const columnRef = useRef<HTMLDivElement>(null);
+  const radioRef = useRef<HTMLDivElement>(null);
+  const [stage, setStage] = useState<Stage | null>(null);
+
+  useLayoutEffect(() => {
+    const desktop = window.matchMedia("(min-width: 64rem)");
+    const fit = () => {
+      const intro = introRef.current;
+      const body = bodyRef.current;
+      const column = columnRef.current;
+      const radio = radioRef.current;
+      if (!desktop.matches || !intro || !body || !column || !radio || !radio.offsetWidth) {
+        setStage(null);
+        return;
+      }
+      const textHeight = body.getBoundingClientRect().bottom - intro.getBoundingClientRect().top;
+      const ratio = radio.offsetHeight / radio.offsetWidth;
+      const maxRadio = column.clientWidth / (1 + SPEAKER_VISIBLE);
+      const radioWidth = Math.min(textHeight / ratio, maxRadio);
+      const next = {
+        radio: Math.round(radioWidth),
+        width: Math.round(radioWidth * (1 + SPEAKER_VISIBLE)),
+        height: Math.round(radioWidth * ratio),
+        // when the column is too narrow for full height, centre it on the text instead
+        offset: Math.max(0, Math.round((textHeight - radioWidth * ratio) / 2)),
+      };
+      setStage((prev) =>
+        prev &&
+        Math.abs(prev.radio - next.radio) < 1 &&
+        Math.abs(prev.height - next.height) < 1 &&
+        prev.offset === next.offset
+          ? prev
+          : next,
+      );
+    };
+    fit();
+    const ro = new ResizeObserver(fit);
+    [introRef, bodyRef, columnRef, radioRef].forEach((r) => r.current && ro.observe(r.current));
+    desktop.addEventListener("change", fit);
+    return () => {
+      ro.disconnect();
+      desktop.removeEventListener("change", fit);
+    };
+  }, []);
+
+  return { introRef, bodyRef, columnRef, radioRef, stage };
+}
+
 const scrollToSection = (id: string) => {
   thock();
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -32,6 +95,7 @@ const scrollToSection = (id: string) => {
 
 export function HeroSection() {
   const age = calculateAge(new Date("1999-06-25"));
+  const { introRef, bodyRef, columnRef, radioRef, stage } = useStageFit();
 
   return (
     <section
@@ -40,7 +104,7 @@ export function HeroSection() {
     >
       <div className="hero-grid mx-auto w-full max-w-7xl content-center gap-x-16 gap-y-10 lg:gap-y-9">
         {/* Intro: portrait + name */}
-        <div className="[grid-area:intro] lg:self-end">
+        <div ref={introRef} className="[grid-area:intro] lg:self-end">
           <div
             className="flex items-center gap-3 text-xs font-extrabold uppercase tracking-[0.24em] text-ink-soft animate-rise-in"
             style={{ animationDelay: "80ms" }}
@@ -74,7 +138,7 @@ export function HeroSection() {
         </div>
 
         {/* Body */}
-        <div className="[grid-area:body] lg:self-start">
+        <div ref={bodyRef} className="[grid-area:body] lg:self-start">
           <p
             className="max-w-xl text-base font-medium leading-relaxed text-ink-soft animate-rise-in md:text-lg"
             style={{ animationDelay: "380ms" }}
@@ -128,17 +192,41 @@ export function HeroSection() {
         </div>
 
         {/* Devices: radio in front of its speaker */}
-        <div className="flex justify-center [grid-area:stage] lg:justify-end">
-          <div className="@container relative aspect-[100/120] w-full sm:aspect-[100/104] max-w-[560px] lg:max-w-[min(600px,calc((100svh-5rem)/1.04))]">
+        <div
+          ref={columnRef}
+          className="flex justify-center [grid-area:stage] lg:items-start lg:justify-end"
+        >
+          <div
+            className="@container relative aspect-[100/120] w-full max-w-[560px] sm:aspect-[100/104] lg:max-w-[min(600px,calc((100svh-5rem)/1.04))]"
+            style={
+              stage
+                ? {
+                    width: stage.width,
+                    height: stage.height,
+                    marginTop: stage.offset,
+                    maxWidth: "none",
+                    aspectRatio: "auto",
+                  }
+                : undefined
+            }
+          >
             <div
-              className="absolute right-0 top-[9%] h-[76%] w-[36%] animate-pop-in sm:w-[44%]"
-              style={{ animationDelay: "300ms" }}
+              className="absolute right-0 top-[9%] h-[76%] w-[38%] animate-pop-in sm:w-[48%]"
+              style={{
+                animationDelay: "300ms",
+                ...(stage && {
+                  width: stage.radio * SPEAKER_WIDTH,
+                  top: "12%",
+                  height: "72%",
+                }),
+              }}
             >
               <SpeakerGrille />
             </div>
             <div
-              className="absolute left-0 top-0 w-[72%] animate-pop-in sm:w-[62%]"
-              style={{ animationDelay: "450ms" }}
+              ref={radioRef}
+              className="absolute left-0 top-0 w-[72%] animate-pop-in sm:w-[64%]"
+              style={{ animationDelay: "450ms", ...(stage && { width: stage.radio }) }}
             >
               <HeroRadio />
             </div>

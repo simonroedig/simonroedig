@@ -5,33 +5,38 @@ import { useCursorLight } from "@/hooks/use-cursor-light";
 import { DeviceSwitch } from "./DeviceSwitch";
 import { CaptionFade } from "./AiText";
 // The path from idea to product, told in first person. `ai` is where AI
-// speeds up each stage (shown in AI Boost mode).
+// speeds up each stage (shown in AI Boost mode); `mark` gets the green marker.
 const STATIONS = [
   {
     name: "Concepts",
     caption: "I research, ideate and shape concepts.",
-    ai: "AI helps me research and explore more ideas, faster.",
+    ai: "AI aids my research and ideation.",
+    mark: "research and ideation.",
   },
   {
     name: "Prototypes",
     caption: "I build physical and digital prototypes.",
-    ai: "I let AI build first prototypes, so we test sooner.",
+    ai: "I iterate fast, building prototypes with AI and code.",
+    mark: "AI and code.",
   },
   {
     name: "User Studies",
     caption: "I run user studies and iterate on UX/UI.",
-    ai: "AI speeds up my study analysis and iterations.",
+    ai: "I've introduced ways to run and analyze studies faster with AI.",
+    mark: "faster",
   },
   {
     name: "Product",
     caption: "I implement it, from frontend to backend.",
-    ai: "I ship faster with AI-assisted engineering.",
+    ai: "I build, test and ship the product, using AI where it helps.",
+    mark: "build, test and ship",
   },
 ];
 const HOME_CAPTION = "From idea to product.";
-const AI_INTRO = "Where I bring in AI:";
+const AI_INTRO = "Same path. Now with AI Boost.";
+const AI_INTRO_MARK = "AI Boost.";
 const AI_FINAL = "I bring AI into every stage and help the whole team move faster.";
-const AI_FINAL_MARK = ["every", "stage"];
+const AI_FINAL_MARK = "every stage";
 
 // AI Boost scan timing
 const INTRO_MS = 2800; // intro line, shown at the rest position
@@ -332,8 +337,8 @@ export function HeroRadio() {
     : finale
       ? { id: "ai-final", text: AI_FINAL, kind: "final" as const, highlight: AI_FINAL_MARK }
       : aiPhase === "intro" || !current
-        ? { id: "ai-intro", text: AI_INTRO, kind: "ai" as const }
-        : { id: `ai-${station}`, text: current.ai, kind: "ai" as const };
+        ? { id: "ai-intro", text: AI_INTRO, kind: "ai" as const, highlight: AI_INTRO_MARK }
+        : { id: `ai-${station}`, text: current.ai, kind: "ai" as const, highlight: current.mark };
 
   return (
     <div className="@container w-full">
@@ -398,6 +403,30 @@ export function HeroRadio() {
             className="lcd absolute left-1/2 top-1/2 h-[11.2em] w-[11.2em] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full transition-[filter] duration-700"
             style={{ filter: ai ? "brightness(1.05)" : "none" }}
           >
+            {/* AI Boost switched on: the glass lights up green once, and a band of light sweeps across */}
+            {ai && (
+              <div
+                className="pointer-events-none absolute inset-0 z-10 overflow-hidden rounded-full"
+                aria-hidden="true"
+              >
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background:
+                      "radial-gradient(circle, color-mix(in srgb, var(--ai) 45%, transparent), transparent 75%)",
+                    animation: "boost-glow 1.8s ease-out both",
+                  }}
+                />
+                <div
+                  className="absolute -top-[20%] h-[140%] w-[45%]"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, transparent, color-mix(in srgb, var(--ai) 60%, transparent) 35%, rgba(255,255,255,0.75) 50%, color-mix(in srgb, var(--ai) 60%, transparent) 65%, transparent)",
+                    animation: "boost-sweep 1.5s cubic-bezier(0.45, 0, 0.25, 1) 0.15s both",
+                  }}
+                />
+              </div>
+            )}
             {/* Tuning view (fades away for the AI Boost finale) */}
             <div
               className={`absolute inset-0 transition-[opacity,filter] duration-500 ${finale ? "opacity-0 blur-[4px]" : "opacity-100 blur-0"}`}
@@ -451,6 +480,32 @@ export function HeroRadio() {
                   className="absolute left-1/2 top-0 h-full w-0"
                   style={{ transform: `translateX(${-START * NAME_STEP}em)` }}
                 >
+                  {/* At rest: chevrons right under the needle, pointing towards "Concepts". They
+                      travel with the scale, so turning slides them away instead of into the name. */}
+                  <div
+                    ref={homeHintRef}
+                    className="absolute top-[0.52em] flex -translate-x-1/2 items-center gap-[0.05em]"
+                    style={{ left: `${HOME * NAME_STEP}em`, opacity: homeHintOpacity(START) }}
+                    aria-hidden="true"
+                  >
+                    {[0, 1, 2].map((i) => (
+                      <svg
+                        key={i}
+                        viewBox="0 0 10 16"
+                        className="h-[1.05em] w-[0.66em]"
+                        style={{ animation: `hint-chevron 1.6s ease-in-out ${i * 0.18}s infinite` }}
+                      >
+                        <path
+                          d="M2.5 2.5 8 8l-5.5 5.5"
+                          fill="none"
+                          stroke="var(--lcd-ink)"
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    ))}
+                  </div>
                   {STATIONS.map((s, i) => (
                     <span
                       key={s.name}
@@ -468,31 +523,6 @@ export function HeroRadio() {
                     </span>
                   ))}
                 </div>
-              </div>
-              {/* at rest: chevrons pointing towards "Concepts", peeking in on the right */}
-              <div
-                ref={homeHintRef}
-                className="absolute left-[calc(50%-1.55em)] top-[5.15em] flex items-center gap-[0.05em]"
-                style={{ opacity: homeHintOpacity(START) }}
-                aria-hidden="true"
-              >
-                {[0, 1, 2].map((i) => (
-                  <svg
-                    key={i}
-                    viewBox="0 0 10 16"
-                    className="h-[1.05em] w-[0.66em]"
-                    style={{ animation: `hint-chevron 1.6s ease-in-out ${i * 0.18}s infinite` }}
-                  >
-                    <path
-                      d="M2.5 2.5 8 8l-5.5 5.5"
-                      fill="none"
-                      stroke="var(--lcd-ink)"
-                      strokeWidth="2.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                ))}
               </div>
               <div className="absolute inset-x-0 top-[7.6em] flex justify-center gap-[0.9em] text-[0.95em] font-extrabold tracking-[0.12em]">
                 <span className={`transition-opacity ${dark ? "opacity-25" : "opacity-80"}`}>

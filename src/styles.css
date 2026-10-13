@@ -610,6 +610,29 @@
   }
 }
 
+@keyframes boost-sweep {
+  from {
+    left: -55%;
+    transform: skewX(-18deg);
+  }
+  to {
+    left: 115%;
+    transform: skewX(-18deg);
+  }
+}
+
+@keyframes boost-glow {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 @keyframes hint-chevron {
   0%,
   100% {

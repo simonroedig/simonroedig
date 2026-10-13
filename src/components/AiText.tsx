@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 
 export type CaptionKind = "plain" | "ai" | "final";
 
@@ -7,8 +7,8 @@ type Props = {
   id: string;
   text: string;
   kind: CaptionKind;
-  /** Words to underline with the marker in the closing line. */
-  highlight?: string[];
+  /** A phrase of the text that gets the green marker swipe once the words are in. */
+  highlight?: string;
 };
 
 type Item = Props;
@@ -50,7 +50,40 @@ export function CaptionFade(props: Props) {
 
 const ENTER_DELAY = 140; // let the outgoing caption start fading first
 
-function Caption({ text, kind, highlight = [] }: Item) {
+/**
+ * The green highlighter: a slightly tilted swipe behind a few words, drawn
+ * from left to right after `delay` ms, with the text inverting on top. Deep
+ * enough to cover descenders (the "g" in "stage").
+ */
+export function Marker({
+  delay,
+  children,
+  className = "",
+}: {
+  delay: number;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <span
+      className={`relative isolate mx-[0.2em] inline-block whitespace-nowrap ${className}`}
+      style={{ animation: `mark-ink 0.3s ease ${delay + 120}ms forwards` }}
+    >
+      <span
+        aria-hidden="true"
+        className="absolute -inset-x-[0.24em] top-[0.02em] bottom-[-0.2em] -z-10 origin-left rounded-[0.24em]"
+        style={{
+          background: "var(--ai-mark-bg)",
+          transform: "rotate(-2deg) skewX(-6deg) scaleX(0)",
+          animation: `mark-swipe 0.5s var(--ease-soft) ${delay}ms forwards`,
+        }}
+      />
+      {children}
+    </span>
+  );
+}
+
+function Caption({ text, kind, highlight }: Item) {
   if (kind === "plain") {
     return (
       <span className="inline-block animate-word-in" style={{ animationDelay: `${ENTER_DELAY}ms` }}>
@@ -62,10 +95,16 @@ function Caption({ text, kind, highlight = [] }: Item) {
   const step = kind === "final" ? 85 : 55;
   const words = text.split(" ");
   const wordsDone = ENTER_DELAY + words.length * step + 400;
-  const marked = new Set(highlight);
-  const markedIdx = words.flatMap((w, idx) => (marked.has(w) ? [idx] : []));
-  const first = kind === "final" && markedIdx.length ? markedIdx[0] : -1;
-  const last = first >= 0 ? markedIdx[markedIdx.length - 1] : -1;
+  // where the marked phrase sits among the words (-1: none)
+  const marked = highlight ? highlight.split(" ") : [];
+  let first = -1;
+  for (let i = 0; marked.length && i + marked.length <= words.length; i++) {
+    if (marked.every((w, k) => words[i + k] === w)) {
+      first = i;
+      break;
+    }
+  }
+  const last = first >= 0 ? first + marked.length - 1 : -1;
 
   const renderWord = (word: string, i: number) => {
     // the closing sentence's own period keeps blinking, like a status light
@@ -92,34 +131,21 @@ function Caption({ text, kind, highlight = [] }: Item) {
   const withSpaces = (from: number, to: number) =>
     words.slice(from, to).flatMap((w, k) => [renderWord(w, from + k), " "]);
 
+  const weight = kind === "final" ? "font-extrabold" : "font-bold";
   if (first < 0) {
-    return <span className="font-bold text-ai-ink">{withSpaces(0, words.length)}</span>;
+    return <span className={`${weight} text-ink-strong`}>{withSpaces(0, words.length)}</span>;
   }
 
-  // Closing line: the marked words get a slightly tilted highlighter swipe and
-  // the text inverts on top of it.
   return (
-    <span className="font-extrabold text-ink-strong">
+    <span className={`${weight} text-ink-strong`}>
       {withSpaces(0, first)}
-      <span
-        className="relative isolate mx-[0.22em] inline-block whitespace-nowrap"
-        style={{ animation: `mark-ink 0.3s ease ${wordsDone + 120}ms forwards` }}
-      >
-        <span
-          aria-hidden="true"
-          className="absolute -inset-x-[0.22em] top-[0.06em] bottom-[-0.04em] -z-10 origin-left rounded-[0.22em]"
-          style={{
-            background: "var(--ai-mark-bg)",
-            transform: "rotate(-2deg) skewX(-6deg) scaleX(0)",
-            animation: `mark-swipe 0.45s var(--ease-soft) ${wordsDone}ms forwards`,
-          }}
-        />
+      <Marker delay={wordsDone}>
         {words
           .slice(first, last + 1)
           .flatMap((w, k) =>
             k === 0 ? [renderWord(w, first + k)] : [" ", renderWord(w, first + k)],
           )}
-      </span>{" "}
+      </Marker>{" "}
       {withSpaces(last + 1, words.length)}
     </span>
   );

@@ -11,16 +11,35 @@ export function SpeakerGrille() {
 
   useEffect(() => setSound(isSoundEnabled()), []);
 
-  useEffect(
-    () =>
-      onSound(() => {
-        pulseRef.current?.animate([{ opacity: 0.9 }, { opacity: 0 }], {
-          duration: 220,
-          easing: "ease-out",
-        });
-      }),
-    [],
-  );
+  // Thumps along with the UI sounds like a level meter: every sound lifts the
+  // level a little and it eases back down. Fast tuning (many clicks a second)
+  // becomes a steady glow instead of a strobe.
+  useEffect(() => {
+    let level = 0;
+    let shown = 0;
+    let frame = 0;
+    let last = 0;
+    const draw = (now: number) => {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      level *= Math.exp(-dt / 0.26); // falls back within about half a second
+      shown += (level - shown) * Math.min(1, dt * 11); // and never jumps
+      if (pulseRef.current) pulseRef.current.style.opacity = shown.toFixed(3);
+      frame = shown > 0.004 || level > 0.004 ? requestAnimationFrame(draw) : 0;
+      if (!frame && pulseRef.current) pulseRef.current.style.opacity = "0";
+    };
+    const stop = onSound(() => {
+      level = Math.min(0.7, level + 0.22);
+      if (!frame) {
+        last = performance.now();
+        frame = requestAnimationFrame(draw);
+      }
+    });
+    return () => {
+      stop();
+      cancelAnimationFrame(frame);
+    };
+  }, []);
 
   const toggleSound = () => {
     const next = !sound;

@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { HeroRadio } from "./HeroRadio";
 import { PortraitCard } from "./PortraitCard";
 import { SpeakerGrille } from "./SpeakerGrille";
+import { Marker } from "./AiText";
 import { IconArrowDown, IconGithub, IconLinkedIn, IconMail, IconYoutube } from "./icons";
 import { thock } from "@/lib/sound";
 
@@ -132,7 +133,11 @@ export function HeroSection() {
               className="col-span-2 font-display text-[clamp(1.6rem,6.5vw,2rem)] font-bold leading-tight tracking-[-0.03em] text-ink animate-rise-in md:col-span-1 md:col-start-2 md:self-start md:text-[2.1rem] lg:text-[clamp(1.75rem,2.6vw,2.4rem)]"
               style={{ animationDelay: "260ms" }}
             >
-              From idea to product.
+              From idea{" "}
+              {/* "to product." stays together; once the line is in, the marker swipes over the goal */}
+              <span className="whitespace-nowrap">
+                to <Marker delay={1250}>product.</Marker>
+              </span>
             </p>
           </div>
         </div>

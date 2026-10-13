@@ -25,7 +25,11 @@ export function DeviceSwitch({ on, onToggle, label, tone }: Props) {
       aria-checked={on}
       aria-label={label}
       title={label}
-      onClick={onToggle}
+      onClick={(e) => {
+        // the box around it may toggle too: count the click once
+        e.stopPropagation();
+        onToggle();
+      }}
       className="group relative block h-[1.9em] w-[3.4em] shrink-0 cursor-pointer rounded-full transition-[background,box-shadow] duration-300"
       style={tone && on ? litTrack(tone) : offTrack}
     >

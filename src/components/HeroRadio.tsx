@@ -704,7 +704,11 @@ export function HeroRadio() {
 
             {/* Controls */}
             <div className="mt-[1.4em] grid grid-cols-[1.3fr_1fr] gap-[0.9em]">
-              <div className="tray flex items-center justify-between gap-[0.6em] rounded-[1.3em] py-[0.75em] pr-[0.75em] pl-[1em]">
+              {/* the whole box toggles, not just the switch (easier to hit on a phone) */}
+              <div
+                onClick={toggleAi}
+                className="tray flex cursor-pointer select-none items-center justify-between gap-[0.6em] rounded-[1.3em] py-[0.75em] pr-[0.75em] pl-[1em]"
+              >
                 <span
                   className={`whitespace-nowrap text-[max(0.9em,9px)] font-extrabold uppercase tracking-[0.12em] transition-colors ${ai ? "text-ai-ink" : "text-ink-soft"}`}
                 >
@@ -712,7 +716,10 @@ export function HeroRadio() {
                 </span>
                 <DeviceSwitch on={ai} onToggle={toggleAi} label="AI Boost" tone="ai" />
               </div>
-              <div className="tray flex items-center justify-center gap-[0.55em] rounded-[1.3em] px-[0.75em] py-[0.75em] text-[max(0.9em,9px)] font-extrabold tracking-[0.08em]">
+              <div
+                onClick={toggleTheme}
+                className="tray flex cursor-pointer select-none items-center justify-center gap-[0.55em] rounded-[1.3em] px-[0.75em] py-[0.75em] text-[max(0.9em,9px)] font-extrabold tracking-[0.08em]"
+              >
                 <span className={`transition-colors ${dark ? "text-ink-faint" : "text-ink"}`}>
                   AM
                 </span>

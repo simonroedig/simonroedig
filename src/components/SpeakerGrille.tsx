@@ -67,7 +67,11 @@ export function SpeakerGrille() {
             className="grille absolute inset-0 opacity-0 [--hl:transparent] [--sd:rgba(45,60,85,0.75)]"
           />
         </div>
-        <div className="surface raise-sm absolute right-[1.2em] bottom-[1.2em] flex items-center gap-[0.7em] rounded-full py-[0.45em] pr-[0.45em] pl-[1em]">
+        {/* the whole pill toggles, not just the switch */}
+        <div
+          onClick={toggleSound}
+          className="surface raise-sm absolute right-[1.2em] bottom-[1.2em] flex cursor-pointer select-none items-center gap-[0.7em] rounded-full py-[0.45em] pr-[0.45em] pl-[1em]"
+        >
           <span
             className={`text-[max(0.85em,9px)] font-extrabold uppercase tracking-[0.16em] transition-colors ${sound ? "text-ink" : "text-ink-faint"}`}
           >

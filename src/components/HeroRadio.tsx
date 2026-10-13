@@ -33,8 +33,8 @@ const STATIONS = [
   },
 ];
 const HOME_CAPTION = "From idea to product.";
-const AI_INTRO = "Same path. Now with AI Boost.";
-const AI_INTRO_MARK = "AI Boost.";
+const AI_INTRO = "Here's how I work with AI.";
+const AI_INTRO_MARK = "with AI.";
 const AI_FINAL = "I bring AI into every stage and help the whole team move faster.";
 const AI_FINAL_MARK = "every stage";
 
@@ -474,7 +474,7 @@ export function HeroRadio() {
                 </div>
               </div>
               {/* station names */}
-              <div className="absolute inset-x-0 top-[4.55em] h-[2.4em]">
+              <div className="absolute inset-x-0 top-[4.95em] h-[2.4em]">
                 <div
                   ref={namesRef}
                   className="absolute left-1/2 top-0 h-full w-0"
@@ -524,7 +524,7 @@ export function HeroRadio() {
                   ))}
                 </div>
               </div>
-              <div className="absolute inset-x-0 top-[7.6em] flex justify-center gap-[0.9em] text-[0.95em] font-extrabold tracking-[0.12em]">
+              <div className="absolute inset-x-0 top-[7.95em] flex justify-center gap-[0.9em] text-[0.95em] font-extrabold tracking-[0.12em]">
                 <span className={`transition-opacity ${dark ? "opacity-25" : "opacity-80"}`}>
                   AM
                 </span>
@@ -533,7 +533,7 @@ export function HeroRadio() {
                 </span>
               </div>
               {/* needle */}
-              <div className="absolute left-1/2 top-[0.4em] h-[4.6em] w-[0.14em] -translate-x-1/2 rounded-full bg-needle shadow-[0_0_0.3em_rgba(212,80,63,0.5)]" />
+              <div className="absolute left-1/2 top-[0.4em] h-[4.4em] w-[0.14em] -translate-x-1/2 rounded-full bg-needle shadow-[0_0_0.3em_rgba(212,80,63,0.5)]" />
             </div>
 
             {/* AI Boost finale: every stage done, by Simon (ink) + AI (green) */}

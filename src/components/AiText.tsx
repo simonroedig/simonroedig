@@ -59,14 +59,17 @@ export function Marker({
   delay,
   children,
   className = "",
+  flush = false,
 }: {
   delay: number;
   children: ReactNode;
   className?: string;
+  /** No side margins: the text keeps its place (e.g. a heading on the page's edge). */
+  flush?: boolean;
 }) {
   return (
     <span
-      className={`relative isolate mx-[0.2em] inline-block whitespace-nowrap ${className}`}
+      className={`relative isolate inline-block whitespace-nowrap ${flush ? "" : "mx-[0.2em]"} ${className}`}
       style={{ animation: `mark-ink 0.3s ease ${delay + 120}ms forwards` }}
     >
       <span

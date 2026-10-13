@@ -89,6 +89,44 @@ function useStageFit() {
   return { introRef, bodyRef, columnRef, radioRef, stage };
 }
 
+// Portrait card: its frame is 4:5 with a padding of 1/30 of the width on each side.
+const PORTRAIT_HEIGHT_PER_WIDTH = (28 / 30) * (5 / 4) + 2 / 30;
+
+/**
+ * From tablet width on, the portrait sits next to the name: sized so it starts
+ * at the top of "Simon" and ends at the bottom of the tagline.
+ */
+function usePortraitFit() {
+  const nameRef = useRef<HTMLHeadingElement>(null);
+  const taglineRef = useRef<HTMLParagraphElement>(null);
+  const [width, setWidth] = useState<number | null>(null);
+
+  useLayoutEffect(() => {
+    const wide = window.matchMedia("(min-width: 48rem)");
+    const fit = () => {
+      const name = nameRef.current;
+      const tagline = taglineRef.current;
+      if (!wide.matches || !name || !tagline) {
+        setWidth(null);
+        return;
+      }
+      const height = tagline.getBoundingClientRect().bottom - name.getBoundingClientRect().top;
+      const next = Math.round(height / PORTRAIT_HEIGHT_PER_WIDTH);
+      setWidth((prev) => (prev !== null && Math.abs(prev - next) < 2 ? prev : next));
+    };
+    fit();
+    const ro = new ResizeObserver(fit);
+    [nameRef, taglineRef].forEach((r) => r.current && ro.observe(r.current));
+    wide.addEventListener("change", fit);
+    return () => {
+      ro.disconnect();
+      wide.removeEventListener("change", fit);
+    };
+  }, []);
+
+  return { nameRef, taglineRef, width };
+}
+
 const scrollToSection = (id: string) => {
   thock();
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -97,6 +135,7 @@ const scrollToSection = (id: string) => {
 export function HeroSection() {
   const age = calculateAge(new Date("1999-06-25"));
   const { introRef, bodyRef, columnRef, radioRef, stage } = useStageFit();
+  const portrait = usePortraitFit();
 
   return (
     <section
@@ -107,21 +146,23 @@ export function HeroSection() {
         {/* Intro: portrait + name */}
         <div ref={introRef} className="[grid-area:intro] lg:self-end">
           <div
-            className="flex items-center gap-3 text-xs font-extrabold uppercase tracking-[0.24em] text-ink-soft animate-rise-in"
+            className="flex items-center gap-3 text-xs font-extrabold uppercase tracking-[0.24em] text-ink-soft animate-rise-in max-lg:justify-center"
             style={{ animationDelay: "80ms" }}
           >
+            <span className="press-xs h-[3px] w-10 rounded-full lg:hidden" />
             Product Designer
             <span className="press-xs h-[3px] w-10 rounded-full" />
           </div>
 
-          <div className="mt-6 grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-5 gap-y-6 sm:gap-x-7 md:mt-8 lg:gap-x-9">
+          <div className="mt-6 grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-5 gap-y-6 sm:gap-x-7 md:mt-8 lg:gap-x-9 max-lg:mx-auto max-lg:w-fit max-lg:grid-cols-[auto_auto]">
             <div
-              className="w-[6.75rem] animate-pop-in sm:w-[8.5rem] md:row-span-2 md:w-[11rem] lg:w-[min(14rem,16vw)]"
-              style={{ animationDelay: "200ms" }}
+              className="w-[6.75rem] animate-pop-in sm:w-[8.5rem] md:row-span-2 md:w-[11rem] md:self-start lg:w-[min(14rem,16vw)]"
+              style={{ animationDelay: "200ms", ...(portrait.width && { width: portrait.width }) }}
             >
               <PortraitCard age={age} />
             </div>
             <h1
+              ref={portrait.nameRef}
               className="font-display text-[clamp(3rem,14vw,4.6rem)] font-extrabold leading-[0.88] tracking-[-0.055em] text-ink-strong animate-rise-in [text-shadow:0_1px_0_var(--hl),0_0.05em_0.1em_var(--sd-soft)] sm:text-[5.25rem] md:self-end md:text-[6rem] lg:text-[clamp(4.5rem,7.2vw,7.5rem)]"
               style={{ animationDelay: "160ms" }}
             >
@@ -130,7 +171,8 @@ export function HeroSection() {
               Rödig
             </h1>
             <p
-              className="col-span-2 font-display text-[clamp(1.6rem,6.5vw,2rem)] font-bold leading-tight tracking-[-0.03em] text-ink animate-rise-in md:col-span-1 md:col-start-2 md:self-start md:text-[2.1rem] lg:text-[clamp(1.75rem,2.6vw,2.4rem)]"
+              ref={portrait.taglineRef}
+              className="col-span-2 font-display max-md:text-center text-[clamp(1.6rem,6.5vw,2rem)] font-bold leading-tight tracking-[-0.03em] text-ink animate-rise-in md:col-span-1 md:col-start-2 md:self-start md:text-[2.1rem] lg:text-[clamp(1.75rem,2.6vw,2.4rem)]"
               style={{ animationDelay: "260ms" }}
             >
               From idea{" "}
@@ -145,7 +187,7 @@ export function HeroSection() {
         {/* Body */}
         <div ref={bodyRef} className="[grid-area:body] lg:self-start">
           <p
-            className="max-w-xl text-base font-medium leading-relaxed text-ink-soft animate-rise-in md:text-lg"
+            className="max-w-xl text-base font-medium leading-relaxed text-ink-soft animate-rise-in md:text-lg max-lg:mx-auto max-lg:text-center"
             style={{ animationDelay: "380ms" }}
           >
             I take new products from the first idea to the finished implementation: research and
@@ -155,7 +197,7 @@ export function HeroSection() {
           </p>
 
           <div
-            className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-5 animate-rise-in md:mt-10"
+            className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-5 animate-rise-in md:mt-10 max-lg:justify-center"
             style={{ animationDelay: "480ms" }}
           >
             <div className="flex gap-4">

@@ -19,6 +19,7 @@ import mediaDesignImg from "@/assets/projects/mediadesign.jpg";
 import webDevelopmentImg from "@/assets/projects/webdev.jpg";
 import sonoAdaptImg from "@/assets/projects/sonoadapt.jpg";
 import playAlongImg from "@/assets/projects/playalong.jpg";
+import smartAssistantImg from "@/assets/projects/smartassistant.jpg";
 
 // New imports for opencards
 import ocWebRedesign from "@/assets/projects/opencards/website/redesign.png";
@@ -62,6 +63,11 @@ import ocPlayAlongPlayer from "@/assets/projects/opencards/playalong/player.jpg"
 import ocPlayAlongChart from "@/assets/projects/opencards/playalong/chart.jpg";
 import ocPlayAlongLyrics from "@/assets/projects/opencards/playalong/lyrics.jpg";
 import ocPlayAlongSeparating from "@/assets/projects/opencards/playalong/separating.jpg";
+
+import ocSmartAssistantWall from "@/assets/projects/opencards/smartassistant/wall.jpg";
+import ocSmartAssistantPhones from "@/assets/projects/opencards/smartassistant/phones.jpg";
+import ocSmartAssistantPlanner from "@/assets/projects/opencards/smartassistant/planner.jpg";
+import ocSmartAssistantNotes from "@/assets/projects/opencards/smartassistant/notes.jpg";
 
 export type RichContentBlock =
   | { type: "text"; content: string }
@@ -110,6 +116,31 @@ export const projects: Project[] = [
       { type: "text", content: "This is also why PlayAlong is not a hosted service but something you run yourself. The website is a showcase with a short guide: install Node.js, download the code from GitHub and start it with a few commands. After that, PlayAlong works like any other web app in your browser, and your songs can even be kept in a folder that syncs across your computers." },
       { type: "link", url: "https://github.com/simonroedig/PlayAlong", text: "➜ PlayAlong on Github" },
       { type: "link", url: "https://play-along-one.vercel.app/", text: "➜ PlayAlong Online" }
+    ]
+  },
+  {
+    id: "smartassistant",
+    category: "Personal",
+    isStarred: true,
+    title: "Smart Assistant",
+    date: "10/2026",
+    sortDate: "2026-10",
+    color: "#34D399",
+    image: smartAssistantImg,
+    shortDescription: "My Own Dashboard for the Day, on the Wall, My Phone and My Laptop.",
+    fullDescription: "",
+    richContent: [
+      { type: "image", src: smartAssistantImg },
+      { type: "text", content: "The small things I need every day used to live in too many places: a calendar for the day, an app for to-dos, a shopping list somewhere else, notes in yet another tool and the weather in a widget. Each of them looked and worked differently on my phone and on my computer, and none of them matched how I actually plan my day. Either a tool did far too much and I used a tenth of it, or the one feature I needed was missing.\n\nSo I built my own: a personal dashboard that shows what matters today, works the same everywhere and does exactly what I need. I use it every day and keep developing it." },
+      { type: "image", src: ocSmartAssistantWall },
+      { type: "text", content: "At home, a Raspberry Pi 5 with a large touch screen runs the dashboard on the wall. In the morning I see the time, the weather, my plan for the day, what's left to buy and what's on my backlog at a glance. It has its own on-screen keyboard, a dim night mode and updates itself whenever I ship something new." },
+      { type: "image", src: ocSmartAssistantPhones },
+      { type: "text", content: "On my phone, the same dashboard is my Android home screen. A small launcher app I wrote in Kotlin wraps it, lists and searches my apps and can block the ones I don't want to open. On the laptop it's a regular web app. Everything syncs live, so when I tick something off on my phone, it disappears from the wall a moment later." },
+      { type: "image", src: ocSmartAssistantPlanner },
+      { type: "text", content: "The planner works with rough time blocks instead of exact appointments, shows what's now and what's next, and lets me move blocks by touch. The backlog, shopping list, notes with colored categories and a PIN protected vault, and a detailed weather view complete it." },
+      { type: "image", src: ocSmartAssistantNotes },
+      { type: "text", content: "Technically, it's a Next.js app on Vercel with Supabase as the backend. The browser talks to the Postgres database directly, and Row Level Security in the database makes sure every row only ever belongs to me, backed by tests that try to break it. Changes appear instantly and reach the other devices through Supabase Realtime, and around 60 end to end tests run on every change." },
+      { type: "link", url: "https://github.com/simonroedig/SimonSmartAssistant", text: "➜ Smart Assistant on Github" }
     ]
   },
   {

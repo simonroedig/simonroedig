@@ -18,6 +18,7 @@ import meetImg from "@/assets/projects/meet.jpg";
 import mediaDesignImg from "@/assets/projects/mediadesign.jpg";
 import webDevelopmentImg from "@/assets/projects/webdev.jpg";
 import sonoAdaptImg from "@/assets/projects/sonoadapt.jpg";
+import playAlongImg from "@/assets/projects/playalong.jpg";
 
 // New imports for opencards
 import ocWebRedesign from "@/assets/projects/opencards/website/redesign.png";
@@ -57,6 +58,11 @@ import ocSonoAdaptVideos from "@/assets/projects/opencards/sonoadapt/videos.png"
 import ocSonoAdaptFormative from "@/assets/projects/opencards/sonoadapt/formative_main_effects.png";
 import ocSonoAdaptSummative from "@/assets/projects/opencards/sonoadapt/summative_main_effects.png";
 
+import ocPlayAlongPlayer from "@/assets/projects/opencards/playalong/player.jpg";
+import ocPlayAlongChart from "@/assets/projects/opencards/playalong/chart.jpg";
+import ocPlayAlongLyrics from "@/assets/projects/opencards/playalong/lyrics.jpg";
+import ocPlayAlongSeparating from "@/assets/projects/opencards/playalong/separating.jpg";
+
 export type RichContentBlock =
   | { type: "text"; content: string }
   | { type: "image"; src: string; alt?: string; noBorder?: boolean; size?: "xxsmall" | "xsmall" | "small" | "large" | "xlarge" }
@@ -79,6 +85,33 @@ export type Project = {
 };
 
 export const projects: Project[] = [
+  {
+    id: "playalong",
+    category: "Personal",
+    isStarred: true,
+    title: "PlayAlong",
+    date: "10/2026",
+    sortDate: "2026-10",
+    color: "#FB923C",
+    image: playAlongImg,
+    shortDescription: "Remove Any Instrument From a Song and Play Along, With AI Chords and Lyrics.",
+    fullDescription: "",
+    richContent: [
+      { type: "image", src: playAlongImg },
+      { type: "text", content: "I love playing along to songs on my guitar, but it has always come with two pains. The first is finding the right chords, which I tackled in my Bachelor Thesis with ChordSync. The second: playing along works best when the instrument you want to play isn't in the recording at all, so you can take its place.\n\nThere are online tools that remove instruments from songs, but they all charge per song or per month, because the AI behind them runs on rented cloud servers. With today's open AI models and vibe coding, building such a tool yourself has become possible in a very short time. So I did: PlayAlong is a free and open-source play-along app that runs entirely on your own computer." },
+      { type: "image", src: ocPlayAlongPlayer },
+      { type: "text", content: "Paste a YouTube link or drop in an audio file, and PlayAlong takes the song apart into six instruments: guitar, bass, drums, vocals, keys and the rest. One click removes the guitar or the bass so you can play it yourself, or plays it alone so you can learn the part. You can slow a song down without changing its pitch, loop the hard parts and download every instrument as its own track." },
+      { type: "image", src: ocPlayAlongChart },
+      { type: "text", content: "On top of that, PlayAlong writes out the chords for guitar and bass, bar by bar, with key, tempo and a beat counter showing what to play now and next. Set a capo or a half step down tuning and the chord shapes change with it." },
+      { type: "image", src: ocPlayAlongLyrics },
+      { type: "text", content: "It also writes down the lyrics and places every chord right above the word where it changes. The sheet scrolls along with the music like a teleprompter, so your eyes stay on the chords instead of searching for them. This works in English, German and many other languages, even when they are mixed in one song." },
+      { type: "image", src: ocPlayAlongSeparating },
+      { type: "text", content: "Under the hood, three open AI models do the work: Meta's Demucs separates the instruments, a BTC transformer recognizes the chords, and OpenAI's Whisper transcribes the lyrics. All of them run directly in the browser with ONNX Runtime Web, on the graphics card via WebGPU or on the processor otherwise. I ported the audio processing around them (spectrograms, the constant-Q transform, Whisper's decoding and word alignment) from Python to TypeScript and checked it against the original implementations. Since no server is involved, nothing is uploaded, nothing costs anything, and there is no limit on how many songs you take apart." },
+      { type: "text", content: "This is also why PlayAlong is not a hosted service but something you run yourself. The website is a showcase with a short guide: install Node.js, download the code from GitHub and start it with a few commands. After that, PlayAlong works like any other web app in your browser, and your songs can even be kept in a folder that syncs across your computers." },
+      { type: "link", url: "https://github.com/simonroedig/PlayAlong", text: "➜ PlayAlong on Github" },
+      { type: "link", url: "https://play-along-one.vercel.app/", text: "➜ PlayAlong Online" }
+    ]
+  },
   {
     id: "sonoadapt",
     category: "University",

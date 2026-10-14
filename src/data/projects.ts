@@ -509,7 +509,7 @@ export const projects: Project[] = [
   {
     id: "media-design",
     category: "Personal",
-    isStarred: false,
+    isStarred: true,
     title: "Media Design",
     date: "11/2021",
     sortDate: "2021-11",

@@ -92,7 +92,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "author", content: "Simon Rödig" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "theme-color", content: "#dbe4ee" },
+      { name: "theme-color", content: "#1f2329" },
     ],
     links: [
       { rel: "icon", type: "image/png", href: faviconUrl },
@@ -106,8 +106,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     scripts: [
       {
-        // Apply the stored theme before first paint to avoid a light/dark flash.
-        children: `try{if(localStorage.getItem("theme")==="dark")document.documentElement.classList.add("dark")}catch(e){}`,
+        // Dark by default, light only if the visitor picked it. Runs before first paint, so nothing flashes.
+        children: `var d=true;try{d=localStorage.getItem("theme")!=="light"}catch(e){}if(d)document.documentElement.classList.add("dark")`,
       },
     ],
   }),

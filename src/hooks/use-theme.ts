@@ -2,20 +2,29 @@ import { useCallback, useEffect, useState } from "react";
 
 const THEME_COLORS = { light: "#dbe4ee", dark: "#1f2329" };
 
-/** Light/dark state backed by the `dark` class on <html> and localStorage. */
+const setThemeColor = (dark: boolean) =>
+  document
+    .querySelector('meta[name="theme-color"]')
+    ?.setAttribute("content", dark ? THEME_COLORS.dark : THEME_COLORS.light);
+
+/**
+ * Light/dark state backed by the `dark` class on <html> and localStorage.
+ * Dark is the default; light only when a visitor picked it.
+ */
 export function useTheme() {
-  const [dark, setDarkState] = useState(false);
+  // starts dark, like the server render, so the AM/PM switch doesn't jump on load
+  const [dark, setDarkState] = useState(true);
 
   useEffect(() => {
-    setDarkState(document.documentElement.classList.contains("dark"));
+    const isDark = document.documentElement.classList.contains("dark");
+    setDarkState(isDark);
+    setThemeColor(isDark);
   }, []);
 
   const setDark = useCallback((next: boolean) => {
     setDarkState(next);
     document.documentElement.classList.toggle("dark", next);
-    document
-      .querySelector('meta[name="theme-color"]')
-      ?.setAttribute("content", next ? THEME_COLORS.dark : THEME_COLORS.light);
+    setThemeColor(next);
     try {
       localStorage.setItem("theme", next ? "dark" : "light");
     } catch {

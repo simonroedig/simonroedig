@@ -657,10 +657,8 @@ export function HeroRadio() {
           <div className="absolute inset-x-0 top-[5.9em] bottom-0 bg-[linear-gradient(180deg,var(--surface),var(--surface-lo))]" />
 
           <div className="relative">
-            {/* sits left, inside the raised part of the wave */}
-            <div className="pl-[0.9em] text-[max(0.95em,9px)] font-extrabold uppercase tracking-[0.24em] text-ink">
-              Tuner
-            </div>
+            {/* keeps the line the "Tuner" label used to take, so the roller stays put */}
+            <div aria-hidden="true" className="h-[1lh] text-[max(0.95em,9px)]" />
 
             {/* Roller */}
             <div className="press-sm mt-[0.8em] rounded-[1.6em] bg-[linear-gradient(150deg,var(--surface-lo),var(--surface))] p-[0.55em]">
